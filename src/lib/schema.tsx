@@ -1,0 +1,100 @@
+import type { Vendor } from './types'
+
+const SITE_URL = 'https://peptidedirectory.com'
+
+export function itemListSchema(
+  vendors: Vendor[],
+  listName: string,
+  listUrl: string,
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: listName,
+    description: `${listName} on Peptide Vendor Directory`,
+    url: `${SITE_URL}${listUrl}`,
+    numberOfItems: vendors.length,
+    itemListElement: vendors.map((v, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Organization',
+        name: v.name,
+        url: `${SITE_URL}/vendors/${v.id}`,
+        description: v.description,
+        address: {
+          '@type': 'PostalAddress',
+          addressLocality: v.location,
+          addressCountry: v.country,
+        },
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: v.rating,
+          reviewCount: v.reviewCount,
+          bestRating: 5,
+          worstRating: 1,
+        },
+      },
+    })),
+  }
+}
+
+export function breadcrumbSchema(items: { name: string; url: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: item.name,
+      item: `${SITE_URL}${item.url}`,
+    })),
+  }
+}
+
+export function organizationSchema(vendor: Vendor) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: vendor.name,
+    url: vendor.website,
+    logo: `${SITE_URL}/logo.png`,
+    description: vendor.description,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: vendor.location,
+      addressCountry: vendor.country,
+    },
+    foundingDate: String(vendor.founded),
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: vendor.rating,
+      reviewCount: vendor.reviewCount,
+      bestRating: 5,
+      worstRating: 1,
+    },
+  }
+}
+
+export function siteSearchSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Peptide Vendor Directory',
+    url: SITE_URL,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${SITE_URL}/?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  }
+}
+
+export function JsonLd({ data }: { data: Record<string, unknown> }) {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  )
+}

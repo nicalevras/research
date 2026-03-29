@@ -74,7 +74,7 @@ export function PillNav({ tags, activeTags, onToggleTag }: PillNavProps) {
               className={
                 `inline-flex items-center shrink-0 rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-all duration-200 cursor-pointer ` +
                 (isActive
-                  ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900'
+                  ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 border border-neutral-900 dark:border-white'
                   : 'bg-white/70 dark:bg-white/[0.04] text-neutral-500 dark:text-neutral-400 hover:bg-white dark:hover:bg-white/[0.08] border border-neutral-200/60 dark:border-white/[0.06] hover:text-neutral-900 dark:hover:text-white')
               }
             >

@@ -1,250 +1,88 @@
+import { eq, and, ilike, or, sql } from 'drizzle-orm'
+import { db } from '~/db'
+import { vendors, compounds, vendorCompounds } from '~/db/schema'
 import type { Vendor } from './types'
 
-export const vendors: Vendor[] = [
-  {
-    id: 'pep-sci',
-    name: 'Peptide Sciences',
-    website: 'https://peptidesciences.com',
-    location: 'Henderson, NV',
-    country: 'USA',
-    rating: 4.8,
-    reviewCount: 1240,
-    category: 'research',
-    description: 'Premium research peptides with rigorous third-party testing. Known for high purity levels and extensive catalog of over 100 peptide compounds.',
-    founded: 2012,
-    certifications: ['GMP', 'ISO 9001'],
-  },
-  {
-    id: 'limitless-life',
-    name: 'Limitless Life Nootropics',
-    website: 'https://limitlesslifenootropics.com',
-    location: 'Phoenix, AZ',
-    country: 'USA',
-    rating: 4.5,
-    reviewCount: 830,
-    category: 'research',
-    description: 'Specializes in research-grade peptides and nootropics with a focus on longevity and anti-aging compounds.',
-    founded: 2015,
-    certifications: ['GMP'],
-  },
-  {
-    id: 'pure-rawz',
-    name: 'Pure Rawz',
-    website: 'https://purerawz.co',
-    location: 'Provo, UT',
-    country: 'USA',
-    rating: 4.6,
-    reviewCount: 960,
-    category: 'research',
-    description: 'Wide selection of research peptides and SARMs with verified COAs on every batch. Popular among biohacking community.',
-    founded: 2017,
-    certifications: ['GMP'],
-  },
-  {
-    id: 'element-sarms',
-    name: 'Element SARMs',
-    website: 'https://elementsarms.com',
-    location: 'Austin, TX',
-    country: 'USA',
-    rating: 4.3,
-    reviewCount: 540,
-    category: 'research',
-    description: 'Research chemicals supplier offering peptides, SARMs, and nootropics with transparent lab reports.',
-    founded: 2019,
-    certifications: [],
-  },
-  {
-    id: 'swiss-chems',
-    name: 'Swiss Chems',
-    website: 'https://swisschems.is',
-    location: 'Zurich',
-    country: 'Switzerland',
-    rating: 4.4,
-    reviewCount: 710,
-    category: 'research',
-    description: 'European-based supplier of premium research peptides with pharmaceutical-grade quality standards.',
-    founded: 2016,
-    certifications: ['GMP', 'ISO 17025'],
-  },
-  {
-    id: 'canagen',
-    name: 'Canagen Therapeutics',
-    website: 'https://canagen.io',
-    location: 'Vancouver, BC',
-    country: 'Canada',
-    rating: 4.7,
-    reviewCount: 420,
-    category: 'therapeutic',
-    description: 'Developing peptide-based therapeutics for metabolic disorders and tissue repair. Clinical-stage biotech.',
-    founded: 2014,
-    certifications: ['GMP', 'FDA IND', 'Health Canada'],
-  },
-  {
-    id: 'med-peptide',
-    name: 'MedPeptide Labs',
-    website: 'https://medpeptide.com',
-    location: 'Boston, MA',
-    country: 'USA',
-    rating: 4.9,
-    reviewCount: 380,
-    category: 'therapeutic',
-    description: 'Compounding pharmacy specializing in therapeutic peptides for hormone optimization and injury recovery.',
-    founded: 2011,
-    certifications: ['PCAB', 'GMP', 'DEA Licensed'],
-  },
-  {
-    id: 'restor-peptide',
-    name: 'Restor Peptide Clinic',
-    website: 'https://restorpeptide.com',
-    location: 'Miami, FL',
-    country: 'USA',
-    rating: 4.6,
-    reviewCount: 620,
-    category: 'therapeutic',
-    description: 'Telemedicine peptide therapy clinic offering BPC-157, TB-500, and growth hormone secretagogues with physician oversight.',
-    founded: 2018,
-    certifications: ['HIPAA Compliant'],
-  },
-  {
-    id: 'vitality-institute',
-    name: 'Vitality Peptide Institute',
-    website: 'https://vitalitypeptide.com',
-    location: 'Denver, CO',
-    country: 'USA',
-    rating: 4.5,
-    reviewCount: 290,
-    category: 'therapeutic',
-    description: 'Integrative medicine practice focused on peptide therapy for anti-aging, immune support, and cognitive enhancement.',
-    founded: 2019,
-    certifications: ['GMP'],
-  },
-  {
-    id: 'bio-thera-eu',
-    name: 'BioTherapeutics EU',
-    website: 'https://biotherapeutics.eu',
-    location: 'Munich',
-    country: 'Germany',
-    rating: 4.7,
-    reviewCount: 350,
-    category: 'therapeutic',
-    description: 'European biotech firm developing peptide-based drugs for autoimmune conditions and regenerative medicine.',
-    founded: 2013,
-    certifications: ['EMA GMP', 'ISO 13485'],
-  },
-  {
-    id: 'skin-peptide-co',
-    name: 'The Peptide Company',
-    website: 'https://thepeptidecompany.com',
-    location: 'Seoul',
-    country: 'South Korea',
-    rating: 4.3,
-    reviewCount: 880,
-    category: 'cosmetic',
-    description: 'K-beauty inspired peptide skincare formulations. Copper peptides, matrixyl, and argireline-based products.',
-    founded: 2016,
-    certifications: ['KFDA', 'ISO 22716'],
-  },
-  {
-    id: 'derma-pep',
-    name: 'DermaPep Labs',
-    website: 'https://dermapep.com',
-    location: 'Los Angeles, CA',
-    country: 'USA',
-    rating: 4.4,
-    reviewCount: 560,
-    category: 'cosmetic',
-    description: 'Custom peptide synthesis for cosmetic brands. Supplies signal peptides, carrier peptides, and neurotransmitter-inhibiting peptides.',
-    founded: 2015,
-    certifications: ['ISO 22716', 'COSMOS'],
-  },
-  {
-    id: 'natur-peptide',
-    name: 'NaturPeptide',
-    website: 'https://naturpeptide.com',
-    location: 'Lyon',
-    country: 'France',
-    rating: 4.6,
-    reviewCount: 340,
-    category: 'cosmetic',
-    description: 'French peptide cosmetics manufacturer specializing in anti-aging and collagen-boosting peptide formulations.',
-    founded: 2013,
-    certifications: ['ECOCERT', 'ISO 9001'],
-  },
-  {
-    id: 'bio-synth-intl',
-    name: 'BioSynth International',
-    website: 'https://biosynth.com',
-    location: 'Shanghai',
-    country: 'China',
-    rating: 4.2,
-    reviewCount: 290,
-    category: 'api-supplier',
-    description: 'Large-scale custom peptide synthesis for pharmaceutical companies. GMP-compliant API manufacturing.',
-    founded: 2008,
-    certifications: ['GMP', 'ISO 9001', 'FDA DMF'],
-  },
-  {
-    id: 'american-peptide',
-    name: 'American Peptide Company',
-    website: 'https://americanpeptide.com',
-    location: 'San Jose, CA',
-    country: 'USA',
-    rating: 4.5,
-    reviewCount: 410,
-    category: 'api-supplier',
-    description: 'GMP peptide API manufacturer serving pharmaceutical and biotech industries. Specializing in long-chain and modified peptides.',
-    founded: 2005,
-    certifications: ['FDA GMP', 'ISO 9001'],
-  },
-  {
-    id: 'bac-peptide',
-    name: 'BAC Peptide',
-    website: 'https://bacpeptide.com',
-    location: 'Karlsruhe',
-    country: 'Germany',
-    rating: 4.6,
-    reviewCount: 180,
-    category: 'api-supplier',
-    description: 'European peptide manufacturer providing custom synthesis and catalog peptides for drug development.',
-    founded: 1998,
-    certifications: ['GMP', 'ISO 17025', 'EMA'],
-  },
-  {
-    id: 'cas-peptide',
-    name: 'CAS Peptide Co.',
-    website: 'https://caspeptide.com',
-    location: 'Hangzhou',
-    country: 'China',
-    rating: 4.0,
-    reviewCount: 220,
-    category: 'api-supplier',
-    description: 'Cost-effective peptide API supplier with large-scale production capacity. Serves generic drug manufacturers worldwide.',
-    founded: 2010,
-    certifications: ['GMP', 'ISO 9001'],
-  },
-]
-
-export function getVendorById(id: string): Vendor | undefined {
-  return vendors.find((v) => v.id === id)
+function rowToVendor(row: typeof vendors.$inferSelect): Vendor {
+  return {
+    id: row.id,
+    name: row.name,
+    website: row.website,
+    location: row.location,
+    country: row.country,
+    rating: row.rating,
+    reviewCount: row.reviewCount,
+    category: row.category as Vendor['category'],
+    description: row.description,
+    founded: row.founded,
+    certifications: row.certifications,
+  }
 }
 
-export function filterVendors(filters: { category?: string; country?: string; q?: string }): Vendor[] {
-  return vendors.filter((v) => {
-    if (filters.category && filters.category !== 'all' && v.category !== filters.category) {
-      return false
-    }
-    if (filters.country && v.country !== filters.country) {
-      return false
-    }
-    if (filters.q) {
-      const query = filters.q.toLowerCase()
-      return (
-        v.name.toLowerCase().includes(query) ||
-        v.location.toLowerCase().includes(query) ||
-        v.country.toLowerCase().includes(query) ||
-        v.description.toLowerCase().includes(query)
-      )
-    }
-    return true
+export async function getVendorById(id: string): Promise<Vendor | undefined> {
+  const row = await db.query.vendors.findFirst({
+    where: eq(vendors.id, id),
   })
+  return row ? rowToVendor(row) : undefined
+}
+
+export async function filterVendors(filters: {
+  category?: string
+  country?: string
+  q?: string
+}): Promise<Vendor[]> {
+  const conditions = []
+
+  if (filters.category && filters.category !== 'all') {
+    conditions.push(eq(vendors.category, filters.category))
+  }
+
+  if (filters.country) {
+    conditions.push(eq(vendors.country, filters.country))
+  }
+
+  if (filters.q) {
+    const pattern = `%${filters.q}%`
+    conditions.push(
+      or(
+        ilike(vendors.name, pattern),
+        ilike(vendors.location, pattern),
+        ilike(vendors.country, pattern),
+        ilike(vendors.description, pattern),
+      )!,
+    )
+  }
+
+  const rows = await db
+    .select()
+    .from(vendors)
+    .where(conditions.length > 0 ? and(...conditions) : undefined)
+    .orderBy(vendors.rating)
+
+  return rows.map(rowToVendor)
+}
+
+export async function getVendorCompounds(vendorId: string) {
+  const rows = await db
+    .select({ id: compounds.id, name: compounds.name, category: compounds.category })
+    .from(vendorCompounds)
+    .innerJoin(compounds, eq(vendorCompounds.compoundId, compounds.id))
+    .where(eq(vendorCompounds.vendorId, vendorId))
+
+  return rows
+}
+
+export async function getCompounds() {
+  return db.select().from(compounds).orderBy(compounds.name)
+}
+
+export async function getVendorsByCompound(compoundId: string): Promise<Vendor[]> {
+  const rows = await db
+    .select({ vendor: vendors })
+    .from(vendorCompounds)
+    .innerJoin(vendors, eq(vendorCompounds.vendorId, vendors.id))
+    .where(eq(vendorCompounds.compoundId, compoundId))
+    .orderBy(vendors.rating)
+
+  return rows.map((r) => rowToVendor(r.vendor))
 }

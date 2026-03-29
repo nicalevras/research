@@ -4,6 +4,7 @@ import { DirectoryListing } from '~/components/directory-listing'
 import { siteSearchSchema } from '~/lib/schema'
 import { SITE_URL } from '~/lib/constants'
 import { searchDefaults, searchSchema } from '~/lib/search'
+import { filterVendors } from '~/lib/data'
 
 export const Route = createFileRoute('/')({
   validateSearch: zodValidator(searchSchema),
@@ -11,7 +12,10 @@ export const Route = createFileRoute('/')({
     middlewares: [stripSearchParams(searchDefaults)],
   },
   loaderDeps: ({ search }) => ({ page: search.page, q: search.q, country: search.country }),
-  loader: ({ deps }) => deps,
+  loader: async ({ deps }) => {
+    const vendors = await filterVendors({ category: 'all', q: deps.q, country: deps.country })
+    return { ...deps, vendors }
+  },
   head: ({ loaderData }) => {
     const { page, q, country } = loaderData ?? {}
     const isFiltered = !!q
@@ -47,6 +51,7 @@ export const Route = createFileRoute('/')({
 
 function HomePage() {
   const { q, country, page } = Route.useSearch()
+  const { vendors } = Route.useLoaderData()
   return (
     <DirectoryListing
       category="all"
@@ -55,6 +60,7 @@ function HomePage() {
       searchQuery={q ?? ''}
       countryFilter={country ?? ''}
       currentPage={page}
+      vendors={vendors}
     />
   )
 }

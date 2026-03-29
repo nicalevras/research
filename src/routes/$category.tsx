@@ -3,6 +3,7 @@ import { zodValidator } from '@tanstack/zod-adapter'
 import { DirectoryListing } from '~/components/directory-listing'
 import { CATEGORIES, SITE_URL } from '~/lib/constants'
 import { searchDefaults, searchSchema } from '~/lib/search'
+import { filterVendors } from '~/lib/data'
 import type { VendorCategory } from '~/lib/types'
 
 const VALID_CATEGORIES = new Set(
@@ -100,7 +101,10 @@ export const Route = createFileRoute('/$category')({
     return { category }
   },
   loaderDeps: ({ search }) => ({ page: search.page, q: search.q, country: search.country }),
-  loader: ({ params, deps }) => ({ category: params.category, ...deps }),
+  loader: async ({ params, deps }) => {
+    const vendors = await filterVendors({ category: params.category, q: deps.q, country: deps.country })
+    return { category: params.category, ...deps, vendors }
+  },
   head: ({ loaderData }) => {
     const { page, q, country } = loaderData ?? {}
     const category = loaderData?.category
@@ -133,6 +137,7 @@ export const Route = createFileRoute('/$category')({
 function CategoryPage() {
   const { category } = Route.useParams()
   const { q, country, page } = Route.useSearch()
+  const { vendors } = Route.useLoaderData()
 
   if (!isValidCategory(category)) return null
 
@@ -147,6 +152,7 @@ function CategoryPage() {
       searchQuery={q ?? ''}
       countryFilter={country ?? ''}
       currentPage={page}
+      vendors={vendors}
     />
   )
 }

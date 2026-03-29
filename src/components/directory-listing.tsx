@@ -1,6 +1,5 @@
-import type { VendorCategory } from '~/lib/types'
+import type { Vendor, VendorCategory } from '~/lib/types'
 import { CATEGORIES, COUNTRIES } from '~/lib/constants'
-import { filterVendors } from '~/lib/data'
 import { PillNav } from '~/components/pill-nav'
 import { VendorGrid } from '~/components/vendor-grid'
 import { SearchIcon, XIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from '~/components/icons'
@@ -17,9 +16,10 @@ interface DirectoryListingProps {
   searchQuery: string
   countryFilter: string
   currentPage: number
+  vendors: Vendor[]
 }
 
-export function DirectoryListing({ category, heading, description, searchQuery, countryFilter, currentPage }: DirectoryListingProps) {
+export function DirectoryListing({ category, heading, description, searchQuery, countryFilter, currentPage, vendors }: DirectoryListingProps) {
   const navigate = useNavigate()
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
   const searchRef = useRef<HTMLInputElement>(null)
@@ -36,13 +36,11 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
   }, [])
 
   const { paginatedVendors, totalPages } = useMemo(() => {
-    const country = countryFilter || undefined
-    const filtered = filterVendors({ category, q: searchQuery, country })
-    const total = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+    const total = Math.max(1, Math.ceil(vendors.length / PAGE_SIZE))
     const start = (currentPage - 1) * PAGE_SIZE
-    const paginated = filtered.slice(start, start + PAGE_SIZE)
+    const paginated = vendors.slice(start, start + PAGE_SIZE)
     return { paginatedVendors: paginated, totalPages: total }
-  }, [category, searchQuery, countryFilter, currentPage])
+  }, [vendors, currentPage])
 
   const path = category === 'all' ? '/' : `/${category}`
   const crumbs =

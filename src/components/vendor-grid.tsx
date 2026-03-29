@@ -74,6 +74,40 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
   )
 }
 
+function SkeletonCard() {
+  return (
+    <div className="rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/8 overflow-hidden flex flex-col animate-pulse">
+      <div className="aspect-[16/9] bg-neutral-100 dark:bg-neutral-800" />
+      <div className="p-5 flex flex-col flex-1">
+        <div className="space-y-2">
+          <div className="h-4 w-3/4 rounded bg-neutral-200 dark:bg-neutral-700" />
+          <div className="h-3 w-1/2 rounded bg-neutral-100 dark:bg-neutral-800" />
+          <div className="h-3 w-1/3 rounded bg-neutral-100 dark:bg-neutral-800" />
+        </div>
+        <div className="mt-5 mb-5 space-y-2">
+          <div className="h-3 w-full rounded bg-neutral-100 dark:bg-neutral-800" />
+          <div className="h-3 w-full rounded bg-neutral-100 dark:bg-neutral-800" />
+          <div className="h-3 w-2/3 rounded bg-neutral-100 dark:bg-neutral-800" />
+        </div>
+        <div className="mt-auto pt-5 border-t border-neutral-100 dark:border-white/[0.04] flex gap-5">
+          <div className="h-9 flex-1 rounded-full bg-neutral-100 dark:bg-neutral-800" />
+          <div className="h-9 flex-1 rounded-full bg-neutral-200 dark:bg-neutral-700" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export function VendorGridSkeleton() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {Array.from({ length: 6 }, (_, i) => (
+        <SkeletonCard key={i} />
+      ))}
+    </div>
+  )
+}
+
 interface VendorGridProps {
   data: Vendor[]
 }

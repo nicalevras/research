@@ -1,9 +1,9 @@
 import type { Vendor, VendorCategory } from '~/lib/types'
 import { CATEGORIES, COUNTRIES, TAGS } from '~/lib/constants'
 import { PillNav } from '~/components/pill-nav'
-import { VendorGrid } from '~/components/vendor-grid'
+import { VendorGrid, VendorGridSkeleton } from '~/components/vendor-grid'
 import { SearchIcon, XIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from '~/components/icons'
-import { useNavigate, Link } from '@tanstack/react-router'
+import { useNavigate, Link, useRouterState } from '@tanstack/react-router'
 import { useMemo, useRef, useCallback, useEffect, useState } from 'react'
 import { JsonLd, itemListSchema, breadcrumbSchema } from '~/lib/schema'
 
@@ -25,12 +25,16 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
   const searchRef = useRef<HTMLInputElement>(null)
   const [localQuery, setLocalQuery] = useState(searchQuery)
-
-  const activeTagList = useMemo(() => activeTags ? activeTags.split(',').filter(Boolean) : [], [activeTags])
+  const [localTags, setLocalTags] = useState<string[]>(() => activeTags ? activeTags.split(',').filter(Boolean) : [])
+  const isLoading = useRouterState({ select: (s) => s.isLoading })
 
   useEffect(() => {
     setLocalQuery(searchQuery)
   }, [searchQuery])
+
+  useEffect(() => {
+    setLocalTags(activeTags ? activeTags.split(',').filter(Boolean) : [])
+  }, [activeTags])
 
   useEffect(() => {
     return () => {
@@ -85,13 +89,14 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
 
   const handleToggleTag = useCallback(
     (tagId: string) => {
-      const current = activeTagList.includes(tagId)
-        ? activeTagList.filter((t) => t !== tagId)
-        : [...activeTagList, tagId]
-      const tagsParam = current.length > 0 ? current.join(',') : undefined
+      const next = localTags.includes(tagId)
+        ? localTags.filter((t) => t !== tagId)
+        : [...localTags, tagId]
+      setLocalTags(next)
+      const tagsParam = next.length > 0 ? next.join(',') : undefined
       navigate({ to: navTo, params: navParams, search: { ...currentSearch, tags: tagsParam, page: undefined } })
     },
-    [navigate, navTo, navParams, currentSearch, activeTagList],
+    [navigate, navTo, navParams, currentSearch, localTags],
   )
 
   return (
@@ -171,9 +176,9 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
           </div>
         </div>
 
-        <PillNav tags={TAGS} activeTags={activeTagList} onToggleTag={handleToggleTag} />
+        <PillNav tags={TAGS} activeTags={localTags} onToggleTag={handleToggleTag} />
 
-        <VendorGrid data={paginatedVendors} />
+        {isLoading ? <VendorGridSkeleton /> : <VendorGrid data={paginatedVendors} />}
 
         {totalPages > 1 && (
           <nav aria-label="Pagination" className="flex items-center justify-center gap-2 pt-4">

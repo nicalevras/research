@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 
 type Theme = 'light' | 'dark'
 
-function getInitialTheme(): Theme {
+function getStoredTheme(): Theme {
   if (typeof window === 'undefined') return 'light'
   const stored = localStorage.getItem('theme') as Theme | null
   if (stored === 'light' || stored === 'dark') return stored
@@ -10,20 +10,17 @@ function getInitialTheme(): Theme {
 }
 
 export function useTheme() {
-  const [theme, setThemeState] = useState<Theme>('light')
+  const [theme, setThemeState] = useState<Theme>(getStoredTheme)
 
   useEffect(() => {
-    const initial = getInitialTheme()
-    setThemeState(initial)
-    document.documentElement.classList.toggle('dark', initial === 'dark')
-  }, [])
+    document.documentElement.classList.toggle('dark', theme === 'dark')
+  }, [theme])
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)')
     const handler = (e: MediaQueryListEvent) => {
       if (!localStorage.getItem('theme')) {
         setThemeState(e.matches ? 'dark' : 'light')
-        document.documentElement.classList.toggle('dark', e.matches)
       }
     }
     mq.addEventListener('change', handler)
@@ -33,7 +30,7 @@ export function useTheme() {
   const setTheme = useCallback((t: Theme) => {
     setThemeState(t)
     localStorage.setItem('theme', t)
-    document.documentElement.style.colorScheme = t === 'dark' ? 'dark' : 'light'
+    document.documentElement.style.colorScheme = t
     document.documentElement.classList.add('no-transition')
     document.documentElement.classList.toggle('dark', t === 'dark')
     requestAnimationFrame(() => {

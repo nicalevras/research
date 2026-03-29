@@ -228,9 +228,12 @@ export function getVendorById(id: string): Vendor | undefined {
   return vendors.find((v) => v.id === id)
 }
 
-export function filterVendors(filters: { category?: string; q?: string }): Vendor[] {
+export function filterVendors(filters: { category?: string; country?: string; q?: string }): Vendor[] {
   return vendors.filter((v) => {
     if (filters.category && filters.category !== 'all' && v.category !== filters.category) {
+      return false
+    }
+    if (filters.country && v.country !== filters.country) {
       return false
     }
     if (filters.q) {

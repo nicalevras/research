@@ -1,6 +1,5 @@
 import type { Vendor } from './types'
-
-const SITE_URL = 'https://peptidedirectory.com'
+import { SITE_URL } from './constants'
 
 export function itemListSchema(
   vendors: Vendor[],
@@ -58,7 +57,6 @@ export function organizationSchema(vendor: Vendor) {
     '@type': 'Organization',
     name: vendor.name,
     url: vendor.website,
-    logo: `${SITE_URL}/logo.png`,
     description: vendor.description,
     address: {
       '@type': 'PostalAddress',

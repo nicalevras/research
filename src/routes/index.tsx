@@ -1,35 +1,60 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, stripSearchParams } from '@tanstack/react-router'
 import { zodValidator } from '@tanstack/zod-adapter'
-import { z } from 'zod'
 import { DirectoryListing } from '~/components/directory-listing'
-import { JsonLd, siteSearchSchema } from '~/lib/schema'
+import { siteSearchSchema } from '~/lib/schema'
+import { SITE_URL } from '~/lib/constants'
+import { searchDefaults, searchSchema } from '~/lib/search'
 
 export const Route = createFileRoute('/')({
-  validateSearch: zodValidator(z.object({ q: z.string().optional() })),
-  head: () => ({
-    meta: [
-      { title: 'Peptide Vendor Directory — Find & Compare Peptide Suppliers' },
-      {
-        name: 'description',
-        content:
-          'Compare the best peptide vendors across research, therapeutic, cosmetic, and API supply. Verified ratings, certifications, and detailed reviews for every supplier.',
-      },
-    ],
-    scripts: [
-      { id: 'site-search-schema', type: 'application/ld+json', children: JSON.stringify(siteSearchSchema()) },
-    ],
-  }),
+  validateSearch: zodValidator(searchSchema),
+  search: {
+    middlewares: [stripSearchParams(searchDefaults)],
+  },
+  loaderDeps: ({ search }) => ({ page: search.page, q: search.q, country: search.country }),
+  loader: ({ deps }) => deps,
+  head: ({ loaderData }) => {
+    const { page, q, country } = loaderData ?? {}
+    const isFiltered = !!q
+    const pageSuffix = page && page > 1 ? ` — Page ${page}` : ''
+    const pageTitle = `Peptide Vendor Directory — Find & Compare Peptide Suppliers${pageSuffix}`
+    const canonicalParams = new URLSearchParams()
+    if (country) canonicalParams.set('country', country)
+    if (page && page > 1) canonicalParams.set('page', String(page))
+    const canonicalUrl = canonicalParams.size > 0
+      ? `${SITE_URL}?${canonicalParams.toString()}`
+      : SITE_URL || '/'
+    return {
+      meta: [
+        { title: pageTitle },
+        {
+          name: 'description',
+          content:
+            'Compare the best peptide vendors across research, therapeutic, cosmetic, and API supply. Verified ratings, certifications, and detailed reviews for every supplier.',
+        },
+        ...(isFiltered ? [{ name: 'robots', content: 'noindex, follow' as const }] : []),
+        { property: 'og:title', content: pageTitle },
+        { property: 'og:description', content: 'Compare the best peptide vendors across research, therapeutic, cosmetic, and API supply.' },
+        { property: 'og:url', content: canonicalUrl },
+      ],
+      links: [{ rel: 'canonical', href: canonicalUrl }],
+      scripts: [
+        { id: 'site-search-schema', type: 'application/ld+json', children: JSON.stringify(siteSearchSchema()) },
+      ],
+    }
+  },
   component: HomePage,
 })
 
 function HomePage() {
-  const { q } = Route.useSearch()
+  const { q, country, page } = Route.useSearch()
   return (
     <DirectoryListing
       category="all"
       heading="Peptide Vendor Directory"
       description="Compare peptide vendors across research, therapeutic, cosmetic, and API supply categories."
       searchQuery={q ?? ''}
+      countryFilter={country ?? ''}
+      currentPage={page}
     />
   )
 }

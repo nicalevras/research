@@ -4,6 +4,8 @@ import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { nitro } from 'nitro/vite'
 
+const siteUrl = process.env.SITE_URL || 'https://example.com'
+
 export default defineConfig({
   server: {
     port: 3000,
@@ -21,6 +23,7 @@ export default defineConfig({
       },
       sitemap: {
         enabled: true,
+        host: siteUrl,
       },
     }),
     viteReact(),

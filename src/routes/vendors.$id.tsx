@@ -19,7 +19,7 @@ function VendorNotFound() {
 
 export const Route = createFileRoute('/vendors/$id')({
   loader: async ({ params: { id } }) => {
-    const vendor = await getVendorById(id)
+    const vendor = await getVendorById({ data: id })
     if (!vendor) throw notFound()
     return { vendor }
   },

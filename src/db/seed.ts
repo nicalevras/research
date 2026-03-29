@@ -355,11 +355,120 @@ const vendorCompoundData: (typeof schema.vendorCompounds.$inferInsert)[] = [
   { vendorId: 'cas-peptide', compoundId: 'tb-500' },
 ]
 
+const tagData: (typeof schema.tags.$inferInsert)[] = [
+  { id: 'credit-card', name: 'Credit Card' },
+  { id: 'crypto', name: 'Crypto Accepted' },
+  { id: 'free-shipping', name: 'Free Shipping' },
+  { id: 'lab-tested', name: 'Lab Tested' },
+  { id: 'gmp-certified', name: 'GMP Certified' },
+  { id: 'ships-international', name: 'Ships International' },
+  { id: 'money-back', name: 'Money-Back Guarantee' },
+  { id: 'same-day-shipping', name: 'Same-Day Shipping' },
+  { id: 'coa-available', name: 'COA Available' },
+  { id: 'bulk-discounts', name: 'Bulk Discounts' },
+]
+
+const vendorTagData: (typeof schema.vendorTags.$inferInsert)[] = [
+  // Peptide Sciences
+  { vendorId: 'pep-sci', tagId: 'credit-card' },
+  { vendorId: 'pep-sci', tagId: 'crypto' },
+  { vendorId: 'pep-sci', tagId: 'lab-tested' },
+  { vendorId: 'pep-sci', tagId: 'gmp-certified' },
+  { vendorId: 'pep-sci', tagId: 'coa-available' },
+  { vendorId: 'pep-sci', tagId: 'free-shipping' },
+
+  // Limitless Life
+  { vendorId: 'limitless-life', tagId: 'credit-card' },
+  { vendorId: 'limitless-life', tagId: 'crypto' },
+  { vendorId: 'limitless-life', tagId: 'lab-tested' },
+  { vendorId: 'limitless-life', tagId: 'coa-available' },
+
+  // Pure Rawz
+  { vendorId: 'pure-rawz', tagId: 'credit-card' },
+  { vendorId: 'pure-rawz', tagId: 'crypto' },
+  { vendorId: 'pure-rawz', tagId: 'lab-tested' },
+  { vendorId: 'pure-rawz', tagId: 'free-shipping' },
+  { vendorId: 'pure-rawz', tagId: 'same-day-shipping' },
+
+  // Element SARMs
+  { vendorId: 'element-sarms', tagId: 'credit-card' },
+  { vendorId: 'element-sarms', tagId: 'lab-tested' },
+
+  // Swiss Chems
+  { vendorId: 'swiss-chems', tagId: 'credit-card' },
+  { vendorId: 'swiss-chems', tagId: 'crypto' },
+  { vendorId: 'swiss-chems', tagId: 'ships-international' },
+  { vendorId: 'swiss-chems', tagId: 'gmp-certified' },
+  { vendorId: 'swiss-chems', tagId: 'coa-available' },
+
+  // Canagen
+  { vendorId: 'canagen', tagId: 'credit-card' },
+  { vendorId: 'canagen', tagId: 'gmp-certified' },
+  { vendorId: 'canagen', tagId: 'lab-tested' },
+
+  // MedPeptide
+  { vendorId: 'med-peptide', tagId: 'credit-card' },
+  { vendorId: 'med-peptide', tagId: 'gmp-certified' },
+  { vendorId: 'med-peptide', tagId: 'lab-tested' },
+  { vendorId: 'med-peptide', tagId: 'money-back' },
+
+  // Restor Peptide
+  { vendorId: 'restor-peptide', tagId: 'credit-card' },
+  { vendorId: 'restor-peptide', tagId: 'free-shipping' },
+
+  // Vitality Institute
+  { vendorId: 'vitality-institute', tagId: 'credit-card' },
+  { vendorId: 'vitality-institute', tagId: 'gmp-certified' },
+
+  // BioTherapeutics EU
+  { vendorId: 'bio-thera-eu', tagId: 'credit-card' },
+  { vendorId: 'bio-thera-eu', tagId: 'ships-international' },
+  { vendorId: 'bio-thera-eu', tagId: 'gmp-certified' },
+  { vendorId: 'bio-thera-eu', tagId: 'lab-tested' },
+
+  // The Peptide Company
+  { vendorId: 'skin-peptide-co', tagId: 'credit-card' },
+  { vendorId: 'skin-peptide-co', tagId: 'ships-international' },
+  { vendorId: 'skin-peptide-co', tagId: 'free-shipping' },
+
+  // DermaPep
+  { vendorId: 'derma-pep', tagId: 'credit-card' },
+  { vendorId: 'derma-pep', tagId: 'bulk-discounts' },
+
+  // NaturPeptide
+  { vendorId: 'natur-peptide', tagId: 'credit-card' },
+  { vendorId: 'natur-peptide', tagId: 'ships-international' },
+
+  // BioSynth
+  { vendorId: 'bio-synth-intl', tagId: 'credit-card' },
+  { vendorId: 'bio-synth-intl', tagId: 'ships-international' },
+  { vendorId: 'bio-synth-intl', tagId: 'gmp-certified' },
+  { vendorId: 'bio-synth-intl', tagId: 'bulk-discounts' },
+
+  // American Peptide
+  { vendorId: 'american-peptide', tagId: 'credit-card' },
+  { vendorId: 'american-peptide', tagId: 'gmp-certified' },
+  { vendorId: 'american-peptide', tagId: 'coa-available' },
+  { vendorId: 'american-peptide', tagId: 'bulk-discounts' },
+
+  // BAC Peptide
+  { vendorId: 'bac-peptide', tagId: 'credit-card' },
+  { vendorId: 'bac-peptide', tagId: 'ships-international' },
+  { vendorId: 'bac-peptide', tagId: 'gmp-certified' },
+
+  // CAS Peptide
+  { vendorId: 'cas-peptide', tagId: 'credit-card' },
+  { vendorId: 'cas-peptide', tagId: 'ships-international' },
+  { vendorId: 'cas-peptide', tagId: 'bulk-discounts' },
+]
+
 async function seed() {
   console.log('🌱 Seeding database...')
 
   // Clear existing data (order matters for foreign keys)
   console.log('  Clearing existing data...')
+  await db.delete(schema.vendorTags)
+  await db.delete(schema.tags)
   await db.delete(schema.vendorCompounds)
   await db.delete(schema.compounds)
   await db.delete(schema.vendors)
@@ -376,11 +485,21 @@ async function seed() {
   console.log(`  Inserting ${vendorCompoundData.length} vendor-compound links...`)
   await db.insert(schema.vendorCompounds).values(vendorCompoundData)
 
+  // Insert tags
+  console.log(`  Inserting ${tagData.length} tags...`)
+  await db.insert(schema.tags).values(tagData)
+
+  // Insert vendor-tag relationships
+  console.log(`  Inserting ${vendorTagData.length} vendor-tag links...`)
+  await db.insert(schema.vendorTags).values(vendorTagData)
+
   console.log('✅ Seed complete!')
+  await client.end()
   process.exit(0)
 }
 
-seed().catch((err) => {
+seed().catch(async (err) => {
   console.error('❌ Seed failed:', err)
+  await client.end()
   process.exit(1)
 })

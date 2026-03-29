@@ -1,5 +1,5 @@
 import type { Vendor, VendorCategory } from '~/lib/types'
-import { CATEGORIES, COUNTRIES } from '~/lib/constants'
+import { CATEGORIES, COUNTRIES, TAGS } from '~/lib/constants'
 import { PillNav } from '~/components/pill-nav'
 import { VendorGrid } from '~/components/vendor-grid'
 import { SearchIcon, XIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from '~/components/icons'
@@ -17,13 +17,16 @@ interface DirectoryListingProps {
   countryFilter: string
   currentPage: number
   vendors: Vendor[]
+  activeTags: string
 }
 
-export function DirectoryListing({ category, heading, description, searchQuery, countryFilter, currentPage, vendors }: DirectoryListingProps) {
+export function DirectoryListing({ category, heading, description, searchQuery, countryFilter, currentPage, vendors, activeTags }: DirectoryListingProps) {
   const navigate = useNavigate()
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
   const searchRef = useRef<HTMLInputElement>(null)
   const [localQuery, setLocalQuery] = useState(searchQuery)
+
+  const activeTagList = useMemo(() => activeTags ? activeTags.split(',').filter(Boolean) : [], [activeTags])
 
   useEffect(() => {
     setLocalQuery(searchQuery)
@@ -55,8 +58,9 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
     const s: Record<string, string | number | undefined> = {}
     if (searchQuery) s.q = searchQuery
     if (countryFilter) s.country = countryFilter
+    if (activeTags) s.tags = activeTags
     return s
-  }, [searchQuery, countryFilter])
+  }, [searchQuery, countryFilter, activeTags])
 
   const navTo = category === 'all' ? ('/' as const) : ('/$category' as const)
   const navParams = category === 'all' ? undefined : { category }
@@ -77,6 +81,17 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
       navigate({ to: navTo, params: navParams, search: { ...currentSearch, country, page: undefined } })
     },
     [navigate, navTo, navParams, currentSearch],
+  )
+
+  const handleToggleTag = useCallback(
+    (tagId: string) => {
+      const current = activeTagList.includes(tagId)
+        ? activeTagList.filter((t) => t !== tagId)
+        : [...activeTagList, tagId]
+      const tagsParam = current.length > 0 ? current.join(',') : undefined
+      navigate({ to: navTo, params: navParams, search: { ...currentSearch, tags: tagsParam, page: undefined } })
+    },
+    [navigate, navTo, navParams, currentSearch, activeTagList],
   )
 
   return (
@@ -140,9 +155,9 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
                 onChange={(e) => {
                   const val = e.target.value as VendorCategory
                   if (val === 'all') {
-                    navigate({ to: '/', search: { q: searchQuery || undefined, country: countryFilter || undefined } })
+                    navigate({ to: '/', search: { q: searchQuery || undefined, country: countryFilter || undefined, tags: activeTags || undefined } })
                   } else {
-                    navigate({ to: '/$category', params: { category: val }, search: { q: searchQuery || undefined, country: countryFilter || undefined } })
+                    navigate({ to: '/$category', params: { category: val }, search: { q: searchQuery || undefined, country: countryFilter || undefined, tags: activeTags || undefined } })
                   }
                 }}
                 className="w-full appearance-none rounded-full border border-neutral-200/80 dark:border-white/[0.08] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer"
@@ -156,7 +171,7 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
           </div>
         </div>
 
-        <PillNav current={category} searchQuery={searchQuery} />
+        <PillNav tags={TAGS} activeTags={activeTagList} onToggleTag={handleToggleTag} />
 
         <VendorGrid data={paginatedVendors} />
 

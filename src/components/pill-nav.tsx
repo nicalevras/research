@@ -1,12 +1,11 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
-import type { VendorCategory } from '~/lib/types'
-import { CATEGORIES } from '~/lib/constants'
-import { Link } from '@tanstack/react-router'
+import type { Tag } from '~/lib/types'
 import { ChevronLeftIcon, ChevronRightIcon } from '~/components/icons'
 
 interface PillNavProps {
-  current: VendorCategory
-  searchQuery?: string
+  tags: Tag[]
+  activeTags: string[]
+  onToggleTag: (tagId: string) => void
 }
 
 function arrowStyle(active: boolean) {
@@ -15,7 +14,7 @@ function arrowStyle(active: boolean) {
   }`
 }
 
-export function PillNav({ current, searchQuery }: PillNavProps) {
+export function PillNav({ tags, activeTags, onToggleTag }: PillNavProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(false)
@@ -45,7 +44,7 @@ export function PillNav({ current, searchQuery }: PillNavProps) {
     el.scrollBy({ left: direction === 'left' ? -200 : 200, behavior: 'smooth' })
   }
 
-  const search = searchQuery ? { q: searchQuery } : undefined
+  if (tags.length === 0) return null
 
   return (
     <div className="relative flex items-center">
@@ -62,17 +61,16 @@ export function PillNav({ current, searchQuery }: PillNavProps) {
         ref={scrollRef}
         className="flex gap-1.5 overflow-x-auto py-1 mx-8"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        aria-label="Category filter"
+        aria-label="Filter by tag"
       >
-        {CATEGORIES.map((cat) => {
-          const isActive = current === cat.value
+        {tags.map((tag) => {
+          const isActive = activeTags.includes(tag.id)
 
           return (
-            <Link
-              key={cat.value}
-              to={cat.value === 'all' ? '/' : '/$category'}
-              params={cat.value === 'all' ? undefined : { category: cat.value }}
-              search={search}
+            <button
+              key={tag.id}
+              type="button"
+              onClick={() => onToggleTag(tag.id)}
               className={
                 `inline-flex items-center shrink-0 rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-all duration-200 ` +
                 (isActive
@@ -80,8 +78,8 @@ export function PillNav({ current, searchQuery }: PillNavProps) {
                   : 'bg-white/70 dark:bg-white/[0.04] text-neutral-500 dark:text-neutral-400 hover:bg-white dark:hover:bg-white/[0.08] border border-neutral-200/60 dark:border-white/[0.06] hover:text-neutral-900 dark:hover:text-white')
               }
             >
-              {cat.label}
-            </Link>
+              {tag.name}
+            </button>
           )
         })}
       </nav>

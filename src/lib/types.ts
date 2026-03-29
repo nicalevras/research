@@ -1,4 +1,4 @@
-export type VendorCategory = 'all' | 'research' | 'therapeutic' | 'cosmetic' | 'api-supplier' | 'custom-synthesis' | 'no-reference' | 'ghrp' | 'bpc' | 'thymosin' | 'glutathione' | 'melanotan' | 'epitalon' | 'tb500' | 'mots-c'
+export type VendorCategory = 'all' | 'research' | 'therapeutic' | 'cosmetic' | 'api-supplier'
 
 export interface Vendor {
   id: string
@@ -12,4 +12,9 @@ export interface Vendor {
   description: string
   founded: number
   certifications: string[]
+}
+
+export interface Tag {
+  id: string
+  name: string
 }

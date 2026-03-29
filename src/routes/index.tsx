@@ -2,7 +2,7 @@ import { createFileRoute, stripSearchParams } from '@tanstack/react-router'
 import { zodValidator } from '@tanstack/zod-adapter'
 import { DirectoryListing } from '~/components/directory-listing'
 import { siteSearchSchema } from '~/lib/schema'
-import { SITE_URL } from '~/lib/constants'
+import { SITE_URL, TAGS } from '~/lib/constants'
 import { searchDefaults, searchSchema } from '~/lib/search'
 import { filterVendors } from '~/lib/data'
 
@@ -11,9 +11,9 @@ export const Route = createFileRoute('/')({
   search: {
     middlewares: [stripSearchParams(searchDefaults)],
   },
-  loaderDeps: ({ search }) => ({ page: search.page, q: search.q, country: search.country }),
+  loaderDeps: ({ search }) => ({ page: search.page, q: search.q, country: search.country, tags: search.tags }),
   loader: async ({ deps }) => {
-    const vendors = await filterVendors({ category: 'all', q: deps.q, country: deps.country })
+    const vendors = await filterVendors({ data: { category: 'all', q: deps.q, country: deps.country, tags: deps.tags } })
     return { ...deps, vendors }
   },
   head: ({ loaderData }) => {
@@ -50,7 +50,7 @@ export const Route = createFileRoute('/')({
 })
 
 function HomePage() {
-  const { q, country, page } = Route.useSearch()
+  const { q, country, page, tags } = Route.useSearch()
   const { vendors } = Route.useLoaderData()
   return (
     <DirectoryListing
@@ -61,6 +61,7 @@ function HomePage() {
       countryFilter={country ?? ''}
       currentPage={page}
       vendors={vendors}
+      activeTags={tags ?? ''}
     />
   )
 }

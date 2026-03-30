@@ -14,17 +14,17 @@ export const CATEGORY_LABELS = Object.fromEntries(
   CATEGORIES.filter((c) => c.value !== 'all').map((c) => [c.value, c.label]),
 ) as Record<Exclude<VendorCategory, 'all'>, string>
 
-export const TAGS: { id: string; name: string }[] = [
-  { id: 'credit-card', name: 'Credit Card' },
-  { id: 'crypto', name: 'Crypto Accepted' },
-  { id: 'free-shipping', name: 'Free Shipping' },
-  { id: 'lab-tested', name: 'Lab Tested' },
-  { id: 'gmp-certified', name: 'GMP Certified' },
-  { id: 'ships-international', name: 'Ships International' },
-  { id: 'money-back', name: 'Money-Back Guarantee' },
-  { id: 'same-day-shipping', name: 'Same-Day Shipping' },
-  { id: 'coa-available', name: 'COA Available' },
-  { id: 'bulk-discounts', name: 'Bulk Discounts' },
+export const TAGS: { id: string; name: string; emoji: string }[] = [
+  { id: 'credit-card', name: 'Credit Card', emoji: '💳' },
+  { id: 'crypto', name: 'Crypto Accepted', emoji: '₿' },
+  { id: 'free-shipping', name: 'Free Shipping', emoji: '📦' },
+  { id: 'lab-tested', name: 'Lab Tested', emoji: '🔬' },
+  { id: 'gmp-certified', name: 'GMP Certified', emoji: '✅' },
+  { id: 'ships-international', name: 'Ships International', emoji: '🌍' },
+  { id: 'money-back', name: 'Money-Back Guarantee', emoji: '💰' },
+  { id: 'same-day-shipping', name: 'Same-Day Shipping', emoji: '⚡' },
+  { id: 'coa-available', name: 'COA Available', emoji: '📋' },
+  { id: 'bulk-discounts', name: 'Bulk Discounts', emoji: '🏷️' },
 ]
 
 export const COUNTRIES = [

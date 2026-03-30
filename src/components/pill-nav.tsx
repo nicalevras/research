@@ -3,7 +3,7 @@ import type { Tag } from '~/lib/types'
 import { ChevronLeftIcon, ChevronRightIcon } from '~/components/icons'
 
 interface PillNavProps {
-  tags: Tag[]
+  tags: (Tag & { emoji?: string })[]
   activeTags: string[]
   onToggleTag: (tagId: string) => void
 }
@@ -78,7 +78,7 @@ export function PillNav({ tags, activeTags, onToggleTag }: PillNavProps) {
                   : 'bg-white/70 dark:bg-white/[0.04] text-neutral-500 dark:text-neutral-400 hover:bg-white dark:hover:bg-white/[0.08] border border-neutral-200/60 dark:border-white/[0.06] hover:text-neutral-900 dark:hover:text-white')
               }
             >
-              {tag.name}
+              {tag.emoji && <span className="mr-1">{tag.emoji}</span>}{tag.name}
             </button>
           )
         })}

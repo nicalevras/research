@@ -77,10 +77,7 @@ function VendorDetailPage() {
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
           <div className="space-y-3">
             <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">{vendor.name}</h1>
-            <p className="text-sm leading-relaxed text-neutral-500 dark:text-neutral-400 max-w-2xl text-pretty">
-              {vendor.description}
-            </p>
-            <div className="flex flex-wrap items-center gap-2.5 pt-1">
+            <div className="flex flex-wrap items-center gap-2.5">
               <CategoryBadge category={vendor.category} />
               <span className="text-sm text-neutral-500 dark:text-neutral-400">
                 {vendor.location}, {vendor.country}
@@ -92,6 +89,9 @@ function VendorDetailPage() {
                 {vendor.reviewCount} reviews
               </span>
             </div>
+            <p className="text-sm leading-relaxed text-neutral-500 dark:text-neutral-400 max-w-2xl text-pretty">
+              {vendor.description}
+            </p>
           </div>
 
           <a

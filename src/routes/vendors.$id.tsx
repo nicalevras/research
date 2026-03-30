@@ -3,7 +3,7 @@ import { getVendorById, getVendorCompounds } from '~/lib/data'
 import { CATEGORY_LABELS, SITE_URL } from '~/lib/constants'
 import { StarRating, CategoryBadge } from '~/components/vendor-ui'
 import { breadcrumbSchema, organizationSchema } from '~/lib/schema'
-import { CircleAlertIcon, ChevronLeftIcon, ExternalLinkIcon } from '~/components/icons'
+import { CircleAlertIcon, ChevronLeftIcon, ShoppingCartIcon } from '~/components/icons'
 
 function VendorNotFound() {
   return (
@@ -101,10 +101,10 @@ function VendorDetailPage() {
             href={vendor.website}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 dark:bg-white px-4 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors shrink-0"
+            className="inline-flex items-center gap-1.5 rounded-full bg-neutral-900 dark:bg-white px-4 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors shrink-0"
           >
-            Visit Website
-            <ExternalLinkIcon className="h-3.5 w-3.5" />
+            <ShoppingCartIcon className="h-4 w-4" />
+            Shop Now
           </a>
         </div>
 

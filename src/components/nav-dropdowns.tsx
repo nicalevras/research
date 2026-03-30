@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 import type { ReactNode } from 'react'
 import { Link, useRouterState } from '@tanstack/react-router'
-import { ThemeToggle } from '~/components/theme-toggle'
-import { MenuIcon, UserIcon } from '~/components/icons'
+import { useTheme } from '~/lib/use-theme'
+import { MenuIcon, UserIcon, SunIcon, MoonIcon } from '~/components/icons'
 
 function DropdownMenu({ trigger, children, align = 'right' }: { trigger: ReactNode; children: ReactNode; align?: 'left' | 'right' }) {
   const [open, setOpen] = useState(false)
@@ -92,6 +92,8 @@ export function HamburgerMenu() {
 }
 
 export function UserMenu() {
+  const { theme, toggleTheme } = useTheme()
+
   return (
     <DropdownMenu
       trigger={<UserIcon className="h-5 w-5" strokeWidth={1.5} />}
@@ -100,10 +102,14 @@ export function UserMenu() {
       <DropdownDivider />
       <DropdownItem>Submit a vendor</DropdownItem>
       <DropdownDivider />
-      <div className="flex items-center justify-between px-3 py-2">
-        <span className="text-sm text-neutral-600 dark:text-neutral-300">Theme</span>
-        <ThemeToggle />
-      </div>
+      <DropdownItem onClick={toggleTheme}>
+        {theme === 'dark' ? (
+          <SunIcon className="h-4 w-4" strokeWidth={1.5} />
+        ) : (
+          <MoonIcon className="h-4 w-4" strokeWidth={1.5} />
+        )}
+        {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+      </DropdownItem>
     </DropdownMenu>
   )
 }

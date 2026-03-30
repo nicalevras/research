@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import type { ReactNode } from 'react'
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
 import { useTheme } from '~/lib/use-theme'
-import { MenuIcon, UserIcon, SunIcon, MoonIcon, LogInIcon, UserPlusIcon, SearchIcon } from '~/components/icons'
+import { MenuIcon, UserIcon, SunIcon, MoonIcon, LogInIcon, UserPlusIcon, SearchIcon, XIcon } from '~/components/icons'
 
 function DropdownMenu({ trigger, children, align = 'right' }: { trigger: ReactNode; children: ReactNode; align?: 'left' | 'right' }) {
   const [open, setOpen] = useState(false)
@@ -175,8 +175,22 @@ export function NavSearch() {
         onKeyDown={(e) => {
           if (e.key === 'Escape') setOpen(false)
         }}
-        className="w-36 sm:w-48 rounded-full border border-neutral-200/60 dark:border-white/8 bg-white/70 dark:bg-white/[0.04] pl-8 pr-3 py-1.5 text-sm placeholder-neutral-400 dark:placeholder-neutral-500 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+        className="w-36 sm:w-48 rounded-full border border-neutral-200/60 dark:border-white/8 bg-white/70 dark:bg-white/[0.04] pl-8 pr-8 py-1.5 text-sm placeholder-neutral-400 dark:placeholder-neutral-500 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
       />
+      {query && (
+        <button
+          type="button"
+          onClick={() => {
+            setQuery('')
+            navigate({ to: '/', search: {} })
+            setOpen(false)
+          }}
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300 transition-colors cursor-pointer"
+          aria-label="Clear search"
+        >
+          <XIcon className="h-3.5 w-3.5" />
+        </button>
+      )}
     </div>
   )
 }

@@ -1,9 +1,17 @@
 import { useState } from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { zodValidator } from '@tanstack/zod-adapter'
+import { z } from 'zod'
 import { authClient } from '~/lib/auth-client'
 import { ChevronLeftIcon } from '~/components/icons'
 
+const resetSearchSchema = z.object({
+  token: z.string().optional(),
+  error: z.string().optional(),
+})
+
 export const Route = createFileRoute('/reset-password')({
+  validateSearch: zodValidator(resetSearchSchema),
   head: () => ({
     meta: [{ title: 'Reset Password — Peptide Vendor Directory' }],
   }),
@@ -11,9 +19,10 @@ export const Route = createFileRoute('/reset-password')({
 })
 
 function ResetPasswordPage() {
+  const { token, error: urlError } = Route.useSearch()
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [error, setError] = useState('')
+  const [error, setError] = useState(urlError === 'INVALID_TOKEN' ? 'This reset link is invalid or has expired.' : '')
   const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
 
@@ -21,6 +30,10 @@ function ResetPasswordPage() {
     e.preventDefault()
     setError('')
 
+    if (!token) {
+      setError('Missing reset token. Please request a new reset link.')
+      return
+    }
     if (password.length < 8) {
       setError('Password must be at least 8 characters')
       return
@@ -34,6 +47,7 @@ function ResetPasswordPage() {
     try {
       const { error: authError } = await authClient.resetPassword({
         newPassword: password,
+        token,
       })
       if (authError) {
         setError(authError.message ?? 'Failed to reset password')

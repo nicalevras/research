@@ -87,7 +87,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
               <div className="flex items-center gap-2">
                 <NavSearch />
                 <div className="md:hidden"><HamburgerMenu /></div>
-                <div className="h-8 w-px bg-neutral-200 dark:bg-white/10" />
+                <div className="h-4 w-px bg-neutral-200 dark:bg-white/10" />
                 <UserMenu />
               </div>
             </div>

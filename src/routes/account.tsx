@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { createFileRoute, Link, redirect, useRouter } from '@tanstack/react-router'
 import { getSession } from '~/lib/auth.functions'
-import { getUserReviews, updateReview, deleteReview, changeUsername, getAffectedVendorIds, getHasPassword, recalcVendorRatingsAfterDelete } from '~/lib/data'
+import { getUserReviews, updateReview, deleteReview, changeUsername, getHasPassword, deleteAccountAndCleanup } from '~/lib/data'
 import { authClient } from '~/lib/auth-client'
 import { StarIcon, ChevronLeftIcon, KeyIcon, TrashIcon, PenIcon, UserIcon } from '~/components/icons'
 
@@ -253,25 +253,12 @@ function DeleteAccountSection({ isOAuthOnly }: { isOAuthOnly: boolean }) {
     setError('')
     setLoading(true)
     try {
-      // Collect affected vendor IDs before deletion so we can recalc ratings
-      const affectedVendorIds = await getAffectedVendorIds()
-
-      const deleteOpts = isOAuthOnly
-        ? {} // OAuth-only users don't have a password
-        : { password }
-
-      const { error: authError } = await authClient.deleteUser(deleteOpts)
-      if (authError) {
-        setError(authError.message ?? 'Failed to delete account')
-      } else {
-        // Recalculate vendor ratings for affected vendors after cascade delete
-        if (affectedVendorIds.length > 0) {
-          await recalcVendorRatingsAfterDelete({ data: { vendorIds: affectedVendorIds } }).catch(() => {})
-        }
-        window.location.href = '/'
-      }
-    } catch {
-      setError('Something went wrong')
+      await deleteAccountAndCleanup({
+        data: isOAuthOnly ? {} : { password },
+      })
+      window.location.href = '/'
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Something went wrong')
     } finally {
       setLoading(false)
     }

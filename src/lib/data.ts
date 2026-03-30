@@ -368,12 +368,47 @@ export const changeUsername = createServerFn({ method: 'POST' })
 
 // ── Account info ───────────────────────────────────────────────────
 
-export const recalcVendorRatingsAfterDelete = createServerFn({ method: 'POST' })
-  .inputValidator((d: { vendorIds: string[] }) => d)
+export const getHasPassword = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    const headers = getRequestHeaders()
+    const session = await auth.api.getSession({ headers })
+    if (!session) throw new Error('Unauthorized')
+
+    const credential = await db
+      .select({ id: account.id })
+      .from(account)
+      .where(and(eq(account.userId, session.user.id), eq(account.providerId, 'credential')))
+      .limit(1)
+
+    return credential.length > 0
+  })
+
+// ── Account deletion ────────────────────────────────────────────────
+
+export const deleteAccountAndCleanup = createServerFn({ method: 'POST' })
+  .inputValidator((d: { password?: string }) => d)
   .handler(async ({ data }) => {
-    // Cap to prevent abuse — a user can't have reviewed more than ~100 vendors realistically
-    const vendorIds = data.vendorIds.slice(0, 100)
-    for (const vendorId of vendorIds) {
+    const headers = getRequestHeaders()
+    const session = await auth.api.getSession({ headers })
+    if (!session) throw new Error('Unauthorized')
+
+    // 1. Collect affected vendor IDs while reviews still exist
+    const affectedRows = await db
+      .selectDistinct({ vendorId: reviews.vendorId })
+      .from(reviews)
+      .where(eq(reviews.userId, session.user.id))
+    const affectedVendorIds = affectedRows.map((r) => r.vendorId)
+
+    // 2. Delete user via better-auth (cascades reviews, sessions, accounts)
+    const deleteResult = await auth.api.deleteUser({
+      headers,
+      body: data.password ? { password: data.password } : {},
+    })
+
+    if (!deleteResult) throw new Error('Failed to delete account')
+
+    // 3. Recalculate vendor ratings now that reviews are cascade-deleted
+    for (const vendorId of affectedVendorIds) {
       const [result] = await db
         .select({
           avgRating: avg(reviews.rating),
@@ -391,36 +426,6 @@ export const recalcVendorRatingsAfterDelete = createServerFn({ method: 'POST' })
         })
         .where(eq(vendors.id, vendorId))
     }
+
     return { success: true }
-  })
-
-export const getHasPassword = createServerFn({ method: 'GET' })
-  .handler(async () => {
-    const headers = getRequestHeaders()
-    const session = await auth.api.getSession({ headers })
-    if (!session) throw new Error('Unauthorized')
-
-    const credential = await db
-      .select({ id: account.id })
-      .from(account)
-      .where(and(eq(account.userId, session.user.id), eq(account.providerId, 'credential')))
-      .limit(1)
-
-    return credential.length > 0
-  })
-
-// ── Account deletion cleanup ────────────────────────────────────────
-
-export const getAffectedVendorIds = createServerFn({ method: 'GET' })
-  .handler(async () => {
-    const headers = getRequestHeaders()
-    const session = await auth.api.getSession({ headers })
-    if (!session) throw new Error('Unauthorized')
-
-    const rows = await db
-      .selectDistinct({ vendorId: reviews.vendorId })
-      .from(reviews)
-      .where(eq(reviews.userId, session.user.id))
-
-    return rows.map((r) => r.vendorId)
   })

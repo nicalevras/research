@@ -371,7 +371,9 @@ export const changeUsername = createServerFn({ method: 'POST' })
 export const recalcVendorRatingsAfterDelete = createServerFn({ method: 'POST' })
   .inputValidator((d: { vendorIds: string[] }) => d)
   .handler(async ({ data }) => {
-    for (const vendorId of data.vendorIds) {
+    // Cap to prevent abuse — a user can't have reviewed more than ~100 vendors realistically
+    const vendorIds = data.vendorIds.slice(0, 100)
+    for (const vendorId of vendorIds) {
       const [result] = await db
         .select({
           avgRating: avg(reviews.rating),

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import type { ReactNode } from 'react'
 import { Link, useRouterState } from '@tanstack/react-router'
-import { useAuth, SignInButton, UserButton } from '@clerk/tanstack-react-start'
+import { useAuth, SignInButton, SignOutButton, UserButton } from '@clerk/tanstack-react-start'
 import { ThemeToggle } from '~/components/theme-toggle'
 import { MenuIcon, UserIcon } from '~/components/icons'
 
@@ -92,37 +92,47 @@ export function HamburgerMenu() {
   )
 }
 
-const userIconButton = (
-  <button
-    type="button"
-    className="inline-flex items-center justify-center rounded-full h-8 w-8 cursor-pointer bg-white/70 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/8 text-neutral-500 dark:text-neutral-400 hover:bg-white dark:hover:bg-white/[0.08] hover:text-neutral-900 dark:hover:text-white transition-all duration-200"
-  >
-    <UserIcon className="h-5 w-5" strokeWidth={1.5} />
-  </button>
-)
-
 export function UserMenu() {
   const { isLoaded, isSignedIn } = useAuth()
 
   return (
-    <div className="flex items-center gap-2">
+    <DropdownMenu
+      trigger={<UserIcon className="h-5 w-5" strokeWidth={1.5} />}
+    >
       {!isLoaded ? (
-        // Show static icon while Clerk loads
-        userIconButton
+        <DropdownItem>Loading...</DropdownItem>
       ) : isSignedIn ? (
-        <UserButton
-          appearance={{
-            elements: {
-              avatarBox: 'h-8 w-8',
-            },
-          }}
-        />
+        <>
+          <div className="px-3 py-2">
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: 'h-8 w-8',
+                },
+              }}
+            />
+          </div>
+          <DropdownDivider />
+          <DropdownItem>Submit a vendor</DropdownItem>
+          <DropdownDivider />
+          <SignOutButton>
+            <DropdownItem>Sign out</DropdownItem>
+          </SignOutButton>
+        </>
       ) : (
-        <SignInButton mode="modal">
-          {userIconButton}
-        </SignInButton>
+        <>
+          <SignInButton mode="modal">
+            <DropdownItem>Sign in</DropdownItem>
+          </SignInButton>
+          <DropdownDivider />
+          <DropdownItem>Submit a vendor</DropdownItem>
+        </>
       )}
-      <ThemeToggle />
-    </div>
+      <DropdownDivider />
+      <div className="flex items-center justify-between px-3 py-2">
+        <span className="text-sm text-neutral-600 dark:text-neutral-300">Theme</span>
+        <ThemeToggle />
+      </div>
+    </DropdownMenu>
   )
 }

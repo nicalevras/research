@@ -140,8 +140,8 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
             )}
           </div>
 
-          <div className="flex gap-3 shrink-0">
-            <div className="relative w-40">
+          <div className="flex gap-3 shrink-0 w-full sm:w-auto">
+            <div className="relative flex-1 sm:flex-none sm:w-40">
               <select
                 value={countryFilter || 'All Countries'}
                 onChange={(e) => handleCountryChange(e.target.value)}
@@ -154,7 +154,7 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
               <ChevronDownIcon className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
             </div>
 
-            <div className="relative w-40">
+            <div className="relative flex-1 sm:flex-none sm:w-40">
               <select
                 value={category}
                 onChange={(e) => {

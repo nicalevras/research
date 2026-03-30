@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from '@tanstack/react-router'
-import { getVendorById } from '~/lib/data'
+import { getVendorById, getVendorCompounds } from '~/lib/data'
 import { CATEGORY_LABELS, SITE_URL } from '~/lib/constants'
 import { StarRating, CategoryBadge } from '~/components/vendor-ui'
 import { breadcrumbSchema, organizationSchema } from '~/lib/schema'
@@ -21,7 +21,8 @@ export const Route = createFileRoute('/vendors/$id')({
   loader: async ({ params: { id } }) => {
     const vendor = await getVendorById({ data: id })
     if (!vendor) throw notFound()
-    return { vendor }
+    const compounds = await getVendorCompounds({ data: vendor.id })
+    return { vendor, compounds }
   },
   head: ({ loaderData }) => {
     const vendor = loaderData?.vendor
@@ -59,7 +60,7 @@ export const Route = createFileRoute('/vendors/$id')({
 })
 
 function VendorDetailPage() {
-  const { vendor } = Route.useLoaderData()
+  const { vendor, compounds } = Route.useLoaderData()
 
   return (
     <div className="space-y-6">
@@ -76,7 +77,10 @@ function VendorDetailPage() {
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
           <div className="space-y-3">
             <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">{vendor.name}</h1>
-            <div className="flex flex-wrap items-center gap-2.5">
+            <p className="text-sm leading-relaxed text-neutral-500 dark:text-neutral-400 max-w-2xl text-pretty">
+              {vendor.description}
+            </p>
+            <div className="flex flex-wrap items-center gap-2.5 pt-1">
               <CategoryBadge category={vendor.category} />
               <span className="text-sm text-neutral-500 dark:text-neutral-400">
                 {vendor.location}, {vendor.country}
@@ -86,7 +90,7 @@ function VendorDetailPage() {
                 Est. {vendor.founded}
               </span>
             </div>
-            <div className="flex items-center gap-2 pt-1">
+            <div className="flex items-center gap-2">
               <StarRating rating={vendor.rating} />
               <span className="text-sm text-neutral-400 dark:text-neutral-500">
                 {vendor.reviewCount} reviews
@@ -108,11 +112,22 @@ function VendorDetailPage() {
         <div className="h-px bg-neutral-100 dark:bg-white/[0.04]" />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-3">
-            <h2 className="text-sm font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">About</h2>
-            <p className="text-sm leading-relaxed text-neutral-600 dark:text-neutral-300">
-              {vendor.description}
-            </p>
+          <div className="lg:col-span-2 space-y-4">
+            {compounds.length > 0 && (
+              <div className="space-y-3">
+                <h2 className="text-sm font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">Compounds</h2>
+                <div className="flex flex-wrap gap-2">
+                  {compounds.map((compound) => (
+                    <span
+                      key={compound.id}
+                      className="inline-flex items-center rounded-full bg-neutral-50 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/[0.06] px-3 py-1.5 text-xs font-medium text-neutral-700 dark:text-neutral-300"
+                    >
+                      {compound.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="space-y-4">

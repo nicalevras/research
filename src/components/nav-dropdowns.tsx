@@ -87,6 +87,8 @@ export function HamburgerMenu() {
       <DropdownLink to="/$category" params={{ category: 'bpc' }}>BPC-157</DropdownLink>
       <DropdownLink to="/$category" params={{ category: 'tb500' }}>TB-500</DropdownLink>
       <DropdownLink to="/$category" params={{ category: 'ghrp' }}>GHRP</DropdownLink>
+      <DropdownDivider />
+      <DropdownItem>Submit a vendor</DropdownItem>
     </DropdownMenu>
   )
 }
@@ -100,8 +102,6 @@ export function UserMenu() {
     >
       <DropdownItem>Sign in</DropdownItem>
       <DropdownItem>Sign up</DropdownItem>
-      <DropdownDivider />
-      <DropdownItem>Submit a vendor</DropdownItem>
       <DropdownDivider />
       <DropdownItem onClick={toggleTheme}>
         {theme === 'dark' ? (

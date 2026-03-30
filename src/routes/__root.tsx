@@ -10,7 +10,7 @@ import type { ReactNode } from 'react'
 import type { ErrorComponentProps } from '@tanstack/react-router'
 import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary'
 import { NotFound } from '~/components/NotFound'
-import { HamburgerMenu, UserMenu, NavSearch } from '~/components/nav-dropdowns'
+import { HamburgerMenu, UserMenu, NavSearch, PeptidesDropdown } from '~/components/nav-dropdowns'
 import { SITE_URL } from '~/lib/constants'
 import appCss from '~/styles/app.css?url'
 
@@ -77,10 +77,9 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
                   <div className="h-4 w-px bg-neutral-200 dark:bg-white/10" />
                   <nav className="flex items-center gap-6">
                     <Link to="/" activeOptions={{ exact: true }} activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-[13px] font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Home</Link>
-                    <Link to="/$category" params={{ category: 'research' }} activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-[13px] font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Research</Link>
-                    <Link to="/$category" params={{ category: 'therapeutic' }} activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-[13px] font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Therapeutic</Link>
-                    <Link to="/$category" params={{ category: 'cosmetic' }} activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-[13px] font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Cosmetic</Link>
-                    <Link to="/$category" params={{ category: 'api-supplier' }} activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-[13px] font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">API Supply</Link>
+                    <PeptidesDropdown />
+                    <span className="text-[13px] font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors cursor-pointer">Calculator</span>
+                    <span className="text-[13px] font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors cursor-pointer">Articles</span>
                   </nav>
                 </div>
               </div>

@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from 'react'
 import type { ReactNode } from 'react'
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
 import { useTheme } from '~/lib/use-theme'
-import { MenuIcon, UserIcon, SunIcon, MoonIcon, LogInIcon, UserPlusIcon, SearchIcon, XIcon } from '~/components/icons'
+import { MenuIcon, UserIcon, SunIcon, MoonIcon, LogInIcon, UserPlusIcon, SearchIcon, XIcon, ChevronDownIcon } from '~/components/icons'
+import { COMPOUNDS } from '~/lib/constants'
 
 function DropdownMenu({ trigger, children, align = 'right' }: { trigger: ReactNode; children: ReactNode; align?: 'left' | 'right' }) {
   const [open, setOpen] = useState(false)
@@ -190,6 +191,50 @@ export function NavSearch() {
         >
           <XIcon className="h-3.5 w-3.5" />
         </button>
+      )}
+    </div>
+  )
+}
+
+export function PeptidesDropdown() {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const handle = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handle)
+    return () => document.removeEventListener('mousedown', handle)
+  }, [])
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="inline-flex items-center gap-1 text-[13px] font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors cursor-pointer"
+      >
+        Peptides
+        <ChevronDownIcon className="h-3 w-3" />
+      </button>
+      {open && (
+        <div className="absolute left-0 top-full mt-3 z-50 min-w-[180px] max-h-80 overflow-y-auto rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] py-1 shadow-lg">
+          {COMPOUNDS.map((compound) => (
+            <button
+              key={compound.id}
+              type="button"
+              onClick={() => {
+                navigate({ to: '/', search: { compound: compound.id } })
+                setOpen(false)
+              }}
+              className="flex w-full items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors text-left cursor-pointer"
+            >
+              {compound.name}
+            </button>
+          ))}
+        </div>
       )}
     </div>
   )

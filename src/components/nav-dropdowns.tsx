@@ -108,7 +108,7 @@ export function UserMenu() {
         ) : (
           <MoonIcon className="h-4 w-4" strokeWidth={1.5} />
         )}
-        {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+        Theme
       </DropdownItem>
     </DropdownMenu>
   )

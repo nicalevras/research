@@ -8,12 +8,10 @@ export const vendors = pgTable('vendors', {
   country: text('country').notNull(),
   rating: real('rating').notNull().default(0),
   reviewCount: integer('review_count').notNull().default(0),
-  category: text('category').notNull(),
   description: text('description').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 }, (t) => [
-  index('idx_vendors_category').on(t.category),
   index('idx_vendors_country').on(t.country),
 ])
 

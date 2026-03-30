@@ -1,4 +1,4 @@
-import type { Vendor, VendorCategory } from '~/lib/types'
+import type { Vendor } from '~/lib/types'
 import { COMPOUNDS, COUNTRIES, TAGS } from '~/lib/constants'
 import { PillNav } from '~/components/pill-nav'
 import { VendorGrid, VendorGridSkeleton } from '~/components/vendor-grid'
@@ -10,7 +10,6 @@ import { JsonLd, itemListSchema, breadcrumbSchema } from '~/lib/schema'
 const PAGE_SIZE = 15
 
 interface DirectoryListingProps {
-  category: VendorCategory
   heading: string
   description: string
   searchQuery: string
@@ -21,7 +20,7 @@ interface DirectoryListingProps {
   activeCompound: string
 }
 
-export function DirectoryListing({ category, heading, description, searchQuery, countryFilter, currentPage, vendors, activeTags, activeCompound }: DirectoryListingProps) {
+export function DirectoryListing({ heading, description, searchQuery, countryFilter, currentPage, vendors, activeTags, activeCompound }: DirectoryListingProps) {
   const navigate = useNavigate()
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
   const searchRef = useRef<HTMLInputElement>(null)
@@ -30,7 +29,9 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
   const isLoading = useRouterState({ select: (s) => s.isLoading })
 
   useEffect(() => {
-    setLocalQuery(searchQuery)
+    if (document.activeElement !== searchRef.current) {
+      setLocalQuery(searchQuery)
+    }
   }, [searchQuery])
 
   useEffect(() => {
@@ -50,26 +51,21 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
     return { paginatedVendors: paginated, totalPages: total }
   }, [vendors, currentPage])
 
-  const path = category === 'all' ? '/' : `/${category}`
-  const crumbs =
-    category === 'all'
-      ? [{ name: 'Home', url: '/' }]
-      : [
-          { name: 'Home', url: '/' },
-          { name: heading, url: path },
-        ]
+  const path = activeCompound ? `/${activeCompound}` : '/'
+  const crumbs = activeCompound
+    ? [{ name: 'Home', url: '/' }, { name: heading, url: `/${activeCompound}` }]
+    : [{ name: 'Home', url: '/' }]
 
   const currentSearch = useMemo(() => {
     const s: Record<string, string | number | undefined> = {}
     if (searchQuery) s.q = searchQuery
     if (countryFilter) s.country = countryFilter
     if (activeTags) s.tags = activeTags
-    if (activeCompound) s.compound = activeCompound
     return s
-  }, [searchQuery, countryFilter, activeTags, activeCompound])
+  }, [searchQuery, countryFilter, activeTags])
 
-  const navTo = category === 'all' ? ('/' as const) : ('/$category' as const)
-  const navParams = category === 'all' ? undefined : { category }
+  const navTo = activeCompound ? ('/$compound' as const) : ('/' as const)
+  const navParams = activeCompound ? { compound: activeCompound } : undefined
 
   const handleSearch = useCallback(
     (value: string) => {
@@ -112,13 +108,13 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
           <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-xl text-pretty mt-1.5">{description}</p>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+        <div className="flex flex-col sm:flex-row gap-5 sm:gap-3 items-stretch sm:items-center">
           <div className="relative flex-1">
             <SearchIcon className="pointer-events-none absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
             <input
               ref={searchRef}
               type="text"
-              placeholder="Search vendors..."
+              placeholder="Search"
               value={localQuery}
               onChange={(e) => {
                 setLocalQuery(e.target.value)
@@ -147,8 +143,12 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
               <select
                 value={activeCompound || ''}
                 onChange={(e) => {
-                  const val = e.target.value || undefined
-                  navigate({ to: navTo, params: navParams, search: { ...currentSearch, compound: val, page: undefined } })
+                  const val = e.target.value
+                  if (val) {
+                    navigate({ to: '/$compound', params: { compound: val }, search: { country: countryFilter || undefined, tags: activeTags || undefined } })
+                  } else {
+                    navigate({ to: '/', search: { country: countryFilter || undefined, tags: activeTags || undefined } })
+                  }
                 }}
                 className="w-full appearance-none rounded-full border border-neutral-200/80 dark:border-white/[0.08] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer"
               >
@@ -186,7 +186,7 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
                 to={navTo}
                 params={navParams}
                 search={{ ...currentSearch, page: currentPage - 1 === 1 ? undefined : currentPage - 1 }}
-                className="inline-flex items-center gap-1 rounded-full border border-neutral-200/60 dark:border-white/[0.06] px-3.5 py-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors"
+                className="inline-flex items-center gap-1 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] px-3.5 py-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors"
               >
                 <ChevronLeftIcon className="h-4 w-4" />
                 Previous
@@ -207,7 +207,7 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
                 to={navTo}
                 params={navParams}
                 search={{ ...currentSearch, page: currentPage + 1 }}
-                className="inline-flex items-center gap-1 rounded-full border border-neutral-200/60 dark:border-white/[0.06] px-3.5 py-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors"
+                className="inline-flex items-center gap-1 rounded-full bg-neutral-900 dark:bg-white px-3.5 py-1.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
               >
                 Next
                 <ChevronRightIcon className="h-4 w-4" />

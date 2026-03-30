@@ -1,5 +1,4 @@
 import type { Vendor } from '~/lib/types'
-import { CATEGORY_LABELS } from '~/lib/constants'
 import { Link } from '@tanstack/react-router'
 import { StarIcon, ExternalLinkIcon, ShoppingCartIcon, SearchIcon } from '~/components/icons'
 
@@ -23,8 +22,6 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
           </Link>
           <div className="flex items-center gap-2 text-[12px] text-neutral-500 dark:text-neutral-400">
             <span>{vendor.location}, {vendor.country}</span>
-            <span className="text-neutral-200 dark:text-neutral-700">·</span>
-            <span>{CATEGORY_LABELS[vendor.category]}</span>
           </div>
           <div className="flex items-center gap-1">
             <span className="text-sm font-semibold tabular-nums text-neutral-900 dark:text-white">{vendor.rating.toFixed(1)}</span>

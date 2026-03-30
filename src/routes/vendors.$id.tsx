@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from '@tanstack/react-router'
 import { getVendorById, getVendorCompounds } from '~/lib/data'
-import { CATEGORY_LABELS, SITE_URL } from '~/lib/constants'
-import { StarRating, CategoryBadge } from '~/components/vendor-ui'
+import { SITE_URL } from '~/lib/constants'
+import { StarRating } from '~/components/vendor-ui'
 import { breadcrumbSchema, organizationSchema } from '~/lib/schema'
 import { CircleAlertIcon, ChevronLeftIcon, ShoppingCartIcon } from '~/components/icons'
 
@@ -48,7 +48,6 @@ export const Route = createFileRoute('/vendors/$id')({
           type: 'application/ld+json',
           children: JSON.stringify(breadcrumbSchema([
             { name: 'Home', url: '/' },
-            { name: CATEGORY_LABELS[vendor.category], url: `/${vendor.category}` },
             { name: vendor.name, url: `/vendors/${vendor.id}` },
           ])),
         },
@@ -79,7 +78,6 @@ function VendorDetailPage() {
           <div className="space-y-3">
             <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">{vendor.name}</h1>
             <div className="flex flex-wrap items-center gap-2.5">
-              <CategoryBadge category={vendor.category} />
               <span className="text-sm text-neutral-500 dark:text-neutral-400">
                 {vendor.location}, {vendor.country}
               </span>

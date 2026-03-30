@@ -6,6 +6,5 @@ export const searchSchema = z.object({
   q: z.string().optional(),
   country: z.string().optional(),
   tags: z.string().optional(),
-  compound: z.string().optional(),
   page: z.number().int().positive().catch(1),
 })

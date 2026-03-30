@@ -11,9 +11,9 @@ export const Route = createFileRoute('/')({
   search: {
     middlewares: [stripSearchParams(searchDefaults)],
   },
-  loaderDeps: ({ search }) => ({ page: search.page, q: search.q, country: search.country, tags: search.tags, compound: search.compound }),
+  loaderDeps: ({ search }) => ({ page: search.page, q: search.q, country: search.country, tags: search.tags }),
   loader: async ({ deps }) => {
-    const vendors = await filterVendors({ data: { category: 'all', q: deps.q, country: deps.country, tags: deps.tags, compound: deps.compound } })
+    const vendors = await filterVendors({ data: { q: deps.q, country: deps.country, tags: deps.tags } })
     return { ...deps, vendors }
   },
   head: ({ loaderData }) => {
@@ -50,19 +50,18 @@ export const Route = createFileRoute('/')({
 })
 
 function HomePage() {
-  const { q, country, page, tags, compound } = Route.useSearch()
+  const { q, country, page, tags } = Route.useSearch()
   const { vendors } = Route.useLoaderData()
   return (
     <DirectoryListing
-      category="all"
       heading="Peptide Vendor Directory"
-      description="Compare peptide vendors across research, therapeutic, cosmetic, and API supply categories."
+      description="Compare peptide vendors. Verified ratings, certifications, and detailed reviews for every supplier."
       searchQuery={q ?? ''}
       countryFilter={country ?? ''}
       currentPage={page}
       vendors={vendors}
       activeTags={tags ?? ''}
-      activeCompound={compound ?? ''}
+      activeCompound=""
     />
   )
 }

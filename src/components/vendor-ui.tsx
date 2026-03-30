@@ -1,5 +1,3 @@
-import type { Vendor } from '~/lib/types'
-import { CATEGORY_LABELS } from '~/lib/constants'
 import { StarIcon } from '~/components/icons'
 
 export function StarRating({ rating }: { rating: number }) {
@@ -22,13 +20,5 @@ export function StarRating({ rating }: { rating: number }) {
         })}
       </div>
     </div>
-  )
-}
-
-export function CategoryBadge({ category }: { category: Vendor['category'] }) {
-  return (
-    <span className="inline-flex items-center rounded-lg bg-neutral-100 dark:bg-white/[0.06] px-2 py-0.5 text-[11px] font-medium uppercase tracking-wider text-neutral-600 dark:text-neutral-400">
-      {CATEGORY_LABELS[category]}
-    </span>
   )
 }

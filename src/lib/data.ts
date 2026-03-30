@@ -13,7 +13,6 @@ function rowToVendor(row: typeof vendors.$inferSelect): Vendor {
     country: row.country,
     rating: row.rating,
     reviewCount: row.reviewCount,
-    category: row.category as Vendor['category'],
     description: row.description,
   }
 }
@@ -28,9 +27,9 @@ export const getVendorById = createServerFn({ method: 'GET' })
   })
 
 export const filterVendors = createServerFn({ method: 'GET' })
-  .inputValidator((d: { category?: string; country?: string; q?: string; tags?: string; compound?: string }) => d)
+  .inputValidator((d: { country?: string; q?: string; tags?: string; compound?: string }) => d)
   .handler(async ({ data: filters }) => {
-    const { category, country, q, tags: tagString, compound } = filters
+    const { country, q, tags: tagString, compound } = filters
     const tagIds = tagString ? tagString.split(',').filter(Boolean) : []
 
     // Collect vendor ID constraints from join tables
@@ -75,22 +74,29 @@ export const filterVendors = createServerFn({ method: 'GET' })
       conditions.push(inArray(vendors.id, vendorIdPool))
     }
 
-    if (category && category !== 'all') {
-      conditions.push(eq(vendors.category, category))
-    }
-
     if (country) {
       conditions.push(eq(vendors.country, country))
     }
 
     if (q) {
       const pattern = `%${q}%`
+
+      // Find vendors linked to compounds matching the query
+      const compoundMatchRows = await db
+        .select({ vendorId: vendorCompounds.vendorId })
+        .from(vendorCompounds)
+        .innerJoin(compounds, eq(vendorCompounds.compoundId, compounds.id))
+        .where(or(ilike(compounds.name, pattern), ilike(compounds.id, pattern)))
+
+      const compoundMatchIds = compoundMatchRows.map((r) => r.vendorId)
+
       conditions.push(
         or(
           ilike(vendors.name, pattern),
           ilike(vendors.location, pattern),
           ilike(vendors.country, pattern),
           ilike(vendors.description, pattern),
+          ...(compoundMatchIds.length > 0 ? [inArray(vendors.id, compoundMatchIds)] : []),
         )!,
       )
     }

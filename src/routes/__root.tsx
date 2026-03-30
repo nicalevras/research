@@ -22,7 +22,7 @@ export const Route = createRootRoute({
       { title: 'Peptide Vendor Directory' },
       {
         name: 'description',
-        content: 'Find and compare peptide vendors across research, therapeutic, cosmetic, and API supply categories.',
+        content: 'Find and compare peptide vendors. Verified ratings, certifications, and detailed reviews for every supplier.',
       },
       { property: 'og:type', content: 'website' },
       { property: 'og:site_name', content: 'Peptide Vendor Directory' },
@@ -97,17 +97,17 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
           <footer className="mx-auto w-full px-4 sm:px-6 lg:px-8 mt-16 border-t border-neutral-200/60 dark:border-white/[0.06] py-8">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-neutral-400 dark:text-neutral-500">
               <div className="flex items-center gap-4">
-                <Link to="/$category" params={{ category: 'research' }} className="hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors">
-                  Research
+                <Link to="/$compound" params={{ compound: 'bpc-157' }} className="hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors">
+                  BPC-157
                 </Link>
-                <Link to="/$category" params={{ category: 'therapeutic' }} className="hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors">
-                  Therapeutic
+                <Link to="/$compound" params={{ compound: 'tb-500' }} className="hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors">
+                  TB-500
                 </Link>
-                <Link to="/$category" params={{ category: 'cosmetic' }} className="hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors">
-                  Cosmetic
+                <Link to="/$compound" params={{ compound: 'nad-plus' }} className="hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors">
+                  NAD+
                 </Link>
-                <Link to="/$category" params={{ category: 'api-supplier' }} className="hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors">
-                  API Suppliers
+                <Link to="/$compound" params={{ compound: 'ipamorelin' }} className="hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors">
+                  Ipamorelin
                 </Link>
               </div>
               <span>&copy; {new Date().getFullYear()} Peptide Directory</span>

@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import type { Tag } from '~/lib/types'
-import { ChevronLeftIcon, ChevronRightIcon } from '~/components/icons'
+import { ChevronLeftIcon, ChevronRightIcon, BitcoinIcon } from '~/components/icons'
 
 interface PillNavProps {
   tags: (Tag & { emoji?: string })[]
@@ -59,7 +59,7 @@ export function PillNav({ tags, activeTags, onToggleTag }: PillNavProps) {
 
       <nav
         ref={scrollRef}
-        className="flex gap-1.5 overflow-x-auto py-1 mx-8"
+        className="flex gap-1.5 overflow-x-auto py-1 mx-[34px]"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         aria-label="Filter by tag"
       >
@@ -78,7 +78,7 @@ export function PillNav({ tags, activeTags, onToggleTag }: PillNavProps) {
                   : 'bg-white/70 dark:bg-white/[0.04] text-neutral-500 dark:text-neutral-400 hover:bg-white dark:hover:bg-white/[0.08] border border-neutral-200/60 dark:border-white/[0.06] hover:text-neutral-900 dark:hover:text-white')
               }
             >
-              {tag.emoji && <span className="mr-1">{tag.emoji}</span>}{tag.name}
+              {tag.id === 'crypto' ? <BitcoinIcon className="h-4 w-4 mr-1.5 shrink-0" /> : tag.emoji && <span className="mr-1.5">{tag.emoji}</span>}{tag.name}
             </button>
           )
         })}

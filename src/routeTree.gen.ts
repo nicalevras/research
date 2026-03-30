@@ -9,13 +9,13 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as CategoryRouteImport } from './routes/$category'
+import { Route as CompoundRouteImport } from './routes/$compound'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VendorsIdRouteImport } from './routes/vendors.$id'
 
-const CategoryRoute = CategoryRouteImport.update({
-  id: '/$category',
-  path: '/$category',
+const CompoundRoute = CompoundRouteImport.update({
+  id: '/$compound',
+  path: '/$compound',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -31,41 +31,41 @@ const VendorsIdRoute = VendorsIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/$category': typeof CategoryRoute
+  '/$compound': typeof CompoundRoute
   '/vendors/$id': typeof VendorsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/$category': typeof CategoryRoute
+  '/$compound': typeof CompoundRoute
   '/vendors/$id': typeof VendorsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/$category': typeof CategoryRoute
+  '/$compound': typeof CompoundRoute
   '/vendors/$id': typeof VendorsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$category' | '/vendors/$id'
+  fullPaths: '/' | '/$compound' | '/vendors/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$category' | '/vendors/$id'
-  id: '__root__' | '/' | '/$category' | '/vendors/$id'
+  to: '/' | '/$compound' | '/vendors/$id'
+  id: '__root__' | '/' | '/$compound' | '/vendors/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CategoryRoute: typeof CategoryRoute
+  CompoundRoute: typeof CompoundRoute
   VendorsIdRoute: typeof VendorsIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/$category': {
-      id: '/$category'
-      path: '/$category'
-      fullPath: '/$category'
-      preLoaderRoute: typeof CategoryRouteImport
+    '/$compound': {
+      id: '/$compound'
+      path: '/$compound'
+      fullPath: '/$compound'
+      preLoaderRoute: typeof CompoundRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -87,7 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CategoryRoute: CategoryRoute,
+  CompoundRoute: CompoundRoute,
   VendorsIdRoute: VendorsIdRoute,
 }
 export const routeTree = rootRouteImport

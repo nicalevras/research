@@ -19,7 +19,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     country: 'USA',
     rating: 4.8,
     reviewCount: 1240,
-    category: 'research',
     description: 'Premium research peptides with rigorous third-party testing. Known for high purity levels and extensive catalog of over 100 peptide compounds.',
   },
   {
@@ -30,7 +29,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     country: 'USA',
     rating: 4.5,
     reviewCount: 830,
-    category: 'research',
     description: 'Specializes in research-grade peptides and nootropics with a focus on longevity and anti-aging compounds.',
   },
   {
@@ -41,7 +39,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     country: 'USA',
     rating: 4.6,
     reviewCount: 960,
-    category: 'research',
     description: 'Wide selection of research peptides and SARMs with verified COAs on every batch. Popular among biohacking community.',
   },
   {
@@ -52,7 +49,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     country: 'USA',
     rating: 4.3,
     reviewCount: 540,
-    category: 'research',
     description: 'Research chemicals supplier offering peptides, SARMs, and nootropics with transparent lab reports.',
   },
   {
@@ -63,7 +59,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     country: 'Switzerland',
     rating: 4.4,
     reviewCount: 710,
-    category: 'research',
     description: 'European-based supplier of premium research peptides with pharmaceutical-grade quality standards.',
   },
   {
@@ -74,7 +69,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     country: 'Canada',
     rating: 4.7,
     reviewCount: 420,
-    category: 'therapeutic',
     description: 'Developing peptide-based therapeutics for metabolic disorders and tissue repair. Clinical-stage biotech.',
   },
   {
@@ -85,7 +79,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     country: 'USA',
     rating: 4.9,
     reviewCount: 380,
-    category: 'therapeutic',
     description: 'Compounding pharmacy specializing in therapeutic peptides for hormone optimization and injury recovery.',
   },
   {
@@ -96,7 +89,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     country: 'USA',
     rating: 4.6,
     reviewCount: 620,
-    category: 'therapeutic',
     description: 'Telemedicine peptide therapy clinic offering BPC-157, TB-500, and growth hormone secretagogues with physician oversight.',
   },
   {
@@ -107,7 +99,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     country: 'USA',
     rating: 4.5,
     reviewCount: 290,
-    category: 'therapeutic',
     description: 'Integrative medicine practice focused on peptide therapy for anti-aging, immune support, and cognitive enhancement.',
   },
   {
@@ -118,7 +109,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     country: 'Germany',
     rating: 4.7,
     reviewCount: 350,
-    category: 'therapeutic',
     description: 'European biotech firm developing peptide-based drugs for autoimmune conditions and regenerative medicine.',
   },
   {
@@ -129,7 +119,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     country: 'South Korea',
     rating: 4.3,
     reviewCount: 880,
-    category: 'cosmetic',
     description: 'K-beauty inspired peptide skincare formulations. Copper peptides, matrixyl, and argireline-based products.',
   },
   {
@@ -140,7 +129,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     country: 'USA',
     rating: 4.4,
     reviewCount: 560,
-    category: 'cosmetic',
     description: 'Custom peptide synthesis for cosmetic brands. Supplies signal peptides, carrier peptides, and neurotransmitter-inhibiting peptides.',
   },
   {
@@ -151,7 +139,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     country: 'France',
     rating: 4.6,
     reviewCount: 340,
-    category: 'cosmetic',
     description: 'French peptide cosmetics manufacturer specializing in anti-aging and collagen-boosting peptide formulations.',
   },
   {
@@ -162,7 +149,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     country: 'China',
     rating: 4.2,
     reviewCount: 290,
-    category: 'api-supplier',
     description: 'Large-scale custom peptide synthesis for pharmaceutical companies. GMP-compliant API manufacturing.',
   },
   {
@@ -173,7 +159,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     country: 'USA',
     rating: 4.5,
     reviewCount: 410,
-    category: 'api-supplier',
     description: 'GMP peptide API manufacturer serving pharmaceutical and biotech industries. Specializing in long-chain and modified peptides.',
   },
   {
@@ -184,7 +169,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     country: 'Germany',
     rating: 4.6,
     reviewCount: 180,
-    category: 'api-supplier',
     description: 'European peptide manufacturer providing custom synthesis and catalog peptides for drug development.',
   },
   {
@@ -195,7 +179,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     country: 'China',
     rating: 4.0,
     reviewCount: 220,
-    category: 'api-supplier',
     description: 'Cost-effective peptide API supplier with large-scale production capacity. Serves generic drug manufacturers worldwide.',
   },
 ]
@@ -323,7 +306,7 @@ const vendorCompoundData: (typeof schema.vendorCompounds.$inferInsert)[] = [
 
 const tagData: (typeof schema.tags.$inferInsert)[] = [
   { id: 'credit-card', name: 'Credit Card' },
-  { id: 'crypto', name: 'Crypto Accepted' },
+  { id: 'crypto', name: 'Crypto' },
   { id: 'free-shipping', name: 'Free Shipping' },
   { id: 'lab-tested', name: 'Lab Tested' },
   { id: 'gmp-certified', name: 'GMP Certified' },

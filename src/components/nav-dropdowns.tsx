@@ -56,7 +56,7 @@ function DropdownItem({ children, onClick }: { children: ReactNode; onClick?: ()
   )
 }
 
-function DropdownLink({ to, params, children }: { to: '/' | '/$category'; params?: { category: string }; children: ReactNode }) {
+function DropdownLink({ to, params, children }: { to: '/' | '/$compound'; params?: { compound: string }; children: ReactNode }) {
   return (
     <Link
       to={to}
@@ -78,16 +78,14 @@ export function HamburgerMenu() {
       align="right"
       trigger={<MenuIcon className="h-5 w-5" strokeWidth={1.5} />}
     >
-      <DropdownLink to="/">Vendors</DropdownLink>
-      <DropdownLink to="/$category" params={{ category: 'research' }}>Research</DropdownLink>
-      <DropdownLink to="/$category" params={{ category: 'therapeutic' }}>Therapeutic</DropdownLink>
-      <DropdownLink to="/$category" params={{ category: 'cosmetic' }}>Cosmetic</DropdownLink>
-      <DropdownLink to="/$category" params={{ category: 'api-supplier' }}>API Suppliers</DropdownLink>
+      <DropdownLink to="/">All Vendors</DropdownLink>
       <DropdownDivider />
-      <DropdownLink to="/$category" params={{ category: 'custom-synthesis' }}>Custom Synthesis</DropdownLink>
-      <DropdownLink to="/$category" params={{ category: 'bpc' }}>BPC-157</DropdownLink>
-      <DropdownLink to="/$category" params={{ category: 'tb500' }}>TB-500</DropdownLink>
-      <DropdownLink to="/$category" params={{ category: 'ghrp' }}>GHRP</DropdownLink>
+      <DropdownLink to="/$compound" params={{ compound: 'bpc-157' }}>BPC-157</DropdownLink>
+      <DropdownLink to="/$compound" params={{ compound: 'tb-500' }}>TB-500</DropdownLink>
+      <DropdownLink to="/$compound" params={{ compound: 'nad-plus' }}>NAD+</DropdownLink>
+      <DropdownLink to="/$compound" params={{ compound: 'ipamorelin' }}>Ipamorelin</DropdownLink>
+      <DropdownLink to="/$compound" params={{ compound: 'cjc-1295' }}>CJC-1295</DropdownLink>
+      <DropdownLink to="/$compound" params={{ compound: 'ghk-cu' }}>GHK-Cu</DropdownLink>
       <DropdownDivider />
       <DropdownItem>Submit a vendor</DropdownItem>
     </DropdownMenu>
@@ -107,9 +105,9 @@ export function UserMenu() {
       <DropdownDivider />
       <DropdownItem onClick={toggleTheme}>
         {theme === 'dark' ? (
-          <SunIcon className="h-4 w-4" strokeWidth={1.5} />
-        ) : (
           <MoonIcon className="h-4 w-4" strokeWidth={1.5} />
+        ) : (
+          <SunIcon className="h-4 w-4" strokeWidth={1.5} />
         )}
         Theme
       </DropdownItem>
@@ -170,7 +168,7 @@ export function NavSearch() {
       <input
         ref={inputRef}
         type="text"
-        placeholder="Search..."
+        placeholder="Search"
         value={query}
         onChange={(e) => handleChange(e.target.value)}
         onKeyDown={(e) => {
@@ -199,7 +197,8 @@ export function NavSearch() {
 export function PeptidesDropdown() {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
-  const navigate = useNavigate()
+  const pathname = useRouterState({ select: (s) => s.location.pathname })
+  const isActive = COMPOUNDS.some((c) => pathname === `/${c.id}`)
 
   useEffect(() => {
     const handle = (e: MouseEvent) => {
@@ -214,7 +213,7 @@ export function PeptidesDropdown() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="inline-flex items-center gap-1 text-[13px] leading-none font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors cursor-pointer"
+        className={`inline-flex items-center gap-1 text-[13px] leading-none font-medium hover:text-neutral-900 dark:hover:text-white transition-colors cursor-pointer ${isActive ? 'text-neutral-900 dark:text-white' : 'text-neutral-500 dark:text-neutral-400'}`}
       >
         Peptides
         <ChevronDownIcon className="h-3 w-3" />
@@ -222,17 +221,15 @@ export function PeptidesDropdown() {
       {open && (
         <div className="absolute left-0 top-full mt-3 z-50 min-w-[180px] max-h-80 overflow-y-auto rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] py-1 shadow-lg">
           {COMPOUNDS.map((compound) => (
-            <button
+            <Link
               key={compound.id}
-              type="button"
-              onClick={() => {
-                navigate({ to: '/', search: { compound: compound.id } })
-                setOpen(false)
-              }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors text-left cursor-pointer"
+              to="/$compound"
+              params={{ compound: compound.id }}
+              onClick={() => setOpen(false)}
+              className="flex w-full items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors text-left"
             >
               {compound.name}
-            </button>
+            </Link>
           ))}
         </div>
       )}

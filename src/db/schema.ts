@@ -10,8 +10,6 @@ export const vendors = pgTable('vendors', {
   reviewCount: integer('review_count').notNull().default(0),
   category: text('category').notNull(),
   description: text('description').notNull(),
-  founded: integer('founded').notNull(),
-  certifications: text('certifications').array().notNull().default([]),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 }, (t) => [

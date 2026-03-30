@@ -15,8 +15,6 @@ function rowToVendor(row: typeof vendors.$inferSelect): Vendor {
     reviewCount: row.reviewCount,
     category: row.category as Vendor['category'],
     description: row.description,
-    founded: row.founded,
-    certifications: row.certifications,
   }
 }
 

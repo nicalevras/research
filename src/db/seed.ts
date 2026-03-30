@@ -21,8 +21,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     reviewCount: 1240,
     category: 'research',
     description: 'Premium research peptides with rigorous third-party testing. Known for high purity levels and extensive catalog of over 100 peptide compounds.',
-    founded: 2012,
-    certifications: ['GMP', 'ISO 9001'],
   },
   {
     id: 'limitless-life',
@@ -34,8 +32,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     reviewCount: 830,
     category: 'research',
     description: 'Specializes in research-grade peptides and nootropics with a focus on longevity and anti-aging compounds.',
-    founded: 2015,
-    certifications: ['GMP'],
   },
   {
     id: 'pure-rawz',
@@ -47,8 +43,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     reviewCount: 960,
     category: 'research',
     description: 'Wide selection of research peptides and SARMs with verified COAs on every batch. Popular among biohacking community.',
-    founded: 2017,
-    certifications: ['GMP'],
   },
   {
     id: 'element-sarms',
@@ -60,8 +54,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     reviewCount: 540,
     category: 'research',
     description: 'Research chemicals supplier offering peptides, SARMs, and nootropics with transparent lab reports.',
-    founded: 2019,
-    certifications: [],
   },
   {
     id: 'swiss-chems',
@@ -73,8 +65,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     reviewCount: 710,
     category: 'research',
     description: 'European-based supplier of premium research peptides with pharmaceutical-grade quality standards.',
-    founded: 2016,
-    certifications: ['GMP', 'ISO 17025'],
   },
   {
     id: 'canagen',
@@ -86,8 +76,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     reviewCount: 420,
     category: 'therapeutic',
     description: 'Developing peptide-based therapeutics for metabolic disorders and tissue repair. Clinical-stage biotech.',
-    founded: 2014,
-    certifications: ['GMP', 'FDA IND', 'Health Canada'],
   },
   {
     id: 'med-peptide',
@@ -99,8 +87,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     reviewCount: 380,
     category: 'therapeutic',
     description: 'Compounding pharmacy specializing in therapeutic peptides for hormone optimization and injury recovery.',
-    founded: 2011,
-    certifications: ['PCAB', 'GMP', 'DEA Licensed'],
   },
   {
     id: 'restor-peptide',
@@ -112,8 +98,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     reviewCount: 620,
     category: 'therapeutic',
     description: 'Telemedicine peptide therapy clinic offering BPC-157, TB-500, and growth hormone secretagogues with physician oversight.',
-    founded: 2018,
-    certifications: ['HIPAA Compliant'],
   },
   {
     id: 'vitality-institute',
@@ -125,8 +109,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     reviewCount: 290,
     category: 'therapeutic',
     description: 'Integrative medicine practice focused on peptide therapy for anti-aging, immune support, and cognitive enhancement.',
-    founded: 2019,
-    certifications: ['GMP'],
   },
   {
     id: 'bio-thera-eu',
@@ -138,8 +120,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     reviewCount: 350,
     category: 'therapeutic',
     description: 'European biotech firm developing peptide-based drugs for autoimmune conditions and regenerative medicine.',
-    founded: 2013,
-    certifications: ['EMA GMP', 'ISO 13485'],
   },
   {
     id: 'skin-peptide-co',
@@ -151,8 +131,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     reviewCount: 880,
     category: 'cosmetic',
     description: 'K-beauty inspired peptide skincare formulations. Copper peptides, matrixyl, and argireline-based products.',
-    founded: 2016,
-    certifications: ['KFDA', 'ISO 22716'],
   },
   {
     id: 'derma-pep',
@@ -164,8 +142,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     reviewCount: 560,
     category: 'cosmetic',
     description: 'Custom peptide synthesis for cosmetic brands. Supplies signal peptides, carrier peptides, and neurotransmitter-inhibiting peptides.',
-    founded: 2015,
-    certifications: ['ISO 22716', 'COSMOS'],
   },
   {
     id: 'natur-peptide',
@@ -177,8 +153,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     reviewCount: 340,
     category: 'cosmetic',
     description: 'French peptide cosmetics manufacturer specializing in anti-aging and collagen-boosting peptide formulations.',
-    founded: 2013,
-    certifications: ['ECOCERT', 'ISO 9001'],
   },
   {
     id: 'bio-synth-intl',
@@ -190,8 +164,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     reviewCount: 290,
     category: 'api-supplier',
     description: 'Large-scale custom peptide synthesis for pharmaceutical companies. GMP-compliant API manufacturing.',
-    founded: 2008,
-    certifications: ['GMP', 'ISO 9001', 'FDA DMF'],
   },
   {
     id: 'american-peptide',
@@ -203,8 +175,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     reviewCount: 410,
     category: 'api-supplier',
     description: 'GMP peptide API manufacturer serving pharmaceutical and biotech industries. Specializing in long-chain and modified peptides.',
-    founded: 2005,
-    certifications: ['FDA GMP', 'ISO 9001'],
   },
   {
     id: 'bac-peptide',
@@ -216,8 +186,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     reviewCount: 180,
     category: 'api-supplier',
     description: 'European peptide manufacturer providing custom synthesis and catalog peptides for drug development.',
-    founded: 1998,
-    certifications: ['GMP', 'ISO 17025', 'EMA'],
   },
   {
     id: 'cas-peptide',
@@ -229,8 +197,6 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     reviewCount: 220,
     category: 'api-supplier',
     description: 'Cost-effective peptide API supplier with large-scale production capacity. Serves generic drug manufacturers worldwide.',
-    founded: 2010,
-    certifications: ['GMP', 'ISO 9001'],
   },
 ]
 

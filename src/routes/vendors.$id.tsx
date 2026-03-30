@@ -85,10 +85,6 @@ function VendorDetailPage() {
               <span className="text-sm text-neutral-500 dark:text-neutral-400">
                 {vendor.location}, {vendor.country}
               </span>
-              <span className="text-neutral-200 dark:text-neutral-700">·</span>
-              <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                Est. {vendor.founded}
-              </span>
             </div>
             <div className="flex items-center gap-2">
               <StarRating rating={vendor.rating} />
@@ -111,61 +107,21 @@ function VendorDetailPage() {
 
         <div className="h-px bg-neutral-100 dark:bg-white/[0.04]" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-4">
-            {compounds.length > 0 && (
-              <div className="space-y-3">
-                <h2 className="text-sm font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">Compounds</h2>
-                <div className="flex flex-wrap gap-2">
-                  {compounds.map((compound) => (
-                    <span
-                      key={compound.id}
-                      className="inline-flex items-center rounded-full bg-neutral-50 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/[0.06] px-3 py-1.5 text-xs font-medium text-neutral-700 dark:text-neutral-300"
-                    >
-                      {compound.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="space-y-4">
-            <h2 className="text-sm font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">Details</h2>
-
-            <div className="space-y-0 rounded-xl border border-neutral-100 dark:border-white/[0.04] divide-y divide-neutral-100 dark:divide-white/[0.04]">
-              {[
-                { label: 'Category', value: CATEGORY_LABELS[vendor.category] },
-                { label: 'Location', value: vendor.location },
-                { label: 'Country', value: vendor.country },
-                { label: 'Founded', value: String(vendor.founded) },
-              ].map((row) => (
-                <div key={row.label} className="flex justify-between px-4 py-3 text-sm">
-                  <span className="text-neutral-400 dark:text-neutral-500">{row.label}</span>
-                  <span className="font-medium text-neutral-700 dark:text-neutral-200">{row.value}</span>
-                </div>
+        {compounds.length > 0 && (
+          <div className="space-y-3">
+            <h2 className="text-sm font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">Compounds</h2>
+            <div className="flex flex-wrap gap-2">
+              {compounds.map((compound) => (
+                <span
+                  key={compound.id}
+                  className="inline-flex items-center rounded-full bg-neutral-50 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/[0.06] px-3 py-1.5 text-xs font-medium text-neutral-700 dark:text-neutral-300"
+                >
+                  {compound.name}
+                </span>
               ))}
             </div>
-
-            {vendor.certifications.length > 0 && (
-              <div className="pt-2">
-                <h3 className="text-xs font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500 mb-2">
-                  Certifications
-                </h3>
-                <div className="flex flex-wrap gap-1.5">
-                  {vendor.certifications.map((cert) => (
-                    <span
-                      key={cert}
-                      className="inline-flex items-center rounded-lg bg-neutral-50 dark:bg-white/[0.04] border border-neutral-100 dark:border-white/[0.04] px-2.5 py-1 text-xs font-medium text-neutral-600 dark:text-neutral-300"
-                    >
-                      {cert}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
-        </div>
+        )}
       </div>
     </div>
   )

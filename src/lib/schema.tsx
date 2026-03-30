@@ -63,7 +63,6 @@ export function organizationSchema(vendor: Vendor) {
       addressLocality: vendor.location,
       addressCountry: vendor.country,
     },
-    foundingDate: String(vendor.founded),
     aggregateRating: {
       '@type': 'AggregateRating',
       ratingValue: vendor.rating,

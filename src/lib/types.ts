@@ -10,8 +10,6 @@ export interface Vendor {
   reviewCount: number
   category: Exclude<VendorCategory, 'all'>
   description: string
-  founded: number
-  certifications: string[]
 }
 
 export interface Tag {

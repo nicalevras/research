@@ -176,7 +176,7 @@ export function NavSearch() {
         onKeyDown={(e) => {
           if (e.key === 'Escape') setOpen(false)
         }}
-        className="w-36 sm:w-48 rounded-full border border-neutral-200/60 dark:border-white/8 bg-white/70 dark:bg-white/[0.04] pl-8 pr-8 py-1.5 text-sm placeholder-neutral-400 dark:placeholder-neutral-500 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+        className="w-36 sm:w-48 h-8 rounded-full border border-neutral-200/60 dark:border-white/8 bg-white/70 dark:bg-white/[0.04] pl-8 pr-8 text-sm placeholder-neutral-400 dark:placeholder-neutral-500 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
       />
       {query && (
         <button

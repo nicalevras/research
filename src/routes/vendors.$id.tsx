@@ -65,12 +65,11 @@ function VendorDetailPage() {
   return (
     <div className="space-y-6">
       <Link
-        to="/$category"
-        params={{ category: vendor.category }}
+        to="/"
         className="inline-flex items-center gap-1.5 text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
       >
         <ChevronLeftIcon className="h-3.5 w-3.5" />
-        Back to {CATEGORY_LABELS[vendor.category]}
+        Back to Peptides
       </Link>
 
       <div className="glass-card-solid p-6 sm:p-8 space-y-8">

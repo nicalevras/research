@@ -75,8 +75,8 @@ function VendorDetailPage() {
 
       <div className="glass-card-solid p-6 sm:p-8 space-y-8">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
-          <div className="flex gap-5">
-            <div className="hidden sm:block shrink-0 w-40 aspect-[2/1] rounded-xl bg-neutral-100 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/[0.06]" />
+          <div className="flex flex-col sm:flex-row gap-5">
+            <div className="shrink-0 w-full sm:w-40 aspect-[2/1] rounded-xl bg-neutral-100 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/[0.06]" />
           <div className="space-y-3">
             <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">{vendor.name}</h1>
             <div className="flex flex-wrap items-center gap-2.5">

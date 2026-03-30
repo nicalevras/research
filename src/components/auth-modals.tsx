@@ -241,7 +241,7 @@ function SignUpForm() {
     e.preventDefault()
     setError('')
     if (!name.trim()) { setError('Name is required'); return }
-    if (!/^[a-zA-Z\s]+$/.test(name.trim())) { setError('Name can only contain letters and spaces'); return }
+    if (!/^[a-zA-Z\s'-]+$/.test(name.trim())) { setError('Name can only contain letters, spaces, hyphens, and apostrophes'); return }
     if (name.trim().length > 50) { setError('Name must be 50 characters or fewer'); return }
     if (!email.trim()) { setError('Email is required'); return }
     if (!username.trim()) { setError('Username is required'); return }

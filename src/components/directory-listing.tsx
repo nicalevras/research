@@ -5,9 +5,8 @@ import { VendorGrid, VendorGridSkeleton } from '~/components/vendor-grid'
 import { SearchIcon, XIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from '~/components/icons'
 import { useNavigate, Link, useRouterState } from '@tanstack/react-router'
 import { useMemo, useRef, useCallback, useEffect, useState } from 'react'
-import { JsonLd, itemListSchema, breadcrumbSchema } from '~/lib/schema'
 
-const PAGE_SIZE = 15
+export const PAGE_SIZE = 15
 
 interface DirectoryListingProps {
   heading: string
@@ -50,11 +49,6 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
     const paginated = vendors.slice(start, start + PAGE_SIZE)
     return { paginatedVendors: paginated, totalPages: total }
   }, [vendors, currentPage])
-
-  const path = activeCompound ? `/${activeCompound}` : '/'
-  const crumbs = activeCompound
-    ? [{ name: 'Home', url: '/' }, { name: heading, url: `/${activeCompound}` }]
-    : [{ name: 'Home', url: '/' }]
 
   const currentSearch = useMemo(() => {
     const s: Record<string, string | number | undefined> = {}
@@ -99,9 +93,6 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
 
   return (
     <>
-      <JsonLd data={itemListSchema(paginatedVendors, heading, path)} />
-      <JsonLd data={breadcrumbSchema(crumbs)} />
-
       <div className="space-y-4">
         <div className="mb-8">
           <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">{heading}</h1>
@@ -127,6 +118,7 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
                 type="button"
                 onClick={() => {
                   const { q, page, ...rest } = currentSearch
+                  setLocalQuery('')
                   navigate({ to: navTo, params: navParams, search: rest })
                   searchRef.current?.focus()
                 }}

@@ -15,6 +15,7 @@ function escapeHtml(str: string): string {
 
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL,
+  trustedOrigins: process.env.BETTER_AUTH_URL ? [process.env.BETTER_AUTH_URL] : [],
   database: drizzleAdapter(db, {
     provider: 'pg',
     schema,
@@ -22,8 +23,11 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: false,
+    minPasswordLength: 8,
+    maxPasswordLength: 128,
     sendResetPassword: async ({ user, url }) => {
-      await resend.emails.send({
+      // Fire-and-forget: don't await to prevent timing attacks that reveal email existence
+      resend.emails.send({
         from: 'Peptide Directory <noreply@nicholasalevras.com>',
         to: user.email,
         subject: 'Reset your password',

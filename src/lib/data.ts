@@ -24,7 +24,10 @@ function escapeLike(str: string): string {
 }
 
 function isUniqueViolation(err: unknown): boolean {
-  return err instanceof Error && (err.message.includes('unique') || err.message.includes('duplicate') || err.message.includes('23505'))
+  // PostgreSQL error code 23505 = unique_violation
+  if (typeof err === 'object' && err !== null && 'code' in err && (err as { code: string }).code === '23505') return true
+  // Fallback for drivers that wrap the error in a message
+  return err instanceof Error && err.message.includes('23505')
 }
 
 export const getVendorById = createServerFn({ method: 'GET' })
@@ -186,6 +189,8 @@ async function recalcVendorRating(vendorId: string) {
 
 const MAX_COMMENT_LENGTH = 2000
 
+const MAX_REVIEWS_PER_PAGE = 100
+
 export const getVendorReviews = createServerFn({ method: 'GET' })
   .inputValidator((d: string) => d)
   .handler(async ({ data: vendorId }) => {
@@ -204,6 +209,7 @@ export const getVendorReviews = createServerFn({ method: 'GET' })
       .innerJoin(user, eq(reviews.userId, user.id))
       .where(eq(reviews.vendorId, vendorId))
       .orderBy(desc(reviews.createdAt))
+      .limit(MAX_REVIEWS_PER_PAGE)
 
     return rows.map((r): Review => ({
       id: r.id,
@@ -223,7 +229,6 @@ export const createReview = createServerFn({ method: 'POST' })
     const headers = getRequestHeaders()
     const session = await auth.api.getSession({ headers })
     if (!session) throw new Error('Unauthorized')
-
     const { vendorId, rating, comment } = data
     if (!Number.isInteger(rating) || rating < 1 || rating > 5) throw new Error('Rating must be 1-5')
     if (!comment.trim()) throw new Error('Comment is required')
@@ -256,7 +261,6 @@ export const updateReview = createServerFn({ method: 'POST' })
     const headers = getRequestHeaders()
     const session = await auth.api.getSession({ headers })
     if (!session) throw new Error('Unauthorized')
-
     const { reviewId, rating, comment } = data
     if (!Number.isInteger(rating) || rating < 1 || rating > 5) throw new Error('Rating must be 1-5')
     if (!comment.trim()) throw new Error('Comment is required')
@@ -283,7 +287,6 @@ export const deleteReview = createServerFn({ method: 'POST' })
     const headers = getRequestHeaders()
     const session = await auth.api.getSession({ headers })
     if (!session) throw new Error('Unauthorized')
-
     const review = await db.query.reviews.findFirst({
       where: eq(reviews.id, data.reviewId),
     })
@@ -343,7 +346,6 @@ export const changeUsername = createServerFn({ method: 'POST' })
     const headers = getRequestHeaders()
     const session = await auth.api.getSession({ headers })
     if (!session) throw new Error('Unauthorized')
-
     const username = data.username.trim()
     if (!username || username.length < 2) throw new Error('Username must be at least 2 characters')
     if (username.length > MAX_USERNAME_LENGTH) throw new Error(`Username must be ${MAX_USERNAME_LENGTH} characters or fewer`)
@@ -391,7 +393,6 @@ export const deleteAccountAndCleanup = createServerFn({ method: 'POST' })
     const headers = getRequestHeaders()
     const session = await auth.api.getSession({ headers })
     if (!session) throw new Error('Unauthorized')
-
     // 1. Collect affected vendor IDs while reviews still exist
     const affectedRows = await db
       .selectDistinct({ vendorId: reviews.vendorId })

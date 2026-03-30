@@ -1,7 +1,8 @@
 import { createFileRoute, notFound, stripSearchParams } from '@tanstack/react-router'
 import { zodValidator } from '@tanstack/zod-adapter'
-import { DirectoryListing } from '~/components/directory-listing'
+import { DirectoryListing, PAGE_SIZE } from '~/components/directory-listing'
 import { COMPOUNDS, SITE_URL } from '~/lib/constants'
+import { itemListSchema, breadcrumbSchema } from '~/lib/schema'
 import { searchDefaults, searchSchema } from '~/lib/search'
 import { filterVendors } from '~/lib/data'
 
@@ -49,6 +50,16 @@ export const Route = createFileRoute('/$compound')({
         ...(isFiltered ? [{ name: 'robots', content: 'noindex, follow' as const }] : []),
       ],
       links: [{ rel: 'canonical', href: canonicalUrl }],
+      scripts: (() => {
+        if (!loaderData?.vendors) return []
+        const { vendors, page: p } = loaderData
+        const start = ((p ?? 1) - 1) * PAGE_SIZE
+        const paginatedVendors = vendors.slice(start, start + PAGE_SIZE)
+        return [
+          { type: 'application/ld+json' as const, children: JSON.stringify(itemListSchema(paginatedVendors, `${compoundName} Vendors`, `/${compound}`)) },
+          { type: 'application/ld+json' as const, children: JSON.stringify(breadcrumbSchema([{ name: 'Home', url: '/' }, { name: `${compoundName} Vendors`, url: `/${compound}` }])) },
+        ]
+      })(),
     }
   },
   component: CompoundPage,

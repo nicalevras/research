@@ -1,8 +1,8 @@
 import { createFileRoute, stripSearchParams } from '@tanstack/react-router'
 import { zodValidator } from '@tanstack/zod-adapter'
-import { DirectoryListing } from '~/components/directory-listing'
-import { siteSearchSchema } from '~/lib/schema'
-import { SITE_URL, TAGS } from '~/lib/constants'
+import { DirectoryListing, PAGE_SIZE } from '~/components/directory-listing'
+import { siteSearchSchema, itemListSchema, breadcrumbSchema } from '~/lib/schema'
+import { SITE_URL } from '~/lib/constants'
 import { searchDefaults, searchSchema } from '~/lib/search'
 import { filterVendors } from '~/lib/data'
 
@@ -42,7 +42,17 @@ export const Route = createFileRoute('/')({
       ],
       links: [{ rel: 'canonical', href: canonicalUrl }],
       scripts: [
-        { id: 'site-search-schema', type: 'application/ld+json', children: JSON.stringify(siteSearchSchema()) },
+        { type: 'application/ld+json', children: JSON.stringify(siteSearchSchema()) },
+        ...(() => {
+          if (!loaderData?.vendors) return []
+          const { vendors, page: p } = loaderData
+          const start = ((p ?? 1) - 1) * PAGE_SIZE
+          const paginatedVendors = vendors.slice(start, start + PAGE_SIZE)
+          return [
+            { type: 'application/ld+json' as const, children: JSON.stringify(itemListSchema(paginatedVendors, 'Peptide Vendor Directory', '/')) },
+            { type: 'application/ld+json' as const, children: JSON.stringify(breadcrumbSchema([{ name: 'Home', url: '/' }])) },
+          ]
+        })(),
       ],
     }
   },

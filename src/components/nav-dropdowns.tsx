@@ -100,9 +100,9 @@ export function UserMenu() {
     <DropdownMenu
       trigger={<UserIcon className="h-5 w-5" strokeWidth={1.5} />}
     >
-      <DropdownItem>Sign in</DropdownItem>
+      <DropdownItem>Sign In</DropdownItem>
       <DropdownDivider />
-      <DropdownItem>Sign up</DropdownItem>
+      <DropdownItem>Sign Up</DropdownItem>
       <DropdownDivider />
       <DropdownItem onClick={toggleTheme}>
         {theme === 'dark' ? (

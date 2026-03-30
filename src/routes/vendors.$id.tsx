@@ -72,7 +72,7 @@ function VendorDetailPage() {
         Back to Peptides
       </Link>
 
-      <div className="glass-card-solid p-6 sm:p-8 space-y-8">
+      <div className="glass-card-solid p-6 sm:p-8 space-y-8 shadow-none">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
           <div className="flex flex-col sm:flex-row gap-5">
             <div className="shrink-0 w-full sm:w-40 aspect-[2/1] rounded-xl bg-neutral-100 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/[0.06]" />

@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import type { ReactNode } from 'react'
 import { Link, useRouterState } from '@tanstack/react-router'
-import { useAuth, SignInButton, SignOutButton, UserButton } from '@clerk/tanstack-react-start'
+import { useAuth, SignInButton, SignUpButton, SignOutButton, UserButton } from '@clerk/tanstack-react-start'
 import { ThemeToggle } from '~/components/theme-toggle'
 import { MenuIcon, UserIcon } from '~/components/icons'
 
@@ -124,6 +124,9 @@ export function UserMenu() {
           <SignInButton mode="modal">
             <DropdownItem>Sign in</DropdownItem>
           </SignInButton>
+          <SignUpButton mode="modal">
+            <DropdownItem>Sign up</DropdownItem>
+          </SignUpButton>
           <DropdownDivider />
           <DropdownItem>Submit a vendor</DropdownItem>
         </>

@@ -1,5 +1,5 @@
 import type { Vendor, VendorCategory } from '~/lib/types'
-import { CATEGORIES, COUNTRIES, TAGS } from '~/lib/constants'
+import { COMPOUNDS, COUNTRIES, TAGS } from '~/lib/constants'
 import { PillNav } from '~/components/pill-nav'
 import { VendorGrid, VendorGridSkeleton } from '~/components/vendor-grid'
 import { SearchIcon, XIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from '~/components/icons'
@@ -18,9 +18,10 @@ interface DirectoryListingProps {
   currentPage: number
   vendors: Vendor[]
   activeTags: string
+  activeCompound: string
 }
 
-export function DirectoryListing({ category, heading, description, searchQuery, countryFilter, currentPage, vendors, activeTags }: DirectoryListingProps) {
+export function DirectoryListing({ category, heading, description, searchQuery, countryFilter, currentPage, vendors, activeTags, activeCompound }: DirectoryListingProps) {
   const navigate = useNavigate()
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
   const searchRef = useRef<HTMLInputElement>(null)
@@ -63,8 +64,9 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
     if (searchQuery) s.q = searchQuery
     if (countryFilter) s.country = countryFilter
     if (activeTags) s.tags = activeTags
+    if (activeCompound) s.compound = activeCompound
     return s
-  }, [searchQuery, countryFilter, activeTags])
+  }, [searchQuery, countryFilter, activeTags, activeCompound])
 
   const navTo = category === 'all' ? ('/' as const) : ('/$category' as const)
   const navParams = category === 'all' ? undefined : { category }
@@ -156,19 +158,16 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
 
             <div className="relative flex-1 sm:flex-none sm:w-40">
               <select
-                value={category}
+                value={activeCompound || ''}
                 onChange={(e) => {
-                  const val = e.target.value as VendorCategory
-                  if (val === 'all') {
-                    navigate({ to: '/', search: { q: searchQuery || undefined, country: countryFilter || undefined, tags: activeTags || undefined } })
-                  } else {
-                    navigate({ to: '/$category', params: { category: val }, search: { q: searchQuery || undefined, country: countryFilter || undefined, tags: activeTags || undefined } })
-                  }
+                  const val = e.target.value || undefined
+                  navigate({ to: navTo, params: navParams, search: { ...currentSearch, compound: val, page: undefined } })
                 }}
                 className="w-full appearance-none rounded-full border border-neutral-200/80 dark:border-white/[0.08] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer"
               >
-                {CATEGORIES.map((cat) => (
-                  <option key={cat.value} value={cat.value}>{cat.label}</option>
+                <option value="">All Peptides</option>
+                {COMPOUNDS.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
               </select>
               <ChevronDownIcon className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />

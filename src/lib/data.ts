@@ -28,14 +28,28 @@ export const getVendorById = createServerFn({ method: 'GET' })
   })
 
 export const filterVendors = createServerFn({ method: 'GET' })
-  .inputValidator((d: { category?: string; country?: string; q?: string; tags?: string }) => d)
+  .inputValidator((d: { category?: string; country?: string; q?: string; tags?: string; compound?: string }) => d)
   .handler(async ({ data: filters }) => {
-    const { category, country, q, tags: tagString } = filters
+    const { category, country, q, tags: tagString, compound } = filters
     const tagIds = tagString ? tagString.split(',').filter(Boolean) : []
 
-    // If filtering by tags, we need to join through vendor_tags
+    // Collect vendor ID constraints from join tables
+    let vendorIdPool: string[] | undefined
+
+    // Filter by compound via vendor_compounds
+    if (compound) {
+      const compoundRows = await db
+        .select({ vendorId: vendorCompounds.vendorId })
+        .from(vendorCompounds)
+        .where(eq(vendorCompounds.compoundId, compound))
+
+      const compoundVendorIds = compoundRows.map((r) => r.vendorId)
+      if (compoundVendorIds.length === 0) return []
+      vendorIdPool = compoundVendorIds
+    }
+
+    // Filter by tags via vendor_tags
     if (tagIds.length > 0) {
-      // Get vendor IDs that have ALL the requested tags
       const taggedVendorRows = await db
         .select({ vendorId: vendorTags.vendorId })
         .from(vendorTags)
@@ -43,40 +57,23 @@ export const filterVendors = createServerFn({ method: 'GET' })
         .groupBy(vendorTags.vendorId)
 
       const taggedVendorIds = taggedVendorRows.map((r) => r.vendorId)
-
       if (taggedVendorIds.length === 0) return []
 
-      const conditions = [inArray(vendors.id, taggedVendorIds)]
-
-      if (category && category !== 'all') {
-        conditions.push(eq(vendors.category, category))
+      // Intersect with compound filter if both are active
+      if (vendorIdPool) {
+        const tagSet = new Set(taggedVendorIds)
+        vendorIdPool = vendorIdPool.filter((id) => tagSet.has(id))
+        if (vendorIdPool.length === 0) return []
+      } else {
+        vendorIdPool = taggedVendorIds
       }
-      if (country) {
-        conditions.push(eq(vendors.country, country))
-      }
-      if (q) {
-        const pattern = `%${q}%`
-        conditions.push(
-          or(
-            ilike(vendors.name, pattern),
-            ilike(vendors.location, pattern),
-            ilike(vendors.country, pattern),
-            ilike(vendors.description, pattern),
-          )!,
-        )
-      }
-
-      const rows = await db
-        .select()
-        .from(vendors)
-        .where(and(...conditions))
-        .orderBy(desc(vendors.rating))
-
-      return rows.map(rowToVendor)
     }
 
-    // Standard filter without tags
     const conditions = []
+
+    if (vendorIdPool) {
+      conditions.push(inArray(vendors.id, vendorIdPool))
+    }
 
     if (category && category !== 'all') {
       conditions.push(eq(vendors.category, category))

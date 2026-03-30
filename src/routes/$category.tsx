@@ -50,9 +50,9 @@ export const Route = createFileRoute('/$category')({
     }
     return { category }
   },
-  loaderDeps: ({ search }) => ({ page: search.page, q: search.q, country: search.country, tags: search.tags }),
+  loaderDeps: ({ search }) => ({ page: search.page, q: search.q, country: search.country, tags: search.tags, compound: search.compound }),
   loader: async ({ params, deps }) => {
-    const vendors = await filterVendors({ data: { category: params.category, q: deps.q, country: deps.country, tags: deps.tags } })
+    const vendors = await filterVendors({ data: { category: params.category, q: deps.q, country: deps.country, tags: deps.tags, compound: deps.compound } })
     return { category: params.category, ...deps, vendors }
   },
   head: ({ loaderData }) => {
@@ -86,7 +86,7 @@ export const Route = createFileRoute('/$category')({
 
 function CategoryPage() {
   const { category } = Route.useParams()
-  const { q, country, page, tags } = Route.useSearch()
+  const { q, country, page, tags, compound } = Route.useSearch()
   const { vendors } = Route.useLoaderData()
 
   if (!isValidCategory(category)) return null
@@ -104,6 +104,7 @@ function CategoryPage() {
       currentPage={page}
       vendors={vendors}
       activeTags={tags ?? ''}
+      activeCompound={compound ?? ''}
     />
   )
 }

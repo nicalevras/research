@@ -210,11 +210,11 @@ export function PeptidesDropdown() {
   }, [])
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} className="relative flex items-center">
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="inline-flex items-center gap-1 text-[13px] font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors cursor-pointer"
+        className="inline-flex items-center gap-1 text-[13px] leading-none font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors cursor-pointer"
       >
         Peptides
         <ChevronDownIcon className="h-3 w-3" />

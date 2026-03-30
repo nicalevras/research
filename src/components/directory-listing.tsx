@@ -105,9 +105,9 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
       <JsonLd data={breadcrumbSchema(crumbs)} />
 
       <div className="space-y-4">
-        <div className="mb-8">
+        <div className="space-y-1.5">
           <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">{heading}</h1>
-          <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-xl text-pretty mt-1.5">{description}</p>
+          <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-xl text-pretty">{description}</p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">

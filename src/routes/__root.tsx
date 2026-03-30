@@ -8,7 +8,6 @@ import {
 } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
 import type { ErrorComponentProps } from '@tanstack/react-router'
-import { ClerkProvider } from '@clerk/tanstack-react-start'
 import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary'
 import { NotFound } from '~/components/NotFound'
 import { HamburgerMenu, UserMenu } from '~/components/nav-dropdowns'
@@ -66,7 +65,6 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <HeadContent />
       </head>
       <body className="min-h-screen">
-        <ClerkProvider>
         <div className="mx-auto w-full max-w-6xl flex min-h-screen flex-col">
           <header className="sticky top-4 z-50 mt-4 bg-white/80 dark:bg-neutral-900/80 rounded-full border border-neutral-200/60 dark:border-white/8 mx-4 sm:mx-6 lg:mx-8 px-2 py-2 backdrop-blur-xl">
             <div className="flex items-center justify-between">
@@ -116,7 +114,6 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
             </div>
           </footer>
         </div>
-        </ClerkProvider>
         <Scripts />
       </body>
     </html>

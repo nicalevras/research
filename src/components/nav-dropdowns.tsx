@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import type { ReactNode } from 'react'
 import { Link, useRouterState } from '@tanstack/react-router'
-import { useAuth, SignInButton, SignUpButton, SignOutButton, UserButton } from '@clerk/tanstack-react-start'
 import { ThemeToggle } from '~/components/theme-toggle'
 import { MenuIcon, UserIcon } from '~/components/icons'
 
@@ -93,44 +92,13 @@ export function HamburgerMenu() {
 }
 
 export function UserMenu() {
-  const { isLoaded, isSignedIn } = useAuth()
-
   return (
     <DropdownMenu
       trigger={<UserIcon className="h-5 w-5" strokeWidth={1.5} />}
     >
-      {!isLoaded ? (
-        <DropdownItem>Loading...</DropdownItem>
-      ) : isSignedIn ? (
-        <>
-          <div className="px-3 py-2">
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: 'h-8 w-8',
-                },
-              }}
-            />
-          </div>
-          <DropdownDivider />
-          <DropdownItem>Submit a vendor</DropdownItem>
-          <DropdownDivider />
-          <SignOutButton>
-            <DropdownItem>Sign out</DropdownItem>
-          </SignOutButton>
-        </>
-      ) : (
-        <>
-          <SignInButton mode="modal">
-            <DropdownItem>Sign in</DropdownItem>
-          </SignInButton>
-          <SignUpButton mode="modal">
-            <DropdownItem>Sign up</DropdownItem>
-          </SignUpButton>
-          <DropdownDivider />
-          <DropdownItem>Submit a vendor</DropdownItem>
-        </>
-      )}
+      <DropdownItem>Sign in</DropdownItem>
+      <DropdownDivider />
+      <DropdownItem>Submit a vendor</DropdownItem>
       <DropdownDivider />
       <div className="flex items-center justify-between px-3 py-2">
         <span className="text-sm text-neutral-600 dark:text-neutral-300">Theme</span>

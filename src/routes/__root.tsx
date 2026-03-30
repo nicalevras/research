@@ -10,7 +10,7 @@ import type { ReactNode } from 'react'
 import type { ErrorComponentProps } from '@tanstack/react-router'
 import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary'
 import { NotFound } from '~/components/NotFound'
-import { HamburgerMenu, UserMenu } from '~/components/nav-dropdowns'
+import { HamburgerMenu, UserMenu, SearchButton } from '~/components/nav-dropdowns'
 import { SITE_URL } from '~/lib/constants'
 import appCss from '~/styles/app.css?url'
 
@@ -85,6 +85,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
                 </div>
               </div>
               <div className="flex items-center gap-2">
+                <SearchButton />
                 <HamburgerMenu />
                 <div className="h-4 w-px bg-neutral-200 dark:bg-white/10" />
                 <UserMenu />

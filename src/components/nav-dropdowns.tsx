@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 import type { ReactNode } from 'react'
-import { Link, useRouterState } from '@tanstack/react-router'
+import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
 import { useTheme } from '~/lib/use-theme'
-import { MenuIcon, UserIcon, SunIcon, MoonIcon, LogInIcon, UserPlusIcon } from '~/components/icons'
+import { MenuIcon, UserIcon, SunIcon, MoonIcon, LogInIcon, UserPlusIcon, SearchIcon } from '~/components/icons'
 
 function DropdownMenu({ trigger, children, align = 'right' }: { trigger: ReactNode; children: ReactNode; align?: 'left' | 'right' }) {
   const [open, setOpen] = useState(false)
@@ -113,5 +113,20 @@ export function UserMenu() {
         Theme
       </DropdownItem>
     </DropdownMenu>
+  )
+}
+
+export function SearchButton() {
+  const navigate = useNavigate()
+
+  return (
+    <button
+      type="button"
+      onClick={() => navigate({ to: '/' })}
+      className="inline-flex items-center justify-center rounded-full h-8 w-8 cursor-pointer bg-white/70 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/8 text-neutral-500 dark:text-neutral-400 hover:bg-white dark:hover:bg-white/[0.08] hover:text-neutral-900 dark:hover:text-white transition-all duration-200"
+      aria-label="Search"
+    >
+      <SearchIcon className="h-4 w-4" strokeWidth={1.5} />
+    </button>
   )
 }

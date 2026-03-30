@@ -28,15 +28,22 @@ function ReviewStars({ rating }: { rating: number }) {
   return (
     <div className="flex gap-px">
       {[1, 2, 3, 4, 5].map((star) => {
-        const filled = rating >= star
+        const isFull = rating >= star
+        const isHalf = !isFull && rating >= star - 0.5
         return (
-          <StarIcon
-            key={star}
-            className={`h-3.5 w-3.5 ${filled ? 'text-amber-400' : 'text-neutral-200 dark:text-neutral-700'}`}
-            fill={filled ? 'currentColor' : 'none'}
-            stroke={filled ? 'none' : 'currentColor'}
-            strokeWidth={filled ? 0 : 1.2}
-          />
+          <div key={star} className="relative">
+            <StarIcon
+              className={`h-3.5 w-3.5 ${isFull ? 'text-amber-400' : 'text-neutral-200 dark:text-neutral-700'}`}
+              fill={isFull ? 'currentColor' : 'none'}
+              stroke={isFull ? 'none' : 'currentColor'}
+              strokeWidth={isFull ? 0 : 1.2}
+            />
+            {isHalf && (
+              <div className="absolute inset-0 overflow-hidden" style={{ width: '50%' }}>
+                <StarIcon className="h-3.5 w-3.5 text-amber-400" fill="currentColor" stroke="none" />
+              </div>
+            )}
+          </div>
         )
       })}
     </div>
@@ -45,26 +52,31 @@ function ReviewStars({ rating }: { rating: number }) {
 
 function StarPicker({ rating, onChange }: { rating: number; onChange: (r: number) => void }) {
   const [hover, setHover] = useState(0)
+  const current = hover || rating
+
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map((star) => {
-        const active = star <= (hover || rating)
+        const half = star - 0.5
+        const isHalf = current >= half && current < star
+        const isFull = current >= star
+
         return (
-          <button
-            key={star}
-            type="button"
-            onClick={() => onChange(star)}
-            onMouseEnter={() => setHover(star)}
-            onMouseLeave={() => setHover(0)}
-            className="cursor-pointer"
-          >
+          <div key={star} className="relative cursor-pointer p-0.5" onMouseLeave={() => setHover(0)}>
             <StarIcon
-              className={`h-5 w-5 transition-colors ${active ? 'text-amber-400' : 'text-neutral-200 dark:text-neutral-700'}`}
-              fill={active ? 'currentColor' : 'none'}
-              stroke={active ? 'none' : 'currentColor'}
-              strokeWidth={active ? 0 : 1.2}
+              className={`h-5 w-5 transition-colors ${isFull ? 'text-amber-400' : 'text-neutral-200 dark:text-neutral-700'}`}
+              fill={isFull ? 'currentColor' : 'none'}
+              stroke={isFull ? 'none' : 'currentColor'}
+              strokeWidth={isFull ? 0 : 1.2}
             />
-          </button>
+            {isHalf && (
+              <div className="absolute inset-0 p-0.5 overflow-hidden" style={{ width: '50%' }}>
+                <StarIcon className="h-5 w-5 text-amber-400" fill="currentColor" stroke="none" />
+              </div>
+            )}
+            <button type="button" className="absolute inset-y-0 left-0 w-1/2" onClick={() => onChange(half)} onMouseEnter={() => setHover(half)} aria-label={`${half} stars`} />
+            <button type="button" className="absolute inset-y-0 right-0 w-1/2" onClick={() => onChange(star)} onMouseEnter={() => setHover(star)} aria-label={`${star} stars`} />
+          </div>
         )
       })}
     </div>
@@ -162,6 +174,10 @@ function ChangePasswordSection({ isOAuthOnly }: { isOAuthOnly: boolean }) {
     setError('')
     setSuccess('')
 
+    if (!currentPassword) {
+      setError('Current password is required')
+      return
+    }
     if (newPassword.length < 8) {
       setError('New password must be at least 8 characters')
       return

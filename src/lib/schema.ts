@@ -23,7 +23,6 @@ export function itemListSchema(
         description: v.description,
         address: {
           '@type': 'PostalAddress',
-          addressLocality: v.location,
           addressCountry: v.country,
         },
         aggregateRating: {
@@ -60,7 +59,6 @@ export function organizationSchema(vendor: Vendor) {
     description: vendor.description,
     address: {
       '@type': 'PostalAddress',
-      addressLocality: vendor.location,
       addressCountry: vendor.country,
     },
     aggregateRating: {

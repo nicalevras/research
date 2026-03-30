@@ -112,17 +112,11 @@ export function UserMenu() {
         <DropdownItem>Loading...</DropdownItem>
       ) : session ? (
         <>
-          <div className="px-3 py-2 text-sm text-neutral-900 dark:text-white font-medium truncate">
-            {(session.user as Record<string, unknown>).username as string || session.user.name}
-          </div>
-          <div className="px-3 pb-2 text-xs text-neutral-400 dark:text-neutral-500 truncate">
-            {session.user.email}
-          </div>
-          <DropdownDivider />
           <DropdownLink to="/account">
             <SettingsIcon className="h-4 w-4" strokeWidth={1.5} />
             Account
           </DropdownLink>
+          <DropdownDivider />
           <DropdownItem onClick={handleSignOut}>
             <LogOutIcon className="h-4 w-4" strokeWidth={1.5} />
             Sign Out

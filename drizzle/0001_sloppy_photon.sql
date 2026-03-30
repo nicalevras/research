@@ -1,0 +1,1 @@
+ALTER TABLE "vendor_compounds" ADD COLUMN "coa_url" text;

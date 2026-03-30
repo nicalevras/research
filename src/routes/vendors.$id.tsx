@@ -4,7 +4,7 @@ import { SITE_URL } from '~/lib/constants'
 import { StarRating } from '~/components/vendor-ui'
 import { ReviewsList } from '~/components/reviews'
 import { breadcrumbSchema, organizationSchema } from '~/lib/schema'
-import { CircleAlertIcon, ChevronLeftIcon, ShoppingCartIcon } from '~/components/icons'
+import { CircleAlertIcon, ChevronLeftIcon, ShoppingCartIcon, ExternalLinkIcon } from '~/components/icons'
 
 function VendorNotFound() {
   return (
@@ -58,9 +58,71 @@ export const Route = createFileRoute('/vendors/$id')({
       ],
     }
   },
+  pendingComponent: VendorSkeleton,
   component: VendorDetailPage,
   notFoundComponent: VendorNotFound,
 })
+
+function Shimmer({ className }: { className?: string }) {
+  return <div className={`animate-pulse rounded-lg bg-neutral-100 dark:bg-white/[0.06] ${className ?? ''}`} />
+}
+
+function VendorSkeleton() {
+  return (
+    <div className="space-y-6">
+      <Shimmer className="h-4 w-28" />
+
+      <div className="glass-card-solid p-6 sm:p-8 space-y-8 shadow-none">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+          <div className="flex flex-col sm:flex-row gap-5">
+            <Shimmer className="shrink-0 w-full sm:w-40 aspect-[2/1] rounded-xl" />
+            <div className="space-y-3">
+              <Shimmer className="h-7 w-48" />
+              <Shimmer className="h-4 w-32" />
+              <Shimmer className="h-4 w-24" />
+              <Shimmer className="h-4 w-full max-w-md" />
+              <Shimmer className="h-4 w-3/4 max-w-sm" />
+            </div>
+          </div>
+          <Shimmer className="h-10 w-28 rounded-full" />
+        </div>
+
+        <div className="h-px bg-neutral-100 dark:bg-white/[0.04]" />
+
+        <div className="space-y-3">
+          <Shimmer className="h-3 w-20" />
+          <div className="rounded-xl border border-neutral-100 dark:border-white/[0.04] divide-y divide-neutral-100 dark:divide-white/[0.04]">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex items-center justify-between px-4 py-3">
+                <Shimmer className="h-4 w-24" />
+                <Shimmer className="h-3 w-16" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="h-px bg-neutral-100 dark:bg-white/[0.04]" />
+
+        <div className="space-y-4">
+          <Shimmer className="h-3 w-20" />
+          <div className="rounded-xl border border-neutral-100 dark:border-white/[0.04] divide-y divide-neutral-100 dark:divide-white/[0.04] px-4">
+            {[1, 2].map((i) => (
+              <div key={i} className="py-4 space-y-2">
+                <div className="flex items-center gap-2">
+                  <Shimmer className="h-4 w-20" />
+                  <Shimmer className="h-3 w-16" />
+                </div>
+                <Shimmer className="h-3.5 w-16" />
+                <Shimmer className="h-4 w-full" />
+                <Shimmer className="h-4 w-2/3" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function VendorDetailPage() {
   const { vendor, compounds, reviews } = Route.useLoaderData()
@@ -78,12 +140,16 @@ function VendorDetailPage() {
       <div className="glass-card-solid p-6 sm:p-8 space-y-8 shadow-none">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
           <div className="flex flex-col sm:flex-row gap-5">
-            <div className="shrink-0 w-full sm:w-40 aspect-[2/1] rounded-xl bg-neutral-100 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/[0.06]" />
+            <div className="shrink-0 w-full sm:w-40 aspect-[2/1] rounded-xl bg-neutral-100 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
+              {vendor.imageUrl && (
+                <img src={vendor.imageUrl} alt={vendor.name} className="h-full w-full object-cover" />
+              )}
+            </div>
           <div className="space-y-3">
             <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">{vendor.name}</h1>
             <div className="flex flex-wrap items-center gap-2.5">
               <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                {vendor.location}, {vendor.country}
+                {vendor.country}
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -104,25 +170,62 @@ function VendorDetailPage() {
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-1.5 rounded-full bg-neutral-900 dark:bg-white px-4 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors shrink-0"
           >
-            <ShoppingCartIcon className="h-4 w-4" />
-            Shop Now
+            View Website
+            <ExternalLinkIcon className="h-3.5 w-3.5" />
           </a>
         </div>
 
         <div className="h-px bg-neutral-100 dark:bg-white/[0.04]" />
 
         {compounds.length > 0 && (
-          <div className="space-y-3">
-            <h2 className="text-sm font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">Peptides</h2>
-            <div className="rounded-xl border border-neutral-100 dark:border-white/[0.04] divide-y divide-neutral-100 dark:divide-white/[0.04]">
-              {compounds.map((compound) => (
-                <div key={compound.id} className="flex items-center justify-between px-4 py-3 text-sm">
-                  <span className="font-medium text-neutral-700 dark:text-neutral-200">{compound.name}</span>
-                  {compound.category && (
-                    <span className="text-neutral-400 dark:text-neutral-500 text-xs">{compound.category}</span>
-                  )}
-                </div>
-              ))}
+          <div>
+            <div className="rounded-xl border border-neutral-100 dark:border-white/[0.04] overflow-hidden">
+              <table className="w-full text-[13px]">
+                <colgroup>
+                  <col className="w-1/2" />
+                  <col />
+                  <col className="w-1/2" />
+                </colgroup>
+                <thead>
+                  <tr className="bg-neutral-50 dark:bg-white/[0.03] border-b border-neutral-100 dark:border-white/[0.04]">
+                    <th className="px-4 py-2.5 text-left font-bold text-neutral-500 dark:text-neutral-400">Peptide</th>
+                    <th className="px-4 py-2.5 text-left font-bold text-neutral-500 dark:text-neutral-400">COA</th>
+                    <th className="px-4 py-2.5 text-right font-bold text-neutral-500 dark:text-neutral-400">Buy</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-neutral-100 dark:divide-white/[0.04]">
+                  {compounds.map((compound) => (
+                    <tr key={compound.id}>
+                      <td className="px-4 py-3 font-semibold text-neutral-700 dark:text-neutral-200">{compound.name}</td>
+                      <td className="px-4 py-3 text-left">
+                        {compound.coaUrl ? (
+                          <a
+                            href={compound.coaUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap"
+                          >
+                            View
+                            <ExternalLinkIcon className="h-3.5 w-3.5" />
+                          </a>
+                        ) : (
+                          <span className="text-neutral-300 dark:text-neutral-600 block text-center">N/A</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <a
+                          href={vendor.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-white/70 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/8 text-neutral-500 dark:text-neutral-400 hover:bg-white dark:hover:bg-white/[0.08] hover:text-neutral-900 dark:hover:text-white transition-all duration-200"
+                        >
+                          <ShoppingCartIcon className="h-3.5 w-3.5" />
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         )}

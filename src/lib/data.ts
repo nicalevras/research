@@ -11,8 +11,8 @@ function rowToVendor(row: typeof vendors.$inferSelect): Vendor {
     id: row.id,
     name: row.name,
     website: row.website,
-    location: row.location,
     country: row.country,
+    imageUrl: row.imageUrl,
     rating: row.rating,
     reviewCount: row.reviewCount,
     description: row.description,
@@ -107,7 +107,6 @@ export const filterVendors = createServerFn({ method: 'GET' })
       conditions.push(
         or(
           ilike(vendors.name, pattern),
-          ilike(vendors.location, pattern),
           ilike(vendors.country, pattern),
           ilike(vendors.description, pattern),
           ...(compoundMatchIds.length > 0 ? [inArray(vendors.id, compoundMatchIds)] : []),
@@ -140,7 +139,7 @@ export const getVendorCompounds = createServerFn({ method: 'GET' })
   .inputValidator((d: string) => d)
   .handler(async ({ data: vendorId }) => {
     const rows = await db
-      .select({ id: compounds.id, name: compounds.name, category: compounds.category })
+      .select({ id: compounds.id, name: compounds.name, category: compounds.category, coaUrl: vendorCompounds.coaUrl })
       .from(vendorCompounds)
       .innerJoin(compounds, eq(vendorCompounds.compoundId, compounds.id))
       .where(eq(vendorCompounds.vendorId, vendorId))
@@ -230,7 +229,7 @@ export const createReview = createServerFn({ method: 'POST' })
     const session = await auth.api.getSession({ headers })
     if (!session) throw new Error('Unauthorized')
     const { vendorId, rating, comment } = data
-    if (!Number.isInteger(rating) || rating < 1 || rating > 5) throw new Error('Rating must be 1-5')
+    if (rating < 1 || rating > 5 || (rating * 2) % 1 !== 0) throw new Error('Rating must be 1-5 in 0.5 increments')
     if (!comment.trim()) throw new Error('Comment is required')
     if (comment.trim().length > MAX_COMMENT_LENGTH) throw new Error(`Comment must be under ${MAX_COMMENT_LENGTH} characters`)
 
@@ -262,7 +261,7 @@ export const updateReview = createServerFn({ method: 'POST' })
     const session = await auth.api.getSession({ headers })
     if (!session) throw new Error('Unauthorized')
     const { reviewId, rating, comment } = data
-    if (!Number.isInteger(rating) || rating < 1 || rating > 5) throw new Error('Rating must be 1-5')
+    if (rating < 1 || rating > 5 || (rating * 2) % 1 !== 0) throw new Error('Rating must be 1-5 in 0.5 increments')
     if (!comment.trim()) throw new Error('Comment is required')
     if (comment.trim().length > MAX_COMMENT_LENGTH) throw new Error(`Comment must be under ${MAX_COMMENT_LENGTH} characters`)
 

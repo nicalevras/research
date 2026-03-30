@@ -2,8 +2,8 @@ export interface Vendor {
   id: string
   name: string
   website: string
-  location: string
   country: string
+  imageUrl: string | null
   rating: number
   reviewCount: number
   description: string

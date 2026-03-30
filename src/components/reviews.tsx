@@ -3,52 +3,171 @@ import type { Review } from '~/lib/types'
 import { authClient } from '~/lib/auth-client'
 import { useAuthModal } from '~/lib/auth-context'
 import { createReview, updateReview, deleteReview } from '~/lib/data'
-import { StarIcon, XIcon } from '~/components/icons'
+import { StarIcon } from '~/components/icons'
 import { useRouter } from '@tanstack/react-router'
+
+const AVATAR_COLORS = [
+  'bg-rose-500', 'bg-orange-500', 'bg-amber-500', 'bg-emerald-500',
+  'bg-teal-500', 'bg-cyan-500', 'bg-blue-500', 'bg-indigo-500',
+  'bg-violet-500', 'bg-purple-500', 'bg-pink-500', 'bg-sky-500',
+]
+
+function hashColor(name: string) {
+  let hash = 0
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash)
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
+}
+
+function relativeTime(dateStr: string) {
+  const now = Date.now()
+  const then = new Date(dateStr).getTime()
+  const diff = now - then
+  const mins = Math.floor(diff / 60000)
+  if (mins < 1) return 'Just now'
+  if (mins < 60) return `${mins}m ago`
+  const hours = Math.floor(mins / 60)
+  if (hours < 24) return `${hours}h ago`
+  const days = Math.floor(hours / 24)
+  if (days < 7) return `${days}d ago`
+  if (days < 30) return `${Math.floor(days / 7)}w ago`
+  return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
 
 function StarPicker({ rating, onChange }: { rating: number; onChange: (r: number) => void }) {
   const [hover, setHover] = useState(0)
+  const current = hover || rating
+
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map((star) => {
-        const active = star <= (hover || rating)
+        const half = star - 0.5
+        const isHalf = current >= half && current < star
+        const isFull = current >= star
+
         return (
-          <button
+          <div
             key={star}
-            type="button"
-            onClick={() => onChange(star)}
-            onMouseEnter={() => setHover(star)}
+            className="relative cursor-pointer p-0.5"
             onMouseLeave={() => setHover(0)}
-            className="cursor-pointer"
           >
             <StarIcon
-              className={`h-5 w-5 transition-colors ${active ? 'text-amber-400' : 'text-neutral-200 dark:text-neutral-700'}`}
-              fill={active ? 'currentColor' : 'none'}
-              stroke={active ? 'none' : 'currentColor'}
-              strokeWidth={active ? 0 : 1.2}
+              className={`h-7 w-7 transition-colors ${isFull ? 'text-amber-400' : 'text-neutral-200 dark:text-neutral-700'}`}
+              fill={isFull ? 'currentColor' : 'none'}
+              stroke={isFull ? 'none' : 'currentColor'}
+              strokeWidth={isFull ? 0 : 1.2}
             />
-          </button>
+            {isHalf && (
+              <div className="absolute inset-0 p-0.5 overflow-hidden" style={{ width: '50%' }}>
+                <StarIcon
+                  className="h-7 w-7 text-amber-400"
+                  fill="currentColor"
+                  stroke="none"
+                />
+              </div>
+            )}
+            {/* Left half - click for x.5 */}
+            <button
+              type="button"
+              className="absolute inset-y-0 left-0 w-1/2"
+              onClick={() => onChange(half)}
+              onMouseEnter={() => setHover(half)}
+              aria-label={`${half} stars`}
+            />
+            {/* Right half - click for x.0 */}
+            <button
+              type="button"
+              className="absolute inset-y-0 right-0 w-1/2"
+              onClick={() => onChange(star)}
+              onMouseEnter={() => setHover(star)}
+              aria-label={`${star} stars`}
+            />
+          </div>
         )
       })}
     </div>
   )
 }
 
-function ReviewStars({ rating }: { rating: number }) {
+function ReviewStars({ rating, size = 'sm' }: { rating: number; size?: 'sm' | 'lg' }) {
+  const cls = size === 'lg' ? 'h-5 w-5' : 'h-3.5 w-3.5'
   return (
     <div className="flex gap-px">
       {[1, 2, 3, 4, 5].map((star) => {
-        const filled = rating >= star
+        const isFull = rating >= star
+        const isHalf = !isFull && rating >= star - 0.5
         return (
-          <StarIcon
-            key={star}
-            className={`h-3.5 w-3.5 ${filled ? 'text-amber-400' : 'text-neutral-200 dark:text-neutral-700'}`}
-            fill={filled ? 'currentColor' : 'none'}
-            stroke={filled ? 'none' : 'currentColor'}
-            strokeWidth={filled ? 0 : 1.2}
-          />
+          <div key={star} className="relative">
+            <StarIcon
+              className={`${cls} ${isFull ? 'text-amber-400' : 'text-neutral-200 dark:text-neutral-700'}`}
+              fill={isFull ? 'currentColor' : 'none'}
+              stroke={isFull ? 'none' : 'currentColor'}
+              strokeWidth={isFull ? 0 : 1.2}
+            />
+            {isHalf && (
+              <div className="absolute inset-0 overflow-hidden" style={{ width: '50%' }}>
+                <StarIcon
+                  className={`${cls} text-amber-400`}
+                  fill="currentColor"
+                  stroke="none"
+                />
+              </div>
+            )}
+          </div>
         )
       })}
+    </div>
+  )
+}
+
+function RatingSummary({ reviews }: { reviews: Review[] }) {
+  const total = reviews.length
+  if (total === 0) return null
+
+  const avg = reviews.reduce((sum, r) => sum + r.rating, 0) / total
+  const dist = [5, 4, 3, 2, 1].map((star) => ({
+    star,
+    count: reviews.filter((r) => Math.floor(r.rating) === star).length,
+  }))
+
+  return (
+    <div className="rounded-2xl bg-neutral-50 dark:bg-white/[0.02] border border-neutral-100 dark:border-white/[0.04] p-6">
+      <div className="flex gap-8 items-center">
+        <div className="text-center shrink-0 space-y-1">
+          <div className="text-5xl font-bold tabular-nums text-neutral-900 dark:text-white leading-none">{avg.toFixed(1)}</div>
+          <ReviewStars rating={avg} size="lg" />
+          <p className="text-[13px] text-neutral-500 dark:text-neutral-400">
+            {total} {total === 1 ? 'review' : 'reviews'}
+          </p>
+        </div>
+        <div className="flex-1 space-y-2">
+          {dist.map(({ star, count }) => {
+            const pct = total > 0 ? (count / total) * 100 : 0
+            return (
+              <div key={star} className="flex items-center gap-2.5">
+                <span className="w-3 text-right text-[13px] tabular-nums font-medium text-neutral-600 dark:text-neutral-300">{star}</span>
+                <StarIcon className="h-3 w-3 text-amber-400 shrink-0" fill="currentColor" stroke="none" />
+                <div className="flex-1 h-2.5 rounded-full bg-neutral-200/70 dark:bg-white/[0.06] overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-amber-400 transition-all duration-500"
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
+                <span className="w-6 text-right text-[13px] tabular-nums text-neutral-400 dark:text-neutral-500">{count}</span>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function Avatar({ name }: { name: string }) {
+  const initial = name.charAt(0).toUpperCase()
+  const color = hashColor(name)
+  return (
+    <div className={`h-9 w-9 rounded-full ${color} flex items-center justify-center shrink-0 shadow-sm`}>
+      <span className="text-sm font-bold text-white leading-none">{initial}</span>
     </div>
   )
 }
@@ -68,9 +187,9 @@ export function ReviewForm({ vendorId, existingReview, onDone }: {
 
   if (!session) {
     return (
-      <div className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] p-6 text-center">
-        <p className="text-sm text-neutral-500 dark:text-neutral-400">
-          <button type="button" onClick={openSignIn} className="font-medium text-neutral-900 dark:text-white hover:underline cursor-pointer">
+      <div className="rounded-2xl bg-neutral-50 dark:bg-white/[0.02] border border-neutral-100 dark:border-white/[0.04] p-6 text-center">
+        <p className="text-[13px] text-neutral-500 dark:text-neutral-400">
+          <button type="button" onClick={openSignIn} className="font-semibold text-neutral-900 dark:text-white hover:underline cursor-pointer">
             Sign in
           </button>
           {' '}to leave a review
@@ -104,25 +223,28 @@ export function ReviewForm({ vendorId, existingReview, onDone }: {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] p-5 space-y-4">
-      <h3 className="text-sm font-medium text-neutral-900 dark:text-white">
+    <form onSubmit={handleSubmit} className="rounded-2xl bg-neutral-50 dark:bg-white/[0.02] border border-neutral-100 dark:border-white/[0.04] p-6 space-y-4">
+      <h3 className="text-sm font-semibold text-neutral-900 dark:text-white">
         {existingReview ? 'Edit your review' : 'Write a review'}
       </h3>
       <StarPicker rating={rating} onChange={setRating} />
       <textarea
         value={comment}
         onChange={(e) => setComment(e.target.value)}
-        placeholder="Share your experience..."
-        rows={3}
+        placeholder="Share your experience with this vendor..."
+        rows={4}
         maxLength={2000}
-        className="w-full rounded-xl border border-neutral-200/80 dark:border-white/[0.08] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all resize-none"
+        className="w-full rounded-xl border border-neutral-200 dark:border-white/[0.08] bg-white dark:bg-white/[0.04] px-4 py-3 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all resize-none"
       />
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-neutral-400 dark:text-neutral-500">{comment.length}/2000</span>
+        {error && <p className="text-sm text-red-500">{error}</p>}
+      </div>
       <div className="flex gap-3">
         <button
           type="submit"
           disabled={loading}
-          className="rounded-full bg-neutral-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
+          className="rounded-full bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
         >
           {loading ? 'Saving...' : existingReview ? 'Update Review' : 'Submit Review'}
         </button>
@@ -130,7 +252,7 @@ export function ReviewForm({ vendorId, existingReview, onDone }: {
           <button
             type="button"
             onClick={onDone}
-            className="rounded-full border border-neutral-200/60 dark:border-white/[0.06] px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors cursor-pointer"
+            className="rounded-full border border-neutral-200 dark:border-white/[0.06] px-5 py-2.5 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-white/[0.04] transition-colors cursor-pointer"
           >
             Cancel
           </button>
@@ -166,42 +288,43 @@ export function ReviewCard({ review, currentUserId, onEdit, onDeleted }: {
     }
   }
 
-  const date = new Date(review.createdAt)
-  const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  const timeAgo = relativeTime(review.createdAt)
 
   return (
-    <div className="py-4 space-y-2">
-      <div className="flex items-start justify-between gap-3">
-        <div className="space-y-1">
+    <div className="py-5 flex gap-4">
+      <Avatar name={review.username} />
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-neutral-900 dark:text-white">{review.username}</span>
-            <span className="text-xs text-neutral-400 dark:text-neutral-500">{dateStr}</span>
+            <span className="text-[13px] font-semibold text-neutral-900 dark:text-white">{review.username}</span>
+            <span className="text-[11px] text-neutral-400 dark:text-neutral-500">{timeAgo}</span>
           </div>
+          {isOwner && (
+            <div className="flex items-center gap-2.5 shrink-0">
+              <button
+                type="button"
+                onClick={onEdit}
+                className="text-[11px] font-medium text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-200 transition-colors cursor-pointer"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={deleting}
+                className="text-[11px] font-medium text-neutral-400 hover:text-red-500 dark:text-neutral-500 dark:hover:text-red-400 transition-colors cursor-pointer disabled:opacity-50"
+              >
+                {deleting ? '...' : 'Delete'}
+              </button>
+            </div>
+          )}
+        </div>
+        <div className="mt-1">
           <ReviewStars rating={review.rating} />
         </div>
-        {isOwner && (
-          <div className="flex items-center gap-1 shrink-0">
-            <button
-              type="button"
-              onClick={onEdit}
-              className="text-xs text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300 transition-colors cursor-pointer"
-            >
-              Edit
-            </button>
-            <span className="text-neutral-300 dark:text-neutral-600">|</span>
-            <button
-              type="button"
-              onClick={handleDelete}
-              disabled={deleting}
-              className="text-xs text-neutral-400 hover:text-red-500 dark:text-neutral-500 dark:hover:text-red-400 transition-colors cursor-pointer disabled:opacity-50"
-            >
-              {deleting ? '...' : 'Delete'}
-            </button>
-          </div>
-        )}
+        <p className="mt-2.5 text-[13px] text-neutral-600 dark:text-neutral-300 leading-relaxed">{review.comment}</p>
+        {deleteError && <p className="text-xs text-red-500 mt-2">{deleteError}</p>}
       </div>
-      <p className="text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">{review.comment}</p>
-      {deleteError && <p className="text-xs text-red-500 mt-1">{deleteError}</p>}
     </div>
   )
 }
@@ -214,12 +337,9 @@ export function ReviewsList({ reviews: initialReviews, vendorId }: { reviews: Re
   const hasReviewed = !!userReview
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-sm font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
-        Reviews {initialReviews.length > 0 && `(${initialReviews.length})`}
-      </h2>
+    <div className="space-y-5">
+      <RatingSummary reviews={initialReviews} />
 
-      {/* Show review form if user hasn't reviewed yet, or if editing their review */}
       {editingId && userReview ? (
         <ReviewForm
           vendorId={vendorId}
@@ -231,7 +351,7 @@ export function ReviewsList({ reviews: initialReviews, vendorId }: { reviews: Re
       ) : null}
 
       {initialReviews.length > 0 ? (
-        <div className="rounded-xl border border-neutral-100 dark:border-white/[0.04] divide-y divide-neutral-100 dark:divide-white/[0.04] px-4">
+        <div className="divide-y divide-neutral-100 dark:divide-white/[0.04]">
           {initialReviews.map((review) => (
             <ReviewCard
               key={review.id}
@@ -243,7 +363,10 @@ export function ReviewsList({ reviews: initialReviews, vendorId }: { reviews: Re
           ))}
         </div>
       ) : (
-        <p className="text-sm text-neutral-400 dark:text-neutral-500">No reviews yet. Be the first to leave one!</p>
+        <div className="rounded-2xl bg-neutral-50 dark:bg-white/[0.02] border border-neutral-100 dark:border-white/[0.04] py-12 text-center">
+          <p className="text-sm font-medium text-neutral-500 dark:text-neutral-400">No reviews yet</p>
+          <p className="text-[13px] text-neutral-400 dark:text-neutral-500 mt-1">Be the first to share your experience</p>
+        </div>
       )}
     </div>
   )

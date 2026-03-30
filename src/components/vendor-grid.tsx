@@ -9,8 +9,12 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
         to="/vendors/$id"
         params={{ id: vendor.id }}
         aria-label={`${vendor.name} image`}
-        className="aspect-[16/9] block bg-neutral-100 dark:bg-neutral-800"
-      />
+        className="aspect-[16/9] block bg-neutral-100 dark:bg-neutral-800 overflow-hidden"
+      >
+        {vendor.imageUrl && (
+          <img src={vendor.imageUrl} alt={vendor.name} className="h-full w-full object-cover" loading="lazy" />
+        )}
+      </Link>
       <div className="p-5 flex flex-col flex-1">
         <div className="space-y-1">
           <Link
@@ -21,21 +25,28 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
             {vendor.name}
           </Link>
           <div className="flex items-center gap-2 text-[12px] text-neutral-500 dark:text-neutral-400">
-            <span>{vendor.location}, {vendor.country}</span>
+            <span>{vendor.country}</span>
           </div>
           <div className="flex items-center gap-1">
             <span className="text-sm font-semibold tabular-nums text-neutral-900 dark:text-white">{vendor.rating.toFixed(1)}</span>
             <div className="flex gap-px">
               {[1, 2, 3, 4, 5].map((star) => {
-                const filled = vendor.rating >= star
+                const isFull = vendor.rating >= star
+                const isHalf = !isFull && vendor.rating >= star - 0.5
                 return (
-                  <StarIcon
-                    key={star}
-                    className={`h-3 w-3 ${filled ? 'text-amber-400' : 'text-neutral-200 dark:text-neutral-700'}`}
-                    fill={filled ? 'currentColor' : 'none'}
-                    stroke={filled ? 'none' : 'currentColor'}
-                    strokeWidth={filled ? 0 : 1.2}
-                  />
+                  <div key={star} className="relative">
+                    <StarIcon
+                      className={`h-3 w-3 ${isFull ? 'text-amber-400' : 'text-neutral-200 dark:text-neutral-700'}`}
+                      fill={isFull ? 'currentColor' : 'none'}
+                      stroke={isFull ? 'none' : 'currentColor'}
+                      strokeWidth={isFull ? 0 : 1.2}
+                    />
+                    {isHalf && (
+                      <div className="absolute inset-0 overflow-hidden" style={{ width: '50%' }}>
+                        <StarIcon className="h-3 w-3 text-amber-400" fill="currentColor" stroke="none" />
+                      </div>
+                    )}
+                  </div>
                 )
               })}
             </div>

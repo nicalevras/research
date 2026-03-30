@@ -64,8 +64,8 @@ export const vendors = pgTable('vendors', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   website: text('website').notNull(),
-  location: text('location').notNull(),
   country: text('country').notNull(),
+  imageUrl: text('image_url'),
   rating: real('rating').notNull().default(0),
   reviewCount: integer('review_count').notNull().default(0),
   description: text('description').notNull(),
@@ -79,7 +79,7 @@ export const reviews = pgTable('reviews', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
   vendorId: text('vendor_id').notNull().references(() => vendors.id, { onDelete: 'cascade' }),
-  rating: integer('rating').notNull(),
+  rating: real('rating').notNull(),
   comment: text('comment').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
@@ -111,6 +111,7 @@ export const vendorCompounds = pgTable('vendor_compounds', {
   compoundId: text('compound_id')
     .notNull()
     .references(() => compounds.id, { onDelete: 'cascade' }),
+  coaUrl: text('coa_url'),
 }, (t) => [
   primaryKey({ columns: [t.vendorId, t.compoundId] }),
   index('idx_vendor_compounds_compound_id').on(t.compoundId),

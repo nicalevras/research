@@ -112,7 +112,7 @@ function VendorDetailPage() {
 
         {compounds.length > 0 && (
           <div className="space-y-3">
-            <h2 className="text-sm font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">Compounds</h2>
+            <h2 className="text-sm font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">Peptides</h2>
             <div className="rounded-xl border border-neutral-100 dark:border-white/[0.04] divide-y divide-neutral-100 dark:divide-white/[0.04]">
               {compounds.map((compound) => (
                 <div key={compound.id} className="flex items-center justify-between px-4 py-3 text-sm">

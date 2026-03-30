@@ -145,19 +145,6 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
           <div className="flex gap-3 shrink-0 w-full sm:w-auto">
             <div className="relative flex-1 sm:flex-none sm:w-40">
               <select
-                value={countryFilter || 'All Countries'}
-                onChange={(e) => handleCountryChange(e.target.value)}
-                className="w-full appearance-none rounded-full border border-neutral-200/80 dark:border-white/[0.08] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer"
-              >
-                {COUNTRIES.map((country) => (
-                  <option key={country} value={country}>{country}</option>
-                ))}
-              </select>
-              <ChevronDownIcon className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
-            </div>
-
-            <div className="relative flex-1 sm:flex-none sm:w-40">
-              <select
                 value={activeCompound || ''}
                 onChange={(e) => {
                   const val = e.target.value || undefined
@@ -168,6 +155,19 @@ export function DirectoryListing({ category, heading, description, searchQuery, 
                 <option value="">All Peptides</option>
                 {COMPOUNDS.map((c) => (
                   <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+              <ChevronDownIcon className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
+            </div>
+
+            <div className="relative flex-1 sm:flex-none sm:w-40">
+              <select
+                value={countryFilter || 'All Countries'}
+                onChange={(e) => handleCountryChange(e.target.value)}
+                className="w-full appearance-none rounded-full border border-neutral-200/80 dark:border-white/[0.08] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer"
+              >
+                {COUNTRIES.map((country) => (
+                  <option key={country} value={country}>{country}</option>
                 ))}
               </select>
               <ChevronDownIcon className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />

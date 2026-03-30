@@ -74,7 +74,7 @@ function DropdownDivider() {
 export function HamburgerMenu() {
   return (
     <DropdownMenu
-      align="left"
+      align="right"
       trigger={<MenuIcon className="h-5 w-5" strokeWidth={1.5} />}
     >
       <DropdownLink to="/">Vendors</DropdownLink>

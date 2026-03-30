@@ -2,7 +2,9 @@ import { useState, useRef, useEffect } from 'react'
 import type { ReactNode } from 'react'
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
 import { useTheme } from '~/lib/use-theme'
-import { MenuIcon, UserIcon, SunIcon, MoonIcon, LogInIcon, UserPlusIcon, SearchIcon, XIcon, ChevronDownIcon } from '~/components/icons'
+import { useAuthModal } from '~/lib/auth-context'
+import { authClient } from '~/lib/auth-client'
+import { MenuIcon, UserIcon, SunIcon, MoonIcon, LogInIcon, UserPlusIcon, LogOutIcon, SettingsIcon, SearchIcon, XIcon, ChevronDownIcon } from '~/components/icons'
 import { COMPOUNDS } from '~/lib/constants'
 
 function DropdownMenu({ trigger, children, align = 'right' }: { trigger: ReactNode; children: ReactNode; align?: 'left' | 'right' }) {
@@ -56,7 +58,7 @@ function DropdownItem({ children, onClick }: { children: ReactNode; onClick?: ()
   )
 }
 
-function DropdownLink({ to, params, children }: { to: '/' | '/$compound'; params?: { compound: string }; children: ReactNode }) {
+function DropdownLink({ to, params, children }: { to: string; params?: Record<string, string>; children: ReactNode }) {
   return (
     <Link
       to={to}
@@ -94,14 +96,45 @@ export function HamburgerMenu() {
 
 export function UserMenu() {
   const { theme, toggleTheme } = useTheme()
+  const { openSignIn, openSignUp } = useAuthModal()
+  const { data: session, isPending } = authClient.useSession()
+
+  const handleSignOut = async () => {
+    await authClient.signOut()
+    window.location.reload()
+  }
 
   return (
     <DropdownMenu
       trigger={<UserIcon className="h-5 w-5" strokeWidth={1.5} />}
     >
-      <DropdownItem><LogInIcon className="h-4 w-4" strokeWidth={1.5} /> Sign In</DropdownItem>
-      <DropdownDivider />
-      <DropdownItem><UserPlusIcon className="h-4 w-4" strokeWidth={1.5} /> Sign Up</DropdownItem>
+      {isPending ? (
+        <DropdownItem>Loading...</DropdownItem>
+      ) : session ? (
+        <>
+          <div className="px-3 py-2 text-sm text-neutral-900 dark:text-white font-medium truncate">
+            {(session.user as Record<string, unknown>).username as string || session.user.name}
+          </div>
+          <div className="px-3 pb-2 text-xs text-neutral-400 dark:text-neutral-500 truncate">
+            {session.user.email}
+          </div>
+          <DropdownDivider />
+          <DropdownLink to="/account">
+            <SettingsIcon className="h-4 w-4" strokeWidth={1.5} />
+            Account
+          </DropdownLink>
+          <DropdownItem onClick={handleSignOut}>
+            <LogOutIcon className="h-4 w-4" strokeWidth={1.5} />
+            Sign Out
+          </DropdownItem>
+        </>
+      ) : (
+        <>
+          <DropdownItem onClick={openSignIn}><LogInIcon className="h-4 w-4" strokeWidth={1.5} /> Sign In</DropdownItem>
+          <DropdownDivider />
+          <DropdownItem onClick={openSignUp}><UserPlusIcon className="h-4 w-4" strokeWidth={1.5} /> Sign Up</DropdownItem>
+        </>
+      )}
       <DropdownDivider />
       <DropdownItem onClick={toggleTheme}>
         {theme === 'dark' ? (

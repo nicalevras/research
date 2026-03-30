@@ -1,7 +1,8 @@
 import { createFileRoute, Link, notFound } from '@tanstack/react-router'
-import { getVendorById, getVendorCompounds } from '~/lib/data'
+import { getVendorById, getVendorCompounds, getVendorReviews } from '~/lib/data'
 import { SITE_URL } from '~/lib/constants'
 import { StarRating } from '~/components/vendor-ui'
+import { ReviewsList } from '~/components/reviews'
 import { breadcrumbSchema, organizationSchema } from '~/lib/schema'
 import { CircleAlertIcon, ChevronLeftIcon, ShoppingCartIcon } from '~/components/icons'
 
@@ -21,8 +22,11 @@ export const Route = createFileRoute('/vendors/$id')({
   loader: async ({ params: { id } }) => {
     const vendor = await getVendorById({ data: id })
     if (!vendor) throw notFound()
-    const compounds = await getVendorCompounds({ data: vendor.id })
-    return { vendor, compounds }
+    const [compounds, reviews] = await Promise.all([
+      getVendorCompounds({ data: vendor.id }),
+      getVendorReviews({ data: vendor.id }),
+    ])
+    return { vendor, compounds, reviews }
   },
   head: ({ loaderData }) => {
     const vendor = loaderData?.vendor
@@ -59,7 +63,7 @@ export const Route = createFileRoute('/vendors/$id')({
 })
 
 function VendorDetailPage() {
-  const { vendor, compounds } = Route.useLoaderData()
+  const { vendor, compounds, reviews } = Route.useLoaderData()
 
   return (
     <div className="space-y-6">
@@ -85,7 +89,7 @@ function VendorDetailPage() {
             <div className="flex items-center gap-2">
               <StarRating rating={vendor.rating} />
               <span className="text-sm text-neutral-400 dark:text-neutral-500">
-                {vendor.reviewCount} reviews
+                {vendor.reviewCount} {vendor.reviewCount === 1 ? 'review' : 'reviews'}
               </span>
             </div>
             <p className="text-sm leading-relaxed text-neutral-500 dark:text-neutral-400 max-w-2xl text-pretty">
@@ -122,6 +126,10 @@ function VendorDetailPage() {
             </div>
           </div>
         )}
+
+        <div className="h-px bg-neutral-100 dark:bg-white/[0.04]" />
+
+        <ReviewsList reviews={reviews} vendorId={vendor.id} />
       </div>
     </div>
   )

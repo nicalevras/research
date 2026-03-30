@@ -9,10 +9,23 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AccountRouteImport } from './routes/account'
 import { Route as CompoundRouteImport } from './routes/$compound'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VendorsIdRouteImport } from './routes/vendors.$id'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CompoundRoute = CompoundRouteImport.update({
   id: '/$compound',
   path: '/$compound',
@@ -28,39 +41,89 @@ const VendorsIdRoute = VendorsIdRouteImport.update({
   path: '/vendors/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$compound': typeof CompoundRoute
+  '/account': typeof AccountRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/vendors/$id': typeof VendorsIdRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$compound': typeof CompoundRoute
+  '/account': typeof AccountRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/vendors/$id': typeof VendorsIdRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$compound': typeof CompoundRoute
+  '/account': typeof AccountRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/vendors/$id': typeof VendorsIdRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$compound' | '/vendors/$id'
+  fullPaths:
+    | '/'
+    | '/$compound'
+    | '/account'
+    | '/reset-password'
+    | '/vendors/$id'
+    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$compound' | '/vendors/$id'
-  id: '__root__' | '/' | '/$compound' | '/vendors/$id'
+  to:
+    | '/'
+    | '/$compound'
+    | '/account'
+    | '/reset-password'
+    | '/vendors/$id'
+    | '/api/auth/$'
+  id:
+    | '__root__'
+    | '/'
+    | '/$compound'
+    | '/account'
+    | '/reset-password'
+    | '/vendors/$id'
+    | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CompoundRoute: typeof CompoundRoute
+  AccountRoute: typeof AccountRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   VendorsIdRoute: typeof VendorsIdRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$compound': {
       id: '/$compound'
       path: '/$compound'
@@ -82,13 +145,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VendorsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CompoundRoute: CompoundRoute,
+  AccountRoute: AccountRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   VendorsIdRoute: VendorsIdRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -17,8 +17,8 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     website: 'https://peptidesciences.com',
     location: 'Henderson, NV',
     country: 'USA',
-    rating: 4.8,
-    reviewCount: 1240,
+    rating: 0,
+    reviewCount: 0,
     description: 'Premium research peptides with rigorous third-party testing. Known for high purity levels and extensive catalog of over 100 peptide compounds.',
   },
   {
@@ -27,8 +27,8 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     website: 'https://limitlesslifenootropics.com',
     location: 'Phoenix, AZ',
     country: 'USA',
-    rating: 4.5,
-    reviewCount: 830,
+    rating: 0,
+    reviewCount: 0,
     description: 'Specializes in research-grade peptides and nootropics with a focus on longevity and anti-aging compounds.',
   },
   {
@@ -37,8 +37,8 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     website: 'https://purerawz.co',
     location: 'Provo, UT',
     country: 'USA',
-    rating: 4.6,
-    reviewCount: 960,
+    rating: 0,
+    reviewCount: 0,
     description: 'Wide selection of research peptides and SARMs with verified COAs on every batch. Popular among biohacking community.',
   },
   {
@@ -47,8 +47,8 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     website: 'https://elementsarms.com',
     location: 'Austin, TX',
     country: 'USA',
-    rating: 4.3,
-    reviewCount: 540,
+    rating: 0,
+    reviewCount: 0,
     description: 'Research chemicals supplier offering peptides, SARMs, and nootropics with transparent lab reports.',
   },
   {
@@ -57,8 +57,8 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     website: 'https://swisschems.is',
     location: 'Zurich',
     country: 'Switzerland',
-    rating: 4.4,
-    reviewCount: 710,
+    rating: 0,
+    reviewCount: 0,
     description: 'European-based supplier of premium research peptides with pharmaceutical-grade quality standards.',
   },
   {
@@ -67,8 +67,8 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     website: 'https://canagen.io',
     location: 'Vancouver, BC',
     country: 'Canada',
-    rating: 4.7,
-    reviewCount: 420,
+    rating: 0,
+    reviewCount: 0,
     description: 'Developing peptide-based therapeutics for metabolic disorders and tissue repair. Clinical-stage biotech.',
   },
   {
@@ -77,8 +77,8 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     website: 'https://medpeptide.com',
     location: 'Boston, MA',
     country: 'USA',
-    rating: 4.9,
-    reviewCount: 380,
+    rating: 0,
+    reviewCount: 0,
     description: 'Compounding pharmacy specializing in therapeutic peptides for hormone optimization and injury recovery.',
   },
   {
@@ -87,8 +87,8 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     website: 'https://restorpeptide.com',
     location: 'Miami, FL',
     country: 'USA',
-    rating: 4.6,
-    reviewCount: 620,
+    rating: 0,
+    reviewCount: 0,
     description: 'Telemedicine peptide therapy clinic offering BPC-157, TB-500, and growth hormone secretagogues with physician oversight.',
   },
   {
@@ -97,8 +97,8 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     website: 'https://vitalitypeptide.com',
     location: 'Denver, CO',
     country: 'USA',
-    rating: 4.5,
-    reviewCount: 290,
+    rating: 0,
+    reviewCount: 0,
     description: 'Integrative medicine practice focused on peptide therapy for anti-aging, immune support, and cognitive enhancement.',
   },
   {
@@ -107,8 +107,8 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     website: 'https://biotherapeutics.eu',
     location: 'Munich',
     country: 'Germany',
-    rating: 4.7,
-    reviewCount: 350,
+    rating: 0,
+    reviewCount: 0,
     description: 'European biotech firm developing peptide-based drugs for autoimmune conditions and regenerative medicine.',
   },
   {
@@ -117,8 +117,8 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     website: 'https://thepeptidecompany.com',
     location: 'Seoul',
     country: 'South Korea',
-    rating: 4.3,
-    reviewCount: 880,
+    rating: 0,
+    reviewCount: 0,
     description: 'K-beauty inspired peptide skincare formulations. Copper peptides, matrixyl, and argireline-based products.',
   },
   {
@@ -127,8 +127,8 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     website: 'https://dermapep.com',
     location: 'Los Angeles, CA',
     country: 'USA',
-    rating: 4.4,
-    reviewCount: 560,
+    rating: 0,
+    reviewCount: 0,
     description: 'Custom peptide synthesis for cosmetic brands. Supplies signal peptides, carrier peptides, and neurotransmitter-inhibiting peptides.',
   },
   {
@@ -137,8 +137,8 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     website: 'https://naturpeptide.com',
     location: 'Lyon',
     country: 'France',
-    rating: 4.6,
-    reviewCount: 340,
+    rating: 0,
+    reviewCount: 0,
     description: 'French peptide cosmetics manufacturer specializing in anti-aging and collagen-boosting peptide formulations.',
   },
   {
@@ -147,8 +147,8 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     website: 'https://biosynth.com',
     location: 'Shanghai',
     country: 'China',
-    rating: 4.2,
-    reviewCount: 290,
+    rating: 0,
+    reviewCount: 0,
     description: 'Large-scale custom peptide synthesis for pharmaceutical companies. GMP-compliant API manufacturing.',
   },
   {
@@ -157,8 +157,8 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     website: 'https://americanpeptide.com',
     location: 'San Jose, CA',
     country: 'USA',
-    rating: 4.5,
-    reviewCount: 410,
+    rating: 0,
+    reviewCount: 0,
     description: 'GMP peptide API manufacturer serving pharmaceutical and biotech industries. Specializing in long-chain and modified peptides.',
   },
   {
@@ -167,8 +167,8 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     website: 'https://bacpeptide.com',
     location: 'Karlsruhe',
     country: 'Germany',
-    rating: 4.6,
-    reviewCount: 180,
+    rating: 0,
+    reviewCount: 0,
     description: 'European peptide manufacturer providing custom synthesis and catalog peptides for drug development.',
   },
   {
@@ -177,8 +177,8 @@ const vendorData: (typeof schema.vendors.$inferInsert)[] = [
     website: 'https://caspeptide.com',
     location: 'Hangzhou',
     country: 'China',
-    rating: 4.0,
-    reviewCount: 220,
+    rating: 0,
+    reviewCount: 0,
     description: 'Cost-effective peptide API supplier with large-scale production capacity. Serves generic drug manufacturers worldwide.',
   },
 ]
@@ -416,6 +416,7 @@ async function seed() {
 
   // Clear existing data (order matters for foreign keys)
   console.log('  Clearing existing data...')
+  await db.delete(schema.reviews)
   await db.delete(schema.vendorTags)
   await db.delete(schema.tags)
   await db.delete(schema.vendorCompounds)

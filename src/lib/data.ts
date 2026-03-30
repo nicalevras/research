@@ -1,8 +1,10 @@
 import { createServerFn } from '@tanstack/react-start'
-import { eq, and, ilike, or, desc, inArray } from 'drizzle-orm'
+import { getRequestHeaders } from '@tanstack/react-start/server'
+import { eq, and, ilike, or, desc, inArray, avg, count, sql, ne } from 'drizzle-orm'
 import { db } from '~/db'
-import { vendors, compounds, vendorCompounds, tags, vendorTags } from '~/db/schema'
-import type { Vendor } from './types'
+import { vendors, compounds, vendorCompounds, tags, vendorTags, reviews, user, account } from '~/db/schema'
+import { auth } from '~/lib/auth'
+import type { Vendor, Review } from './types'
 
 function rowToVendor(row: typeof vendors.$inferSelect): Vendor {
   return {
@@ -15,6 +17,14 @@ function rowToVendor(row: typeof vendors.$inferSelect): Vendor {
     reviewCount: row.reviewCount,
     description: row.description,
   }
+}
+
+function escapeLike(str: string): string {
+  return str.replace(/[%_\\]/g, '\\$&')
+}
+
+function isUniqueViolation(err: unknown): boolean {
+  return err instanceof Error && (err.message.includes('unique') || err.message.includes('duplicate') || err.message.includes('23505'))
 }
 
 export const getVendorById = createServerFn({ method: 'GET' })
@@ -79,7 +89,8 @@ export const filterVendors = createServerFn({ method: 'GET' })
     }
 
     if (q) {
-      const pattern = `%${q}%`
+      const escaped = escapeLike(q)
+      const pattern = `%${escaped}%`
 
       // Find vendors linked to compounds matching the query
       const compoundMatchRows = await db
@@ -150,4 +161,258 @@ export const getVendorsByCompound = createServerFn({ method: 'GET' })
       .orderBy(desc(vendors.rating))
 
     return rows.map((r) => rowToVendor(r.vendor))
+  })
+
+// ── Reviews ─────────────────────────────────────────────────────────
+
+async function recalcVendorRating(vendorId: string) {
+  const [result] = await db
+    .select({
+      avgRating: avg(reviews.rating),
+      total: count(reviews.id),
+    })
+    .from(reviews)
+    .where(eq(reviews.vendorId, vendorId))
+
+  await db
+    .update(vendors)
+    .set({
+      rating: result.avgRating ? parseFloat(String(result.avgRating)) : 0,
+      reviewCount: result.total,
+      updatedAt: new Date(),
+    })
+    .where(eq(vendors.id, vendorId))
+}
+
+const MAX_COMMENT_LENGTH = 2000
+
+export const getVendorReviews = createServerFn({ method: 'GET' })
+  .inputValidator((d: string) => d)
+  .handler(async ({ data: vendorId }) => {
+    const rows = await db
+      .select({
+        id: reviews.id,
+        userId: reviews.userId,
+        username: user.username,
+        vendorId: reviews.vendorId,
+        rating: reviews.rating,
+        comment: reviews.comment,
+        createdAt: reviews.createdAt,
+        updatedAt: reviews.updatedAt,
+      })
+      .from(reviews)
+      .innerJoin(user, eq(reviews.userId, user.id))
+      .where(eq(reviews.vendorId, vendorId))
+      .orderBy(desc(reviews.createdAt))
+
+    return rows.map((r): Review => ({
+      id: r.id,
+      userId: r.userId,
+      username: r.username,
+      vendorId: r.vendorId,
+      rating: r.rating,
+      comment: r.comment,
+      createdAt: r.createdAt.toISOString(),
+      updatedAt: r.updatedAt.toISOString(),
+    }))
+  })
+
+export const createReview = createServerFn({ method: 'POST' })
+  .inputValidator((d: { vendorId: string; rating: number; comment: string }) => d)
+  .handler(async ({ data }) => {
+    const headers = getRequestHeaders()
+    const session = await auth.api.getSession({ headers })
+    if (!session) throw new Error('Unauthorized')
+
+    const { vendorId, rating, comment } = data
+    if (rating < 1 || rating > 5) throw new Error('Rating must be 1-5')
+    if (!comment.trim()) throw new Error('Comment is required')
+    if (comment.trim().length > MAX_COMMENT_LENGTH) throw new Error(`Comment must be under ${MAX_COMMENT_LENGTH} characters`)
+
+    // Verify vendor exists
+    const vendor = await db.query.vendors.findFirst({ where: eq(vendors.id, vendorId) })
+    if (!vendor) throw new Error('Vendor not found')
+
+    // Insert and catch unique constraint violation (TOCTOU-safe)
+    try {
+      await db.insert(reviews).values({
+        userId: session.user.id,
+        vendorId,
+        rating,
+        comment: comment.trim(),
+      })
+    } catch (err) {
+      if (isUniqueViolation(err)) throw new Error('You have already reviewed this vendor')
+      throw err
+    }
+
+    await recalcVendorRating(vendorId)
+    return { success: true }
+  })
+
+export const updateReview = createServerFn({ method: 'POST' })
+  .inputValidator((d: { reviewId: string; rating: number; comment: string }) => d)
+  .handler(async ({ data }) => {
+    const headers = getRequestHeaders()
+    const session = await auth.api.getSession({ headers })
+    if (!session) throw new Error('Unauthorized')
+
+    const { reviewId, rating, comment } = data
+    if (rating < 1 || rating > 5) throw new Error('Rating must be 1-5')
+    if (!comment.trim()) throw new Error('Comment is required')
+    if (comment.trim().length > MAX_COMMENT_LENGTH) throw new Error(`Comment must be under ${MAX_COMMENT_LENGTH} characters`)
+
+    const review = await db.query.reviews.findFirst({
+      where: eq(reviews.id, reviewId),
+    })
+    if (!review) throw new Error('Review not found')
+    if (review.userId !== session.user.id) throw new Error('Unauthorized')
+
+    await db
+      .update(reviews)
+      .set({ rating, comment: comment.trim(), updatedAt: new Date() })
+      .where(eq(reviews.id, reviewId))
+
+    await recalcVendorRating(review.vendorId)
+    return { success: true }
+  })
+
+export const deleteReview = createServerFn({ method: 'POST' })
+  .inputValidator((d: { reviewId: string }) => d)
+  .handler(async ({ data }) => {
+    const headers = getRequestHeaders()
+    const session = await auth.api.getSession({ headers })
+    if (!session) throw new Error('Unauthorized')
+
+    const review = await db.query.reviews.findFirst({
+      where: eq(reviews.id, data.reviewId),
+    })
+    if (!review) throw new Error('Review not found')
+    if (review.userId !== session.user.id) throw new Error('Unauthorized')
+
+    const vendorId = review.vendorId
+    await db.delete(reviews).where(eq(reviews.id, data.reviewId))
+    await recalcVendorRating(vendorId)
+    return { success: true }
+  })
+
+export const getUserReviews = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    const headers = getRequestHeaders()
+    const session = await auth.api.getSession({ headers })
+    if (!session) throw new Error('Unauthorized')
+
+    const rows = await db
+      .select({
+        id: reviews.id,
+        userId: reviews.userId,
+        username: user.username,
+        vendorId: reviews.vendorId,
+        vendorName: vendors.name,
+        rating: reviews.rating,
+        comment: reviews.comment,
+        createdAt: reviews.createdAt,
+        updatedAt: reviews.updatedAt,
+      })
+      .from(reviews)
+      .innerJoin(user, eq(reviews.userId, user.id))
+      .innerJoin(vendors, eq(reviews.vendorId, vendors.id))
+      .where(eq(reviews.userId, session.user.id))
+      .orderBy(desc(reviews.createdAt))
+
+    return rows.map((r) => ({
+      id: r.id,
+      userId: r.userId,
+      username: r.username,
+      vendorId: r.vendorId,
+      vendorName: r.vendorName,
+      rating: r.rating,
+      comment: r.comment,
+      createdAt: r.createdAt.toISOString(),
+      updatedAt: r.updatedAt.toISOString(),
+    }))
+  })
+
+// ── Username ────────────────────────────────────────────────────────
+
+const MAX_USERNAME_LENGTH = 30
+
+export const checkUsername = createServerFn({ method: 'GET' })
+  .inputValidator((d: string) => d)
+  .handler(async ({ data: username }) => {
+    const headers = getRequestHeaders()
+    const session = await auth.api.getSession({ headers })
+    if (!session) throw new Error('Unauthorized')
+
+    const existing = await db
+      .select({ id: user.id })
+      .from(user)
+      .where(
+        and(eq(sql`lower(${user.username})`, username.toLowerCase()), ne(user.id, session.user.id)),
+      )
+      .limit(1)
+
+    return { available: existing.length === 0 }
+  })
+
+export const changeUsername = createServerFn({ method: 'POST' })
+  .inputValidator((d: { username: string }) => d)
+  .handler(async ({ data }) => {
+    const headers = getRequestHeaders()
+    const session = await auth.api.getSession({ headers })
+    if (!session) throw new Error('Unauthorized')
+
+    const username = data.username.trim()
+    if (!username || username.length < 2) throw new Error('Username must be at least 2 characters')
+    if (username.length > MAX_USERNAME_LENGTH) throw new Error(`Username must be ${MAX_USERNAME_LENGTH} characters or fewer`)
+    if (!/^[a-zA-Z0-9_-]+$/.test(username)) throw new Error('Username can only contain letters, numbers, hyphens, and underscores')
+
+    // Attempt the update directly — catch unique constraint violation (TOCTOU-safe)
+    try {
+      const result = await db
+        .update(user)
+        .set({ username, updatedAt: new Date() })
+        .where(eq(user.id, session.user.id))
+        .returning({ id: user.id })
+
+      if (result.length === 0) throw new Error('User not found')
+    } catch (err) {
+      if (isUniqueViolation(err)) throw new Error('Username is already taken')
+      throw err
+    }
+
+    return { success: true }
+  })
+
+// ── Account info ───────────────────────────────────────────────────
+
+export const getHasPassword = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    const headers = getRequestHeaders()
+    const session = await auth.api.getSession({ headers })
+    if (!session) throw new Error('Unauthorized')
+
+    const credential = await db
+      .select({ id: account.id })
+      .from(account)
+      .where(and(eq(account.userId, session.user.id), eq(account.providerId, 'credential')))
+      .limit(1)
+
+    return credential.length > 0
+  })
+
+// ── Account deletion cleanup ────────────────────────────────────────
+
+export const getAffectedVendorIds = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    const headers = getRequestHeaders()
+    const session = await auth.api.getSession({ headers })
+    if (!session) throw new Error('Unauthorized')
+
+    const rows = await db
+      .selectDistinct({ vendorId: reviews.vendorId })
+      .from(reviews)
+      .where(eq(reviews.userId, session.user.id))
+
+    return rows.map((r) => r.vendorId)
   })

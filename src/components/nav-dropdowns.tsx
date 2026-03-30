@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import type { ReactNode } from 'react'
 import { Link, useRouterState } from '@tanstack/react-router'
-import { Show, SignInButton, UserButton } from '@clerk/tanstack-react-start'
+import { useAuth, SignInButton, UserButton } from '@clerk/tanstack-react-start'
 import { ThemeToggle } from '~/components/theme-toggle'
 import { MenuIcon, UserIcon } from '~/components/icons'
 
@@ -92,10 +92,24 @@ export function HamburgerMenu() {
   )
 }
 
+const userIconButton = (
+  <button
+    type="button"
+    className="inline-flex items-center justify-center rounded-full h-8 w-8 cursor-pointer bg-white/70 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/8 text-neutral-500 dark:text-neutral-400 hover:bg-white dark:hover:bg-white/[0.08] hover:text-neutral-900 dark:hover:text-white transition-all duration-200"
+  >
+    <UserIcon className="h-5 w-5" strokeWidth={1.5} />
+  </button>
+)
+
 export function UserMenu() {
+  const { isLoaded, isSignedIn } = useAuth()
+
   return (
     <div className="flex items-center gap-2">
-      <Show when="signed-in">
+      {!isLoaded ? (
+        // Show static icon while Clerk loads
+        userIconButton
+      ) : isSignedIn ? (
         <UserButton
           appearance={{
             elements: {
@@ -103,17 +117,11 @@ export function UserMenu() {
             },
           }}
         />
-      </Show>
-      <Show when="signed-out">
+      ) : (
         <SignInButton mode="modal">
-          <button
-            type="button"
-            className="inline-flex items-center justify-center rounded-full h-8 w-8 cursor-pointer bg-white/70 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/8 text-neutral-500 dark:text-neutral-400 hover:bg-white dark:hover:bg-white/[0.08] hover:text-neutral-900 dark:hover:text-white transition-all duration-200"
-          >
-            <UserIcon className="h-5 w-5" strokeWidth={1.5} />
-          </button>
+          {userIconButton}
         </SignInButton>
-      </Show>
+      )}
       <ThemeToggle />
     </div>
   )

@@ -110,14 +110,14 @@ function VendorDetailPage() {
         {compounds.length > 0 && (
           <div className="space-y-3">
             <h2 className="text-sm font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">Compounds</h2>
-            <div className="flex flex-wrap gap-2">
+            <div className="rounded-xl border border-neutral-100 dark:border-white/[0.04] divide-y divide-neutral-100 dark:divide-white/[0.04]">
               {compounds.map((compound) => (
-                <span
-                  key={compound.id}
-                  className="inline-flex items-center rounded-full bg-neutral-50 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/[0.06] px-3 py-1.5 text-xs font-medium text-neutral-700 dark:text-neutral-300"
-                >
-                  {compound.name}
-                </span>
+                <div key={compound.id} className="flex items-center justify-between px-4 py-3 text-sm">
+                  <span className="font-medium text-neutral-700 dark:text-neutral-200">{compound.name}</span>
+                  {compound.category && (
+                    <span className="text-neutral-400 dark:text-neutral-500 text-xs">{compound.category}</span>
+                  )}
+                </div>
               ))}
             </div>
           </div>

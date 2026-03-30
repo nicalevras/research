@@ -88,18 +88,15 @@ function ForgotPasswordForm() {
     if (!email.trim()) { setError('Please enter your email'); return }
     setLoading(true)
     try {
-      const { error: authError } = await authClient.forgetPassword({
+      await authClient.forgetPassword({
         email,
         redirectTo: '/reset-password',
       })
-      if (authError) {
-        setError(authError.message ?? 'Something went wrong')
-      } else {
-        setSent(true)
-      }
     } catch {
-      setError('Something went wrong')
+      // Silently ignore — don't reveal whether the email exists
     } finally {
+      // Always show "check your email" to prevent email enumeration
+      setSent(true)
       setLoading(false)
     }
   }
@@ -169,7 +166,7 @@ function SignInForm() {
         password,
       })
       if (authError) {
-        setError(authError.message ?? 'Sign in failed')
+        setError('Invalid email or password')
       } else {
         closeModal()
         window.location.reload()

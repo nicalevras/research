@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
-import { eq, and, ilike, or, desc, inArray, avg, count, sql, ne } from 'drizzle-orm'
+import { eq, and, ilike, or, desc, inArray, avg, count, sql } from 'drizzle-orm'
 import { db } from '~/db'
 import { vendors, compounds, vendorCompounds, tags, vendorTags, reviews, user, account } from '~/db/schema'
 import { auth } from '~/lib/auth'
@@ -225,7 +225,7 @@ export const createReview = createServerFn({ method: 'POST' })
     if (!session) throw new Error('Unauthorized')
 
     const { vendorId, rating, comment } = data
-    if (rating < 1 || rating > 5) throw new Error('Rating must be 1-5')
+    if (!Number.isInteger(rating) || rating < 1 || rating > 5) throw new Error('Rating must be 1-5')
     if (!comment.trim()) throw new Error('Comment is required')
     if (comment.trim().length > MAX_COMMENT_LENGTH) throw new Error(`Comment must be under ${MAX_COMMENT_LENGTH} characters`)
 
@@ -258,7 +258,7 @@ export const updateReview = createServerFn({ method: 'POST' })
     if (!session) throw new Error('Unauthorized')
 
     const { reviewId, rating, comment } = data
-    if (rating < 1 || rating > 5) throw new Error('Rating must be 1-5')
+    if (!Number.isInteger(rating) || rating < 1 || rating > 5) throw new Error('Rating must be 1-5')
     if (!comment.trim()) throw new Error('Comment is required')
     if (comment.trim().length > MAX_COMMENT_LENGTH) throw new Error(`Comment must be under ${MAX_COMMENT_LENGTH} characters`)
 
@@ -337,24 +337,6 @@ export const getUserReviews = createServerFn({ method: 'GET' })
 
 const MAX_USERNAME_LENGTH = 30
 
-export const checkUsername = createServerFn({ method: 'GET' })
-  .inputValidator((d: string) => d)
-  .handler(async ({ data: username }) => {
-    const headers = getRequestHeaders()
-    const session = await auth.api.getSession({ headers })
-    if (!session) throw new Error('Unauthorized')
-
-    const existing = await db
-      .select({ id: user.id })
-      .from(user)
-      .where(
-        and(eq(sql`lower(${user.username})`, username.toLowerCase()), ne(user.id, session.user.id)),
-      )
-      .limit(1)
-
-    return { available: existing.length === 0 }
-  })
-
 export const changeUsername = createServerFn({ method: 'POST' })
   .inputValidator((d: { username: string }) => d)
   .handler(async ({ data }) => {
@@ -385,6 +367,30 @@ export const changeUsername = createServerFn({ method: 'POST' })
   })
 
 // ── Account info ───────────────────────────────────────────────────
+
+export const recalcVendorRatingsAfterDelete = createServerFn({ method: 'POST' })
+  .inputValidator((d: { vendorIds: string[] }) => d)
+  .handler(async ({ data }) => {
+    for (const vendorId of data.vendorIds) {
+      const [result] = await db
+        .select({
+          avgRating: avg(reviews.rating),
+          total: count(reviews.id),
+        })
+        .from(reviews)
+        .where(eq(reviews.vendorId, vendorId))
+
+      await db
+        .update(vendors)
+        .set({
+          rating: result.avgRating ? parseFloat(String(result.avgRating)) : 0,
+          reviewCount: result.total,
+          updatedAt: new Date(),
+        })
+        .where(eq(vendors.id, vendorId))
+    }
+    return { success: true }
+  })
 
 export const getHasPassword = createServerFn({ method: 'GET' })
   .handler(async () => {

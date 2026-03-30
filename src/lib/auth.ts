@@ -3,11 +3,15 @@ import { reactStartCookies } from 'better-auth/react-start'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { db } from '~/db'
 import * as schema from '~/db/schema'
-import { user as userTable, reviews, vendors } from '~/db/schema'
-import { eq, sql, avg, count } from 'drizzle-orm'
+import { user as userTable } from '~/db/schema'
+import { eq, sql } from 'drizzle-orm'
 import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
+
+function escapeHtml(str: string): string {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+}
 
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL,
@@ -33,7 +37,7 @@ export const auth = betterAuth({
       <table width="100%" style="max-width:460px;background:#ffffff;border-radius:12px;overflow:hidden">
         <tr><td style="padding:32px 32px 0">
           <p style="margin:0 0 4px;font-size:20px;font-weight:600;color:#171717">Reset your password</p>
-          <p style="margin:0 0 24px;font-size:14px;color:#737373">Hi ${user.name}, we received a request to reset your password.</p>
+          <p style="margin:0 0 24px;font-size:14px;color:#737373">Hi ${escapeHtml(user.name)}, we received a request to reset your password.</p>
           <a href="${url}" style="display:inline-block;background:#171717;color:#ffffff;font-size:14px;font-weight:500;padding:10px 24px;border-radius:9999px;text-decoration:none">Reset Password</a>
           <p style="margin:24px 0 0;font-size:12px;color:#a3a3a3;line-height:1.5">If you didn't request this, you can safely ignore this email. This link expires in 1 hour.</p>
         </td></tr>
@@ -82,14 +86,24 @@ export const auth = betterAuth({
       create: {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         before: (async (user: any) => {
-          // Fallback name for OAuth users with no name
+          // Validate and sanitize name
           if (!user.name) {
             user.name = (user.email as string).split('@')[0] || 'User'
+          }
+          // Strip anything that isn't letters, spaces, hyphens, or apostrophes, then trim and cap length
+          user.name = (user.name as string).replace(/[^a-zA-Z\s'-]/g, '').trim().slice(0, 50)
+          if (!(user.name as string)) {
+            user.name = 'User'
           }
           // If no username provided (e.g. OAuth), generate from email
           if (!user.username) {
             const base = (user.email as string).split('@')[0].replace(/[^a-zA-Z0-9_-]/g, '')
             user.username = base || `user${Date.now()}`
+          }
+          // Sanitize: strip any characters that aren't alphanumeric, hyphens, or underscores
+          user.username = (user.username as string).replace(/[^a-zA-Z0-9_-]/g, '')
+          if (!(user.username as string)) {
+            user.username = `user${Date.now().toString(36)}`
           }
           // Enforce minimum length
           if ((user.username as string).length < 2) {
@@ -128,25 +142,3 @@ export const auth = betterAuth({
   },
   plugins: [reactStartCookies()], // must be last
 })
-
-// Helper: recalculate vendor ratings after user deletion cascade
-export async function recalcAllVendorRatings(vendorIds: string[]) {
-  for (const vendorId of vendorIds) {
-    const [result] = await db
-      .select({
-        avgRating: avg(reviews.rating),
-        total: count(reviews.id),
-      })
-      .from(reviews)
-      .where(eq(reviews.vendorId, vendorId))
-
-    await db
-      .update(vendors)
-      .set({
-        rating: result.avgRating ? parseFloat(String(result.avgRating)) : 0,
-        reviewCount: result.total,
-        updatedAt: new Date(),
-      })
-      .where(eq(vendors.id, vendorId))
-  }
-}

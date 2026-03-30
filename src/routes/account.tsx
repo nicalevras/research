@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { createFileRoute, Link, redirect, useRouter } from '@tanstack/react-router'
 import { getSession } from '~/lib/auth.functions'
-import { getUserReviews, updateReview, deleteReview, changeUsername, getAffectedVendorIds, getHasPassword } from '~/lib/data'
-import { recalcAllVendorRatings } from '~/lib/auth'
+import { getUserReviews, updateReview, deleteReview, changeUsername, getAffectedVendorIds, getHasPassword, recalcVendorRatingsAfterDelete } from '~/lib/data'
 import { authClient } from '~/lib/auth-client'
 import { StarIcon, ChevronLeftIcon, KeyIcon, TrashIcon, PenIcon, UserIcon } from '~/components/icons'
 
@@ -267,7 +266,7 @@ function DeleteAccountSection({ isOAuthOnly }: { isOAuthOnly: boolean }) {
       } else {
         // Recalculate vendor ratings for affected vendors after cascade delete
         if (affectedVendorIds.length > 0) {
-          await recalcAllVendorRatings(affectedVendorIds).catch(() => {})
+          await recalcVendorRatingsAfterDelete({ data: { vendorIds: affectedVendorIds } }).catch(() => {})
         }
         window.location.href = '/'
       }

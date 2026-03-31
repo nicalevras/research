@@ -1,4 +1,4 @@
-import type { SVGProps } from 'react'
+import type { SVGProps, ReactElement } from 'react'
 
 type FlagProps = SVGProps<SVGSVGElement>
 
@@ -80,7 +80,7 @@ function CN(props: FlagProps) {
   )
 }
 
-const FLAG_MAP: Record<string, (props: FlagProps) => JSX.Element> = {
+const FLAG_MAP: Record<string, (props: FlagProps) => ReactElement> = {
   'USA': US,
   'Canada': CA,
   'Switzerland': CH,

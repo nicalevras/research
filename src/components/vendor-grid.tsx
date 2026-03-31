@@ -1,6 +1,7 @@
 import type { Vendor } from '~/lib/types'
 import { Link } from '@tanstack/react-router'
 import { StarIcon, ExternalLinkIcon, ShoppingCartIcon, SearchIcon } from '~/components/icons'
+import { CountryFlag } from '~/components/flags'
 
 function VendorCard({ vendor }: { vendor: Vendor }) {
   return (
@@ -24,9 +25,6 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
           >
             {vendor.name}
           </Link>
-          <div className="flex items-center gap-2 text-[12px] text-neutral-500 dark:text-neutral-400">
-            <span>{vendor.country}</span>
-          </div>
           <div className="flex items-center gap-1">
             <span className="text-sm font-semibold tabular-nums text-neutral-900 dark:text-white">{vendor.rating.toFixed(1)}</span>
             <div className="flex gap-px">
@@ -51,6 +49,10 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
               })}
             </div>
             <span className="text-[11px] text-neutral-400 dark:text-neutral-500">({vendor.reviewCount})</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-[12px] text-neutral-500 dark:text-neutral-400">
+            <CountryFlag country={vendor.country} />
+            <span>{vendor.country}</span>
           </div>
         </div>
 

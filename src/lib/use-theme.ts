@@ -2,30 +2,21 @@ import { useCallback, useEffect, useState } from 'react'
 
 type Theme = 'light' | 'dark'
 
-function getStoredTheme(): Theme {
-  if (typeof window === 'undefined') return 'light'
-  const stored = localStorage.getItem('theme') as Theme | null
-  if (stored === 'light' || stored === 'dark') return stored
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-}
-
 export function useTheme() {
-  const [theme, setThemeState] = useState<Theme>(getStoredTheme)
+  const [theme, setThemeState] = useState<Theme>('light')
 
+  // Sync from localStorage after hydration
+  useEffect(() => {
+    const stored = localStorage.getItem('theme') as Theme | null
+    if (stored === 'dark') {
+      setThemeState('dark')
+    }
+  }, [])
+
+  // Apply theme class whenever state changes
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
   }, [theme])
-
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-color-scheme: dark)')
-    const handler = (e: MediaQueryListEvent) => {
-      if (!localStorage.getItem('theme')) {
-        setThemeState(e.matches ? 'dark' : 'light')
-      }
-    }
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
-  }, [])
 
   const setTheme = useCallback((t: Theme) => {
     setThemeState(t)

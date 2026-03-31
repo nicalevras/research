@@ -47,6 +47,8 @@ export const Route = createFileRoute('/$compound')({
         { property: 'og:title', content: pageTitle },
         { property: 'og:description', content: pageDescription },
         { property: 'og:url', content: canonicalUrl },
+        { name: 'twitter:title', content: pageTitle },
+        { name: 'twitter:description', content: pageDescription },
         ...(isFiltered ? [{ name: 'robots', content: 'noindex, follow' as const }] : []),
       ],
       links: [{ rel: 'canonical', href: canonicalUrl }],

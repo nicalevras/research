@@ -3,7 +3,7 @@ import { getVendorById, getVendorCompounds, getVendorReviews } from '~/lib/data'
 import { SITE_URL } from '~/lib/constants'
 import { StarRating } from '~/components/vendor-ui'
 import { ReviewsList } from '~/components/reviews'
-import { breadcrumbSchema, organizationSchema } from '~/lib/schema'
+import { breadcrumbSchema, organizationSchema, reviewSchema } from '~/lib/schema'
 import { CircleAlertIcon, ChevronRightIcon, ExternalLinkIcon, ShoppingCartIcon } from '~/components/icons'
 import { CountryFlag } from '~/components/flags'
 
@@ -31,10 +31,12 @@ export const Route = createFileRoute('/vendors/$id')({
   },
   head: ({ loaderData }) => {
     const vendor = loaderData?.vendor
+    const reviews = loaderData?.reviews
     if (!vendor) return { meta: [], links: [] }
     const pageTitle = `${vendor.name} — Peptide Vendor Profile`
     const pageDescription = vendor.description.slice(0, 160)
     const canonicalUrl = `${SITE_URL}/vendors/${vendor.id}`
+    const ogImage = vendor.imageUrl || `${SITE_URL}/og-image.png`
     return {
       meta: [
         { title: pageTitle },
@@ -42,6 +44,10 @@ export const Route = createFileRoute('/vendors/$id')({
         { property: 'og:title', content: pageTitle },
         { property: 'og:description', content: pageDescription },
         { property: 'og:url', content: canonicalUrl },
+        { property: 'og:image', content: ogImage },
+        { name: 'twitter:title', content: pageTitle },
+        { name: 'twitter:description', content: pageDescription },
+        { name: 'twitter:image', content: ogImage },
       ],
       links: [{ rel: 'canonical', href: canonicalUrl }],
       scripts: [
@@ -56,6 +62,12 @@ export const Route = createFileRoute('/vendors/$id')({
             { name: vendor.name, url: `/vendors/${vendor.id}` },
           ])),
         },
+        ...(reviews && reviews.length > 0
+          ? reviews.map((r) => ({
+              type: 'application/ld+json' as const,
+              children: JSON.stringify(reviewSchema(r, vendor.name)),
+            }))
+          : []),
       ],
     }
   },
@@ -91,7 +103,7 @@ function VendorSkeleton() {
         <div className="p-6 sm:p-8 pb-0 sm:pb-0">
           <Shimmer className="h-3 w-28" />
         </div>
-        <div className="mt-4 divide-y divide-neutral-100 dark:divide-white/[0.04]">
+        <div className="mt-4 divide-y divide-neutral-200/60 dark:divide-white/[0.06]">
           {[1, 2, 3].map((i) => (
             <div key={i} className="flex items-center justify-between px-6 sm:px-8 py-3">
               <Shimmer className="h-4 w-24" />
@@ -153,7 +165,7 @@ function VendorDetailPage() {
                   href={vendor.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors shrink-0"
+                  className="hidden sm:inline-flex items-center justify-center gap-2 rounded-xl bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors shrink-0"
                 >
                   <ShoppingCartIcon className="h-4 w-4" />
                   Shop Now
@@ -162,7 +174,9 @@ function VendorDetailPage() {
               <div className="flex items-center gap-1.5">
                 <StarRating rating={vendor.rating} />
                 <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                  ({vendor.reviewCount} {vendor.reviewCount === 1 ? 'review' : 'reviews'})
+                  {vendor.reviewCount > 0
+                    ? `(${vendor.reviewCount} ${vendor.reviewCount === 1 ? 'review' : 'reviews'})`
+                    : '(No reviews)'}
                 </span>
               </div>
               <div className="flex items-center gap-1.5 text-sm text-neutral-500 dark:text-neutral-400">
@@ -172,6 +186,15 @@ function VendorDetailPage() {
               <p className="text-sm leading-relaxed text-neutral-500 dark:text-neutral-400 max-w-2xl text-pretty">
                 {vendor.description}
               </p>
+              <a
+                href={vendor.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="sm:hidden inline-flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors mt-2"
+              >
+                <ShoppingCartIcon className="h-4 w-4" />
+                Shop Now
+              </a>
             </div>
           </div>
         </div>
@@ -179,25 +202,26 @@ function VendorDetailPage() {
         {/* Compounds table */}
         {compounds.length > 0 && (
           <>
-            <div>
-              <table className="w-full text-[13px]">
+            <div className="px-6 sm:px-8 pb-6 sm:pb-8">
+              <div className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
+              <table className="w-full text-[13px] border-collapse">
                 <colgroup>
                   <col className="w-1/2" />
                   <col />
                   <col className="w-1/2" />
                 </colgroup>
                 <thead>
-                  <tr className="border-y border-neutral-100 dark:border-white/[0.04] bg-neutral-50 dark:bg-white/[0.02]">
-                    <th className="px-6 sm:px-8 py-2.5 text-left text-[13px] font-bold text-neutral-500 dark:text-neutral-400">Peptide</th>
-                    <th className="px-6 sm:px-8 py-2.5 text-left text-[13px] font-bold text-neutral-500 dark:text-neutral-400">COA</th>
-                    <th className="px-6 sm:px-8 py-2.5 text-right text-[13px] font-bold text-neutral-500 dark:text-neutral-400">Link</th>
+                  <tr className="border-b border-neutral-200/60 dark:border-white/[0.06] bg-neutral-50 dark:bg-white/[0.02]">
+                    <th className="px-4 py-2.5 text-left text-[13px] font-bold text-neutral-500 dark:text-neutral-400">Peptide</th>
+                    <th className="px-4 py-2.5 text-left text-[13px] font-bold text-neutral-500 dark:text-neutral-400">COA</th>
+                    <th className="px-4 py-2.5 text-right text-[13px] font-bold text-neutral-500 dark:text-neutral-400">Link</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-neutral-100 dark:divide-white/[0.04]">
+                <tbody className="divide-y divide-neutral-200/60 dark:divide-white/[0.06]">
                   {compounds.map((compound) => (
-                    <tr key={compound.id}>
-                      <td className="px-6 sm:px-8 py-3 font-semibold text-neutral-700 dark:text-neutral-200">{compound.name}</td>
-                      <td className="px-6 sm:px-8 py-3 text-left">
+                    <tr key={compound.id} className="hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition-colors">
+                      <td className="px-4 py-3 font-semibold text-neutral-700 dark:text-neutral-200">{compound.name}</td>
+                      <td className="px-4 py-3 text-left">
                         {compound.coaUrl ? (
                           <a
                             href={compound.coaUrl}
@@ -212,12 +236,12 @@ function VendorDetailPage() {
                           <span className="text-neutral-300 dark:text-neutral-600">—</span>
                         )}
                       </td>
-                      <td className="px-6 sm:px-8 py-3 text-right">
+                      <td className="px-4 py-3 text-right">
                         <a
                           href={vendor.website}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center justify-center rounded-full bg-neutral-900 dark:bg-white px-4 py-1.5 text-xs font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
+                          className="inline-flex items-center justify-center rounded-xl bg-neutral-900 dark:bg-white px-3 py-1.5 text-xs font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
                         >
                           Buy
                         </a>
@@ -226,6 +250,7 @@ function VendorDetailPage() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
           </>
         )}

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useRouter } from '@tanstack/react-router'
 import { useAuthModal } from '~/lib/auth-context'
 import { authClient } from '~/lib/auth-client'
 import { XIcon } from '~/components/icons'
@@ -41,7 +42,7 @@ function InputField({ label, type, value, onChange, placeholder, autoComplete, m
         placeholder={placeholder}
         autoComplete={autoComplete}
         maxLength={maxLength}
-        className="w-full rounded-xl border border-neutral-200/80 dark:border-white/[0.08] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+        className="w-full rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
       />
     </div>
   )
@@ -52,7 +53,7 @@ function GoogleButton({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="w-full flex items-center justify-center gap-2 rounded-xl border border-neutral-200/80 dark:border-white/[0.08] bg-white dark:bg-white/[0.04] px-3.5 py-2.5 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
+      className="w-full flex items-center justify-center gap-2 rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white dark:bg-white/[0.04] px-3.5 py-2.5 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
     >
       <svg className="h-4 w-4" viewBox="0 0 24 24">
         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
@@ -151,6 +152,7 @@ function ForgotPasswordForm() {
 
 function SignInForm() {
   const { closeModal, openSignUp, openForgotPassword } = useAuthModal()
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -169,7 +171,7 @@ function SignInForm() {
         setError('Invalid email or password')
       } else {
         closeModal()
-        window.location.reload()
+        router.invalidate()
       }
     } catch {
       setError('Something went wrong')
@@ -230,6 +232,7 @@ function SignInForm() {
 
 function SignUpForm() {
   const { closeModal, openSignIn } = useAuthModal()
+  const router = useRouter()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
@@ -261,7 +264,7 @@ function SignUpForm() {
         setError(authError.message ?? 'Sign up failed')
       } else {
         closeModal()
-        window.location.reload()
+        router.invalidate()
       }
     } catch {
       setError('Something went wrong')

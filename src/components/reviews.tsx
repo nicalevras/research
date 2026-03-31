@@ -6,16 +6,19 @@ import { createReview, updateReview, deleteReview } from '~/lib/data'
 import { StarIcon } from '~/components/icons'
 import { useRouter } from '@tanstack/react-router'
 
-const AVATAR_COLORS = [
-  'bg-rose-500', 'bg-orange-500', 'bg-amber-500', 'bg-emerald-500',
-  'bg-teal-500', 'bg-cyan-500', 'bg-blue-500', 'bg-indigo-500',
-  'bg-violet-500', 'bg-purple-500', 'bg-pink-500', 'bg-sky-500',
+const GRADIENT_COLORS = [
+  '#f43f5e', '#fb923c', '#f59e0b', '#10b981',
+  '#14b8a6', '#06b6d4', '#3b82f6', '#6366f1',
+  '#8b5cf6', '#a855f7', '#ec4899', '#0ea5e9',
 ]
 
-function hashColor(name: string) {
+function hashGradient(name: string) {
   let hash = 0
   for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash)
-  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length]
+  const c1 = GRADIENT_COLORS[Math.abs(hash) % GRADIENT_COLORS.length]
+  const c2 = GRADIENT_COLORS[Math.abs(hash * 7 + 3) % GRADIENT_COLORS.length]
+  const angle = Math.abs(hash * 13) % 360
+  return `linear-gradient(${angle}deg, ${c1}, ${c2})`
 }
 
 function relativeTime(dateStr: string) {
@@ -33,9 +36,10 @@ function relativeTime(dateStr: string) {
   return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
-function StarPicker({ rating, onChange }: { rating: number; onChange: (r: number) => void }) {
+export function StarPicker({ rating, onChange, size = 'lg' }: { rating: number; onChange: (r: number) => void; size?: 'sm' | 'lg' }) {
   const [hover, setHover] = useState(0)
   const current = hover || rating
+  const cls = size === 'lg' ? 'h-7 w-7' : 'h-5 w-5'
 
   return (
     <div className="flex gap-0.5">
@@ -51,7 +55,7 @@ function StarPicker({ rating, onChange }: { rating: number; onChange: (r: number
             onMouseLeave={() => setHover(0)}
           >
             <StarIcon
-              className={`h-7 w-7 transition-colors ${isFull ? 'text-amber-400' : 'text-neutral-200 dark:text-neutral-700'}`}
+              className={`${cls} transition-colors ${isFull ? 'text-amber-400' : 'text-neutral-200 dark:text-neutral-700'}`}
               fill={isFull ? 'currentColor' : 'none'}
               stroke={isFull ? 'none' : 'currentColor'}
               strokeWidth={isFull ? 0 : 1.2}
@@ -59,13 +63,12 @@ function StarPicker({ rating, onChange }: { rating: number; onChange: (r: number
             {isHalf && (
               <div className="absolute inset-0 p-0.5 overflow-hidden" style={{ width: '50%' }}>
                 <StarIcon
-                  className="h-7 w-7 text-amber-400"
+                  className={`${cls} text-amber-400`}
                   fill="currentColor"
                   stroke="none"
                 />
               </div>
             )}
-            {/* Left half - click for x.5 */}
             <button
               type="button"
               className="absolute inset-y-0 left-0 w-1/2"
@@ -73,7 +76,6 @@ function StarPicker({ rating, onChange }: { rating: number; onChange: (r: number
               onMouseEnter={() => setHover(half)}
               aria-label={`${half} stars`}
             />
-            {/* Right half - click for x.0 */}
             <button
               type="button"
               className="absolute inset-y-0 right-0 w-1/2"
@@ -88,8 +90,8 @@ function StarPicker({ rating, onChange }: { rating: number; onChange: (r: number
   )
 }
 
-function ReviewStars({ rating, size = 'sm' }: { rating: number; size?: 'sm' | 'lg' }) {
-  const cls = size === 'lg' ? 'h-5 w-5' : 'h-3.5 w-3.5'
+export function ReviewStars({ rating, size = 'sm' }: { rating: number; size?: 'xs' | 'sm' | 'lg' }) {
+  const cls = size === 'lg' ? 'h-5 w-5' : size === 'xs' ? 'h-3 w-3' : 'h-3.5 w-3.5'
   return (
     <div className="flex gap-px">
       {[1, 2, 3, 4, 5].map((star) => {
@@ -162,10 +164,13 @@ export function RatingSummary({ reviews }: { reviews: Review[] }) {
 
 function Avatar({ name }: { name: string }) {
   const initial = name.charAt(0).toUpperCase()
-  const color = hashColor(name)
+  const gradient = hashGradient(name)
   return (
-    <div className={`h-9 w-9 rounded-full ${color} flex items-center justify-center shrink-0 shadow-sm`}>
-      <span className="text-sm font-bold text-white leading-none">{initial}</span>
+    <div
+      className="h-9 w-9 rounded-full flex items-center justify-center shrink-0 shadow-sm"
+      style={{ background: gradient }}
+    >
+      <span className="text-sm font-bold text-white leading-none drop-shadow-sm">{initial}</span>
     </div>
   )
 }
@@ -224,7 +229,7 @@ export function ReviewForm({ vendorId, existingReview, onDone }: {
         rows={4}
         maxLength={2000}
         disabled={!isAuthed}
-        className="w-full rounded-xl border border-neutral-200 dark:border-white/[0.08] bg-white dark:bg-white/[0.04] px-4 py-3 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white dark:bg-white/[0.04] px-4 py-3 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed"
       />
       <div className="flex items-start justify-between -mt-2">
         <div>
@@ -236,7 +241,7 @@ export function ReviewForm({ vendorId, existingReview, onDone }: {
           <button
             type="submit"
             disabled={loading}
-            className="rounded-full bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
+            className="rounded-xl bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? 'Saving...' : existingReview ? 'Update Review' : 'Submit Review'}
           </button>
@@ -244,7 +249,7 @@ export function ReviewForm({ vendorId, existingReview, onDone }: {
           <button
             type="button"
             onClick={openSignIn}
-            className="rounded-full bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors cursor-pointer"
+            className="rounded-xl bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors cursor-pointer"
           >
             Sign in to review
           </button>
@@ -253,7 +258,7 @@ export function ReviewForm({ vendorId, existingReview, onDone }: {
           <button
             type="button"
             onClick={onDone}
-            className="rounded-full border border-neutral-200 dark:border-white/[0.06] px-5 py-2.5 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-white/[0.04] transition-colors cursor-pointer"
+            className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] px-5 py-2.5 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-white/[0.04] transition-colors cursor-pointer"
           >
             Cancel
           </button>
@@ -293,7 +298,7 @@ export function ReviewCard({ review, currentUserId, onEdit, onDeleted }: {
   const timeAgo = relativeTime(review.createdAt)
 
   return (
-    <div className="rounded-2xl bg-neutral-50 dark:bg-white/[0.02] border border-neutral-100 dark:border-white/[0.04] p-5 flex gap-4">
+    <div className="rounded-2xl bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/[0.06] p-5 flex gap-4">
       <Avatar name={review.username} />
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-3">
@@ -303,13 +308,15 @@ export function ReviewCard({ review, currentUserId, onEdit, onDeleted }: {
           </div>
           {isOwner && (
             <div className="flex items-center gap-2.5 shrink-0">
-              <button
-                type="button"
-                onClick={onEdit}
-                className="text-[11px] font-medium text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-200 transition-colors cursor-pointer"
-              >
-                Edit
-              </button>
+              {onEdit && (
+                <button
+                  type="button"
+                  onClick={onEdit}
+                  className="text-[11px] font-medium text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-200 transition-colors cursor-pointer"
+                >
+                  Edit
+                </button>
+              )}
               <button
                 type="button"
                 onClick={handleDelete}
@@ -343,7 +350,7 @@ function ReviewFormSkeleton() {
       <div className="h-[106px] rounded-xl bg-neutral-100 dark:bg-white/[0.06]" />
       <div className="flex items-center justify-between">
         <div className="h-3 w-12 rounded bg-neutral-100 dark:bg-white/[0.06]" />
-        <div className="h-10 w-32 rounded-full bg-neutral-100 dark:bg-white/[0.06]" />
+        <div className="h-10 w-32 rounded-xl bg-neutral-100 dark:bg-white/[0.06]" />
       </div>
     </div>
   )
@@ -379,13 +386,11 @@ export function ReviewsList({ reviews: initialReviews, vendorId }: { reviews: Re
               key={review.id}
               review={review}
               currentUserId={session?.user.id}
-              onEdit={() => {}}
-              onDeleted={() => {}}
             />
           ))}
         </div>
       ) : (
-        <div className="rounded-2xl bg-neutral-50 dark:bg-white/[0.02] border border-neutral-100 dark:border-white/[0.04] py-12 text-center">
+        <div className="rounded-2xl bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/[0.06] py-12 text-center">
           <p className="text-sm font-medium text-neutral-500 dark:text-neutral-400">No reviews yet</p>
           <p className="text-[13px] text-neutral-400 dark:text-neutral-500 mt-1">Be the first to share your experience</p>
         </div>

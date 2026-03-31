@@ -36,7 +36,7 @@ export const Route = createRootRoute({
       { rel: 'icon', href: '/favicon.ico' },
     ],
     scripts: [
-      { children: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme:dark)').matches))document.documentElement.classList.add('dark')}catch(e){}})()` },
+      { children: `(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark')}catch(e){}})()` },
     ],
   }),
   errorComponent: (props: ErrorComponentProps) => (
@@ -69,7 +69,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       <body className="min-h-screen">
         <AuthModalProvider>
         <div className="mx-auto w-full max-w-6xl flex min-h-screen flex-col">
-          <header className="sticky top-4 z-50 mt-4 bg-white/80 dark:bg-neutral-900/80 rounded-full border border-neutral-200/60 dark:border-white/8 mx-4 sm:mx-6 lg:mx-8 px-2 py-2 backdrop-blur-xl">
+          <header className="sticky top-4 z-50 mt-4 bg-white/80 dark:bg-neutral-900/80 rounded-2xl border border-neutral-200/60 dark:border-white/[0.06] mx-4 sm:mx-6 lg:mx-8 p-3 backdrop-blur-xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-900 dark:bg-white text-base" aria-hidden="true">🧪</div>
@@ -86,10 +86,9 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
                   </nav>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <NavSearch />
                 <div className="md:hidden"><HamburgerMenu /></div>
-                <div className="h-4 w-px bg-neutral-200 dark:bg-white/10" />
                 <UserMenu />
               </div>
             </div>

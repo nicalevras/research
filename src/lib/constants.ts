@@ -1,4 +1,4 @@
-export const SITE_URL = ''
+export const SITE_URL = process.env.SITE_URL || ''
 
 export const TAGS: { id: string; name: string; emoji: string }[] = [
   { id: 'credit-card', name: 'Credit Card', emoji: '💳' },

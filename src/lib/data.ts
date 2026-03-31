@@ -2,7 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
 import { eq, and, ilike, or, desc, inArray, avg, count, sql } from 'drizzle-orm'
 import { db } from '~/db'
-import { vendors, compounds, vendorCompounds, tags, vendorTags, reviews, user, account } from '~/db/schema'
+import { vendors, compounds, vendorCompounds, vendorTags, reviews, user, account } from '~/db/schema'
 import { auth } from '~/lib/auth'
 import type { Vendor, Review } from './types'
 
@@ -123,18 +123,6 @@ export const filterVendors = createServerFn({ method: 'GET' })
     return rows.map(rowToVendor)
   })
 
-export const getVendorTags = createServerFn({ method: 'GET' })
-  .inputValidator((d: string) => d)
-  .handler(async ({ data: vendorId }) => {
-    const rows = await db
-      .select({ id: tags.id, name: tags.name })
-      .from(vendorTags)
-      .innerJoin(tags, eq(vendorTags.tagId, tags.id))
-      .where(eq(vendorTags.vendorId, vendorId))
-
-    return rows
-  })
-
 export const getVendorCompounds = createServerFn({ method: 'GET' })
   .inputValidator((d: string) => d)
   .handler(async ({ data: vendorId }) => {
@@ -145,24 +133,6 @@ export const getVendorCompounds = createServerFn({ method: 'GET' })
       .where(eq(vendorCompounds.vendorId, vendorId))
 
     return rows
-  })
-
-export const getCompounds = createServerFn({ method: 'GET' })
-  .handler(async () => {
-    return db.select().from(compounds).orderBy(compounds.name)
-  })
-
-export const getVendorsByCompound = createServerFn({ method: 'GET' })
-  .inputValidator((d: string) => d)
-  .handler(async ({ data: compoundId }) => {
-    const rows = await db
-      .select({ vendor: vendors })
-      .from(vendorCompounds)
-      .innerJoin(vendors, eq(vendorCompounds.vendorId, vendors.id))
-      .where(eq(vendorCompounds.compoundId, compoundId))
-      .orderBy(desc(vendors.rating))
-
-    return rows.map((r) => rowToVendor(r.vendor))
   })
 
 // ── Reviews ─────────────────────────────────────────────────────────
@@ -409,22 +379,7 @@ export const deleteAccountAndCleanup = createServerFn({ method: 'POST' })
 
     // 3. Recalculate vendor ratings now that reviews are cascade-deleted
     for (const vendorId of affectedVendorIds) {
-      const [result] = await db
-        .select({
-          avgRating: avg(reviews.rating),
-          total: count(reviews.id),
-        })
-        .from(reviews)
-        .where(eq(reviews.vendorId, vendorId))
-
-      await db
-        .update(vendors)
-        .set({
-          rating: result.avgRating ? parseFloat(String(result.avgRating)) : 0,
-          reviewCount: result.total,
-          updatedAt: new Date(),
-        })
-        .where(eq(vendors.id, vendorId))
+      await recalcVendorRating(vendorId)
     }
 
     return { success: true }

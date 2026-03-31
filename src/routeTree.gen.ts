@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as CompoundRouteImport } from './routes/$compound'
@@ -16,6 +17,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as VendorsIdRouteImport } from './routes/vendors.$id'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/$compound': typeof CompoundRoute
   '/account': typeof AccountRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/vendors/$id': typeof VendorsIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/$compound': typeof CompoundRoute
   '/account': typeof AccountRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/vendors/$id': typeof VendorsIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/$compound': typeof CompoundRoute
   '/account': typeof AccountRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/vendors/$id': typeof VendorsIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/$compound'
     | '/account'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/vendors/$id'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/$compound'
     | '/account'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/vendors/$id'
     | '/api/auth/$'
   id:
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/$compound'
     | '/account'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/vendors/$id'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
@@ -104,12 +116,20 @@ export interface RootRouteChildren {
   CompoundRoute: typeof CompoundRoute
   AccountRoute: typeof AccountRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   VendorsIdRoute: typeof VendorsIdRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
@@ -160,6 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   CompoundRoute: CompoundRoute,
   AccountRoute: AccountRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   VendorsIdRoute: VendorsIdRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }

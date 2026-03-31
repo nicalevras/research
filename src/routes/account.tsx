@@ -3,7 +3,8 @@ import { createFileRoute, Link, redirect, useRouter } from '@tanstack/react-rout
 import { getSession } from '~/lib/auth.functions'
 import { getUserReviews, updateReview, deleteReview, changeUsername, getHasPassword, deleteAccountAndCleanup } from '~/lib/data'
 import { authClient } from '~/lib/auth-client'
-import { StarIcon, ChevronLeftIcon, KeyIcon, TrashIcon, PenIcon, UserIcon } from '~/components/icons'
+import { ChevronLeftIcon, KeyIcon, TrashIcon, PenIcon, UserIcon } from '~/components/icons'
+import { ReviewStars, StarPicker } from '~/components/reviews'
 
 export const Route = createFileRoute('/account')({
   beforeLoad: async () => {
@@ -23,65 +24,6 @@ export const Route = createFileRoute('/account')({
   }),
   component: AccountPage,
 })
-
-function ReviewStars({ rating }: { rating: number }) {
-  return (
-    <div className="flex gap-px">
-      {[1, 2, 3, 4, 5].map((star) => {
-        const isFull = rating >= star
-        const isHalf = !isFull && rating >= star - 0.5
-        return (
-          <div key={star} className="relative">
-            <StarIcon
-              className={`h-3.5 w-3.5 ${isFull ? 'text-amber-400' : 'text-neutral-200 dark:text-neutral-700'}`}
-              fill={isFull ? 'currentColor' : 'none'}
-              stroke={isFull ? 'none' : 'currentColor'}
-              strokeWidth={isFull ? 0 : 1.2}
-            />
-            {isHalf && (
-              <div className="absolute inset-0 overflow-hidden" style={{ width: '50%' }}>
-                <StarIcon className="h-3.5 w-3.5 text-amber-400" fill="currentColor" stroke="none" />
-              </div>
-            )}
-          </div>
-        )
-      })}
-    </div>
-  )
-}
-
-function StarPicker({ rating, onChange }: { rating: number; onChange: (r: number) => void }) {
-  const [hover, setHover] = useState(0)
-  const current = hover || rating
-
-  return (
-    <div className="flex gap-0.5">
-      {[1, 2, 3, 4, 5].map((star) => {
-        const half = star - 0.5
-        const isHalf = current >= half && current < star
-        const isFull = current >= star
-
-        return (
-          <div key={star} className="relative cursor-pointer p-0.5" onMouseLeave={() => setHover(0)}>
-            <StarIcon
-              className={`h-5 w-5 transition-colors ${isFull ? 'text-amber-400' : 'text-neutral-200 dark:text-neutral-700'}`}
-              fill={isFull ? 'currentColor' : 'none'}
-              stroke={isFull ? 'none' : 'currentColor'}
-              strokeWidth={isFull ? 0 : 1.2}
-            />
-            {isHalf && (
-              <div className="absolute inset-0 p-0.5 overflow-hidden" style={{ width: '50%' }}>
-                <StarIcon className="h-5 w-5 text-amber-400" fill="currentColor" stroke="none" />
-              </div>
-            )}
-            <button type="button" className="absolute inset-y-0 left-0 w-1/2" onClick={() => onChange(half)} onMouseEnter={() => setHover(half)} aria-label={`${half} stars`} />
-            <button type="button" className="absolute inset-y-0 right-0 w-1/2" onClick={() => onChange(star)} onMouseEnter={() => setHover(star)} aria-label={`${star} stars`} />
-          </div>
-        )
-      })}
-    </div>
-  )
-}
 
 function ChangeUsernameSection({ currentUsername }: { currentUsername: string }) {
   const [username, setUsername] = useState(currentUsername)
@@ -129,7 +71,7 @@ function ChangeUsernameSection({ currentUsername }: { currentUsername: string })
           placeholder="your-username"
           maxLength={30}
           autoComplete="username"
-          className="w-full rounded-xl border border-neutral-200/80 dark:border-white/[0.08] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+          className="w-full rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
         />
 
         {error && <p className="text-sm text-red-500">{error}</p>}
@@ -138,7 +80,7 @@ function ChangeUsernameSection({ currentUsername }: { currentUsername: string })
         <button
           type="submit"
           disabled={loading}
-          className="rounded-full bg-neutral-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
+          className="rounded-xl bg-neutral-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
         >
           {loading ? 'Updating...' : 'Update Username'}
         </button>
@@ -223,7 +165,7 @@ function ChangePasswordSection({ isOAuthOnly }: { isOAuthOnly: boolean }) {
           onChange={(e) => setCurrentPassword(e.target.value)}
           placeholder="Current password"
           autoComplete="current-password"
-          className="w-full rounded-xl border border-neutral-200/80 dark:border-white/[0.08] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+          className="w-full rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
         />
         <input
           type="password"
@@ -231,7 +173,7 @@ function ChangePasswordSection({ isOAuthOnly }: { isOAuthOnly: boolean }) {
           onChange={(e) => setNewPassword(e.target.value)}
           placeholder="New password"
           autoComplete="new-password"
-          className="w-full rounded-xl border border-neutral-200/80 dark:border-white/[0.08] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+          className="w-full rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
         />
         <input
           type="password"
@@ -239,7 +181,7 @@ function ChangePasswordSection({ isOAuthOnly }: { isOAuthOnly: boolean }) {
           onChange={(e) => setConfirmPassword(e.target.value)}
           placeholder="Confirm new password"
           autoComplete="new-password"
-          className="w-full rounded-xl border border-neutral-200/80 dark:border-white/[0.08] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+          className="w-full rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
         />
 
         {error && <p className="text-sm text-red-500">{error}</p>}
@@ -248,7 +190,7 @@ function ChangePasswordSection({ isOAuthOnly }: { isOAuthOnly: boolean }) {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-full bg-neutral-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
+          className="rounded-xl bg-neutral-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
         >
           {loading ? 'Updating...' : 'Update Password'}
         </button>
@@ -297,7 +239,7 @@ function DeleteAccountSection({ isOAuthOnly }: { isOAuthOnly: boolean }) {
           <button
             type="button"
             onClick={() => setConfirming(true)}
-            className="rounded-full border border-red-200 dark:border-red-500/20 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors cursor-pointer"
+            className="rounded-xl border border-red-200 dark:border-red-500/20 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors cursor-pointer"
           >
             Delete Account
           </button>
@@ -336,14 +278,14 @@ function DeleteAccountSection({ isOAuthOnly }: { isOAuthOnly: boolean }) {
             <button
               type="submit"
               disabled={loading || !canSubmit}
-              className="rounded-full bg-red-600 dark:bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 dark:hover:bg-red-600 transition-colors disabled:opacity-50 cursor-pointer"
+              className="rounded-xl bg-red-600 dark:bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 dark:hover:bg-red-600 transition-colors disabled:opacity-50 cursor-pointer"
             >
               {loading ? 'Deleting...' : 'Confirm Delete'}
             </button>
             <button
               type="button"
               onClick={() => { setConfirming(false); setPassword(''); setConfirmText(''); setError('') }}
-              className="rounded-full border border-neutral-200/60 dark:border-white/[0.06] px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors cursor-pointer"
+              className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors cursor-pointer"
             >
               Cancel
             </button>
@@ -423,27 +365,27 @@ function UserReviewCard({ review, onUpdated }: { review: UserReview; onUpdated: 
           </Link>
         </div>
         <form onSubmit={handleUpdate} className="space-y-3">
-          <StarPicker rating={rating} onChange={setRating} />
+          <StarPicker rating={rating} onChange={setRating} size="sm" />
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             rows={3}
             maxLength={2000}
-            className="w-full rounded-xl border border-neutral-200/80 dark:border-white/[0.08] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all resize-none"
+            className="w-full rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all resize-none"
           />
           {error && <p className="text-sm text-red-500">{error}</p>}
           <div className="flex gap-3">
             <button
               type="submit"
               disabled={loading}
-              className="rounded-full bg-neutral-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
+              className="rounded-xl bg-neutral-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
             >
               {loading ? 'Saving...' : 'Save'}
             </button>
             <button
               type="button"
               onClick={() => { setEditing(false); setRating(review.rating); setComment(review.comment); setError('') }}
-              className="rounded-full border border-neutral-200/60 dark:border-white/[0.06] px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors cursor-pointer"
+              className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors cursor-pointer"
             >
               Cancel
             </button>
@@ -532,7 +474,7 @@ function AccountPage() {
         </h2>
 
         {reviews.length > 0 ? (
-          <div className="rounded-xl border border-neutral-100 dark:border-white/[0.04] divide-y divide-neutral-100 dark:divide-white/[0.04]">
+          <div className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] divide-y divide-neutral-200/60 dark:divide-white/[0.06]">
             {reviews.map((review: UserReview) => (
               <UserReviewCard
                 key={review.id}

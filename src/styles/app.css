@@ -41,7 +41,7 @@
 
 @layer components {
   .glass-card-solid {
-    @apply rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/8;
+    @apply rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06];
     box-shadow: var(--shadow-lg);
   }
 

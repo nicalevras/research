@@ -1,4 +1,4 @@
-import type { Vendor } from './types'
+import type { Vendor, Review } from './types'
 import { SITE_URL } from './constants'
 
 export function itemListSchema(
@@ -25,13 +25,15 @@ export function itemListSchema(
           '@type': 'PostalAddress',
           addressCountry: v.country,
         },
-        aggregateRating: {
-          '@type': 'AggregateRating',
-          ratingValue: v.rating,
-          reviewCount: v.reviewCount,
-          bestRating: 5,
-          worstRating: 1,
-        },
+        ...(v.reviewCount > 0 && {
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: v.rating,
+            reviewCount: v.reviewCount,
+            bestRating: 5,
+            worstRating: 1,
+          },
+        }),
       },
     })),
   }
@@ -61,13 +63,31 @@ export function organizationSchema(vendor: Vendor) {
       '@type': 'PostalAddress',
       addressCountry: vendor.country,
     },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: vendor.rating,
-      reviewCount: vendor.reviewCount,
+    ...(vendor.reviewCount > 0 && {
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: vendor.rating,
+        reviewCount: vendor.reviewCount,
+        bestRating: 5,
+        worstRating: 1,
+      },
+    }),
+  }
+}
+
+export function reviewSchema(review: Review, vendorName: string) {
+  return {
+    '@type': 'Review',
+    author: { '@type': 'Person', name: review.username },
+    datePublished: review.createdAt,
+    reviewRating: {
+      '@type': 'Rating',
+      ratingValue: review.rating,
       bestRating: 5,
       worstRating: 1,
     },
+    reviewBody: review.comment,
+    itemReviewed: { '@type': 'Organization', name: vendorName },
   }
 }
 

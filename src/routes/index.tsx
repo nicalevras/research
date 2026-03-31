@@ -39,6 +39,8 @@ export const Route = createFileRoute('/')({
         { property: 'og:title', content: pageTitle },
         { property: 'og:description', content: 'Compare the best peptide vendors across research, therapeutic, cosmetic, and API supply.' },
         { property: 'og:url', content: canonicalUrl },
+        { name: 'twitter:title', content: pageTitle },
+        { name: 'twitter:description', content: 'Compare the best peptide vendors across research, therapeutic, cosmetic, and API supply.' },
       ],
       links: [{ rel: 'canonical', href: canonicalUrl }],
       scripts: [

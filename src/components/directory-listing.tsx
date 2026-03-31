@@ -111,7 +111,7 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
                 setLocalQuery(e.target.value)
                 handleSearch(e.target.value)
               }}
-              className="w-full rounded-full border border-neutral-200/80 dark:border-white/[0.08] bg-white/70 dark:bg-white/[0.04] pl-9 pr-9 py-2 text-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 focus:border-neutral-300 dark:focus:border-white/20 transition-all backdrop-blur-sm"
+              className="w-full rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-9 pr-9 py-2 text-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 focus:border-neutral-300 dark:focus:border-white/20 transition-all backdrop-blur-sm"
             />
             {searchQuery && (
               <button
@@ -142,7 +142,7 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
                     navigate({ to: '/', search: { country: countryFilter || undefined, tags: activeTags || undefined } })
                   }
                 }}
-                className="w-full appearance-none rounded-full border border-neutral-200/80 dark:border-white/[0.08] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer"
+                className="w-full appearance-none rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer"
               >
                 <option value="">All Peptides</option>
                 {COMPOUNDS.map((c) => (
@@ -156,7 +156,7 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
               <select
                 value={countryFilter || 'All Countries'}
                 onChange={(e) => handleCountryChange(e.target.value)}
-                className="w-full appearance-none rounded-full border border-neutral-200/80 dark:border-white/[0.08] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer"
+                className="w-full appearance-none rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer"
               >
                 {COUNTRIES.map((country) => (
                   <option key={country} value={country}>{country}</option>
@@ -178,13 +178,13 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
                 to={navTo}
                 params={navParams}
                 search={{ ...currentSearch, page: currentPage - 1 === 1 ? undefined : currentPage - 1 }}
-                className="inline-flex items-center gap-1 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] px-3.5 py-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors"
+                className="inline-flex items-center gap-1 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] px-3.5 py-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors"
               >
                 <ChevronLeftIcon className="h-4 w-4" />
                 Previous
               </Link>
             ) : (
-              <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200/60 dark:border-white/[0.06] px-3.5 py-1.5 text-sm font-medium text-neutral-300 dark:text-neutral-600 cursor-not-allowed">
+              <span className="inline-flex items-center gap-1 rounded-xl border border-neutral-200/60 dark:border-white/[0.06] px-3.5 py-1.5 text-sm font-medium text-neutral-300 dark:text-neutral-600 cursor-not-allowed">
                 <ChevronLeftIcon className="h-4 w-4" />
                 Previous
               </span>
@@ -199,13 +199,13 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
                 to={navTo}
                 params={navParams}
                 search={{ ...currentSearch, page: currentPage + 1 }}
-                className="inline-flex items-center gap-1 rounded-full bg-neutral-900 dark:bg-white px-3.5 py-1.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
+                className="inline-flex items-center gap-1 rounded-xl bg-neutral-900 dark:bg-white px-3.5 py-1.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
               >
                 Next
                 <ChevronRightIcon className="h-4 w-4" />
               </Link>
             ) : (
-              <span className="inline-flex items-center gap-1 rounded-full border border-neutral-200/60 dark:border-white/[0.06] px-3.5 py-1.5 text-sm font-medium text-neutral-300 dark:text-neutral-600 cursor-not-allowed">
+              <span className="inline-flex items-center gap-1 rounded-xl border border-neutral-200/60 dark:border-white/[0.06] px-3.5 py-1.5 text-sm font-medium text-neutral-300 dark:text-neutral-600 cursor-not-allowed">
                 Next
                 <ChevronRightIcon className="h-4 w-4" />
               </span>

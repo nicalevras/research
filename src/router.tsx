@@ -7,7 +7,7 @@ export function getRouter() {
     defaultPreload: 'intent',
     scrollRestoration: true,
     defaultStaleTime: 5 * 60_000,
-    defaultGcTime: 10 * 60_000,
+    defaultGcTime: 5 * 60_000,
     defaultErrorComponent: ({ error }) => <ErrorComponent error={error} />,
   })
   return router

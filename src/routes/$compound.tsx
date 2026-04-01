@@ -64,6 +64,10 @@ export const Route = createFileRoute('/$compound')({
       })(),
     }
   },
+  headers: () => ({
+    'Cache-Control': 'public, max-age=300, stale-while-revalidate=3600',
+    'Vary': 'Accept, Accept-Encoding',
+  }),
   component: CompoundPage,
 })
 

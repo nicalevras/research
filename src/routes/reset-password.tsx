@@ -12,8 +12,13 @@ const resetSearchSchema = z.object({
 
 export const Route = createFileRoute('/reset-password')({
   validateSearch: zodValidator(resetSearchSchema),
+  staleTime: 0,
+  gcTime: 0,
   head: () => ({
     meta: [{ title: 'Reset Password — Peptide Vendor Directory' }],
+  }),
+  headers: () => ({
+    'Cache-Control': 'private, no-cache, no-store',
   }),
   component: ResetPasswordPage,
 })

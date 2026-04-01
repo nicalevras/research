@@ -71,6 +71,10 @@ export const Route = createFileRoute('/vendors/$id')({
       ],
     }
   },
+  headers: () => ({
+    'Cache-Control': 'public, max-age=300, stale-while-revalidate=3600',
+    'Vary': 'Accept, Accept-Encoding',
+  }),
   pendingComponent: VendorSkeleton,
   component: VendorDetailPage,
   notFoundComponent: VendorNotFound,

@@ -58,6 +58,10 @@ export const Route = createFileRoute('/')({
       ],
     }
   },
+  headers: () => ({
+    'Cache-Control': 'public, max-age=300, stale-while-revalidate=3600',
+    'Vary': 'Accept, Accept-Encoding',
+  }),
   component: HomePage,
 })
 

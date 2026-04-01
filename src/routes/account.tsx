@@ -19,8 +19,13 @@ export const Route = createFileRoute('/account')({
     ])
     return { reviews, hasPassword }
   },
+  staleTime: 0,
+  gcTime: 0,
   head: () => ({
     meta: [{ title: 'Account — Peptide Vendor Directory' }],
+  }),
+  headers: () => ({
+    'Cache-Control': 'private, no-cache, no-store',
   }),
   component: AccountPage,
 })

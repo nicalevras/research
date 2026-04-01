@@ -53,7 +53,7 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
           <a
             href={vendor.website}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener noreferrer nofollow"
             className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-neutral-900 dark:bg-white px-3.5 py-1.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors flex-1"
           >
             <ShoppingCartIcon className="h-4 w-4" />

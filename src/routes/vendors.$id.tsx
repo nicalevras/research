@@ -164,7 +164,7 @@ function VendorDetailPage() {
                 <a
                   href={vendor.website}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer nofollow"
                   className="hidden sm:inline-flex items-center justify-center gap-2 rounded-xl bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors shrink-0"
                 >
                   <ShoppingCartIcon className="h-4 w-4" />
@@ -189,7 +189,7 @@ function VendorDetailPage() {
               <a
                 href={vendor.website}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener noreferrer nofollow"
                 className="sm:hidden inline-flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors mt-2"
               >
                 <ShoppingCartIcon className="h-4 w-4" />
@@ -226,7 +226,7 @@ function VendorDetailPage() {
                           <a
                             href={compound.coaUrl}
                             target="_blank"
-                            rel="noopener noreferrer"
+                            rel="noopener noreferrer nofollow"
                             className="inline-flex items-center gap-1 font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap"
                           >
                             View
@@ -240,7 +240,7 @@ function VendorDetailPage() {
                         <a
                           href={vendor.website}
                           target="_blank"
-                          rel="noopener noreferrer"
+                          rel="noopener noreferrer nofollow"
                           className="inline-flex items-center justify-center rounded-xl bg-neutral-900 dark:bg-white px-3 py-1.5 text-xs font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
                         >
                           Buy

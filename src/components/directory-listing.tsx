@@ -169,7 +169,10 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
 
         <PillNav tags={TAGS} activeTags={localTags} onToggleTag={handleToggleTag} />
 
-        {isLoading ? <VendorGridSkeleton /> : <VendorGrid data={paginatedVendors} />}
+        <section aria-label="Vendor listings">
+          <h2 className="sr-only">Vendors</h2>
+          {isLoading ? <VendorGridSkeleton /> : <VendorGrid data={paginatedVendors} />}
+        </section>
 
         {totalPages > 1 && (
           <nav aria-label="Pagination" className="flex items-center justify-center gap-2 pt-4">

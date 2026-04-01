@@ -153,7 +153,7 @@ function VendorDetailPage() {
           <div className="flex flex-col sm:flex-row gap-6">
             <div className="shrink-0 w-full sm:w-80 aspect-video rounded-xl bg-neutral-100 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
               {vendor.imageUrl && (
-                <img src={vendor.imageUrl} alt={vendor.name} className="h-full w-full object-cover" />
+                <img src={vendor.imageUrl} alt={vendor.name} width={640} height={360} className="h-full w-full object-cover" />
               )}
             </div>
             <div className="flex-1 min-w-0 space-y-2">
@@ -201,9 +201,9 @@ function VendorDetailPage() {
 
         {/* Compounds table */}
         {compounds.length > 0 && (
-          <>
-            <div className="px-6 sm:px-8 pb-6 sm:pb-8">
-              <div className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
+          <section className="px-6 sm:px-8 pb-6 sm:pb-8">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500 mb-4">Available Peptides</h2>
+            <div className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
               <table className="w-full text-[13px] border-collapse">
                 <colgroup>
                   <col className="w-1/2" />
@@ -250,9 +250,8 @@ function VendorDetailPage() {
                   ))}
                 </tbody>
               </table>
-              </div>
             </div>
-          </>
+          </section>
         )}
 
       </div>

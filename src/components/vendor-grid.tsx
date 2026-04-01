@@ -6,7 +6,7 @@ import { CountryFlag } from '~/components/flags'
 
 function VendorCard({ vendor }: { vendor: Vendor }) {
   return (
-    <div className="rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden flex flex-col">
+    <article className="rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden flex flex-col">
       <Link
         to="/vendors/$id"
         params={{ id: vendor.id }}
@@ -14,7 +14,7 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
         className="aspect-[16/9] block bg-neutral-100 dark:bg-neutral-800 overflow-hidden"
       >
         {vendor.imageUrl && (
-          <img src={vendor.imageUrl} alt={vendor.name} className="h-full w-full object-cover" loading="lazy" />
+          <img src={vendor.imageUrl} alt={vendor.name} width={640} height={360} className="h-full w-full object-cover" loading="lazy" />
         )}
       </Link>
       <div className="p-5 flex flex-col flex-1 gap-3">
@@ -61,7 +61,7 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
           </a>
         </div>
       </div>
-    </div>
+    </article>
   )
 }
 

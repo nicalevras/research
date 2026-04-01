@@ -298,13 +298,13 @@ export function ReviewCard({ review, currentUserId, onEdit, onDeleted }: {
   const timeAgo = relativeTime(review.createdAt)
 
   return (
-    <div className="rounded-2xl bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/[0.06] p-5 flex gap-4">
+    <article className="rounded-2xl bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/[0.06] p-5 flex gap-4">
       <Avatar name={review.username} />
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <span className="text-[13px] font-semibold text-neutral-900 dark:text-white">{review.username}</span>
-            <span className="text-[11px] text-neutral-400 dark:text-neutral-500">{timeAgo}</span>
+            <time dateTime={review.createdAt} className="text-[11px] text-neutral-400 dark:text-neutral-500">{timeAgo}</time>
           </div>
           {isOwner && (
             <div className="flex items-center gap-2.5 shrink-0">
@@ -334,7 +334,7 @@ export function ReviewCard({ review, currentUserId, onEdit, onDeleted }: {
         <p className="mt-2.5 text-[13px] text-neutral-600 dark:text-neutral-300 leading-relaxed">{review.comment}</p>
         {deleteError && <p className="text-xs text-red-500 mt-2">{deleteError}</p>}
       </div>
-    </div>
+    </article>
   )
 }
 

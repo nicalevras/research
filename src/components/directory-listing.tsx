@@ -59,7 +59,7 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
   }, [searchQuery, countryFilter, activeTags])
 
   const navTo = activeCompound ? ('/$compound' as const) : ('/' as const)
-  const navParams = activeCompound ? { compound: activeCompound } : undefined
+  const navParams = useMemo(() => activeCompound ? { compound: activeCompound } : undefined, [activeCompound])
 
   const handleSearch = useCallback(
     (value: string) => {
@@ -81,14 +81,14 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
 
   const handleToggleTag = useCallback(
     (tagId: string) => {
-      const next = localTags.includes(tagId)
-        ? localTags.filter((t) => t !== tagId)
-        : [...localTags, tagId]
-      setLocalTags(next)
-      const tagsParam = next.length > 0 ? next.join(',') : undefined
-      navigate({ to: navTo, params: navParams, search: { ...currentSearch, tags: tagsParam, page: undefined } })
+      setLocalTags((prev) => {
+        const next = prev.includes(tagId) ? prev.filter((t) => t !== tagId) : [...prev, tagId]
+        const tagsParam = next.length > 0 ? next.join(',') : undefined
+        navigate({ to: navTo, params: navParams, search: { ...currentSearch, tags: tagsParam, page: undefined } })
+        return next
+      })
     },
-    [navigate, navTo, navParams, currentSearch, localTags],
+    [navigate, navTo, navParams, currentSearch],
   )
 
   return (
@@ -142,7 +142,7 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
                     navigate({ to: '/', search: { country: countryFilter || undefined, tags: activeTags || undefined } })
                   }
                 }}
-                className="w-full appearance-none rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer"
+                className="w-full appearance-none rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer dark:[color-scheme:dark]"
               >
                 <option value="">All Peptides</option>
                 {COMPOUNDS.map((c) => (
@@ -156,7 +156,7 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
               <select
                 value={countryFilter || 'All Countries'}
                 onChange={(e) => handleCountryChange(e.target.value)}
-                className="w-full appearance-none rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer"
+                className="w-full appearance-none rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer dark:[color-scheme:dark]"
               >
                 {COUNTRIES.map((country) => (
                   <option key={country} value={country}>{country}</option>

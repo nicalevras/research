@@ -10,13 +10,10 @@ export function useTheme() {
     const stored = localStorage.getItem('theme') as Theme | null
     if (stored === 'dark') {
       setThemeState('dark')
+      document.documentElement.classList.add('dark')
+      document.documentElement.style.colorScheme = 'dark'
     }
   }, [])
-
-  // Apply theme class whenever state changes
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark')
-  }, [theme])
 
   const setTheme = useCallback((t: Theme) => {
     setThemeState(t)
@@ -32,8 +29,20 @@ export function useTheme() {
   }, [])
 
   const toggleTheme = useCallback(() => {
-    setTheme(theme === 'dark' ? 'light' : 'dark')
-  }, [theme, setTheme])
+    setThemeState((prev) => {
+      const next = prev === 'dark' ? 'light' : 'dark'
+      localStorage.setItem('theme', next)
+      document.documentElement.style.colorScheme = next
+      document.documentElement.classList.add('no-transition')
+      document.documentElement.classList.toggle('dark', next === 'dark')
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          document.documentElement.classList.remove('no-transition')
+        })
+      })
+      return next
+    })
+  }, [])
 
   return { theme, setTheme, toggleTheme } as const
 }

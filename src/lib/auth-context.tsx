@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from 'react'
+import { createContext, useContext, useState, useCallback, useMemo } from 'react'
 import type { ReactNode } from 'react'
 
 type AuthModal = 'sign-in' | 'sign-up' | 'forgot-password' | null
@@ -27,8 +27,10 @@ export function AuthModalProvider({ children }: { children: ReactNode }) {
   const openForgotPassword = useCallback(() => setModal('forgot-password'), [])
   const closeModal = useCallback(() => setModal(null), [])
 
+  const value = useMemo(() => ({ modal, openSignIn, openSignUp, openForgotPassword, closeModal }), [modal, openSignIn, openSignUp, openForgotPassword, closeModal])
+
   return (
-    <AuthModalContext.Provider value={{ modal, openSignIn, openSignUp, openForgotPassword, closeModal }}>
+    <AuthModalContext.Provider value={value}>
       {children}
     </AuthModalContext.Provider>
   )

@@ -147,15 +147,21 @@ export function NavSearch() {
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
-  const inputRef = useRef<HTMLInputElement>(null)
+  const mobileInputRef = useRef<HTMLInputElement>(null)
+  const desktopInputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
 
   useEffect(() => {
-    if (open) inputRef.current?.focus()
+    if (open) {
+      // Focus whichever input is visible
+      mobileInputRef.current?.focus()
+      desktopInputRef.current?.focus()
+    }
   }, [open])
 
   useEffect(() => {
+    if (!open) return
     const handle = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
         setOpen(false)
@@ -163,7 +169,7 @@ export function NavSearch() {
     }
     document.addEventListener('mousedown', handle)
     return () => document.removeEventListener('mousedown', handle)
-  }, [])
+  }, [open])
 
   useEffect(() => {
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current) }
@@ -187,7 +193,7 @@ export function NavSearch() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex items-center justify-center rounded-xl h-8 w-8 cursor-pointer text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-all duration-200 md:bg-white/70 md:dark:bg-white/[0.04] md:border md:border-neutral-200/60 md:dark:border-white/[0.06] md:hover:bg-white md:dark:hover:bg-white/[0.08]"
+        className="inline-flex items-center justify-end rounded-xl h-8 w-8 cursor-pointer text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-all duration-200 md:justify-center md:bg-white/70 md:dark:bg-white/[0.04] md:border md:border-neutral-200/60 md:dark:border-white/[0.06] md:hover:bg-white md:dark:hover:bg-white/[0.08]"
         aria-label="Search"
       >
         <SearchIcon className="h-4 w-4" strokeWidth={1.5} />
@@ -196,36 +202,38 @@ export function NavSearch() {
   }
 
   return (
-    <>
+    <div ref={containerRef}>
       {/* Mobile: full-width takeover */}
-      <div ref={containerRef} className="md:hidden absolute inset-0 z-10 flex items-center gap-2 px-3 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl">
-        <SearchIcon className="shrink-0 h-4 w-4 text-neutral-400 dark:text-neutral-500" />
-        <input
-          ref={inputRef}
-          type="text"
-          placeholder="Search vendors, peptides..."
-          value={query}
-          onChange={(e) => handleChange(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') close()
-          }}
-          className="flex-1 h-8 bg-transparent text-sm placeholder-neutral-400 dark:placeholder-neutral-500 text-neutral-900 dark:text-white focus:outline-none"
-        />
-        <button
-          type="button"
-          onClick={() => {
-            if (query) {
-              setQuery('')
-              navigate({ to: '/', search: {} })
-            } else {
-              close()
-            }
-          }}
-          className="shrink-0 inline-flex items-center justify-center rounded-xl h-8 w-8 text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300 transition-colors cursor-pointer"
-          aria-label="Close search"
-        >
-          <XIcon className="h-4 w-4" />
-        </button>
+      <div className="md:hidden absolute inset-0 z-10 flex items-center p-2.5 bg-white dark:bg-neutral-900 rounded-2xl">
+        <div className="relative flex-1">
+          <SearchIcon className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
+          <input
+            ref={mobileInputRef}
+            type="text"
+            placeholder="Search"
+            value={query}
+            onChange={(e) => handleChange(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') close()
+            }}
+            className="w-full h-8 rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-8 pr-8 text-sm placeholder-neutral-400 dark:placeholder-neutral-500 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+          />
+          <button
+            type="button"
+            onClick={() => {
+              if (query) {
+                setQuery('')
+                navigate({ to: '/', search: {} })
+              } else {
+                close()
+              }
+            }}
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300 transition-colors cursor-pointer"
+            aria-label="Close search"
+          >
+            <XIcon className="h-3.5 w-3.5" />
+          </button>
+        </div>
       </div>
 
       {/* Desktop: inline expanding input */}
@@ -239,7 +247,7 @@ export function NavSearch() {
           onKeyDown={(e) => {
             if (e.key === 'Escape') close()
           }}
-          ref={inputRef}
+          ref={desktopInputRef}
           className="w-36 sm:w-48 h-8 rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-8 pr-8 text-sm placeholder-neutral-400 dark:placeholder-neutral-500 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
         />
         {query && (
@@ -248,7 +256,6 @@ export function NavSearch() {
             onClick={() => {
               setQuery('')
               navigate({ to: '/', search: {} })
-              close()
             }}
             className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300 transition-colors cursor-pointer"
             aria-label="Clear search"
@@ -257,7 +264,7 @@ export function NavSearch() {
           </button>
         )}
       </div>
-    </>
+    </div>
   )
 }
 
@@ -280,7 +287,7 @@ export function PeptidesDropdown() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`inline-flex items-center gap-1 text-[13px] leading-none font-medium hover:text-neutral-900 dark:hover:text-white transition-colors cursor-pointer ${isActive ? 'text-neutral-900 dark:text-white' : 'text-neutral-500 dark:text-neutral-400'}`}
+        className={`inline-flex items-center gap-1 text-sm leading-none font-medium hover:text-neutral-900 dark:hover:text-white transition-colors cursor-pointer ${isActive ? 'text-neutral-900 dark:text-white' : 'text-neutral-500 dark:text-neutral-400'}`}
       >
         Peptides
         <ChevronDownIcon className="h-3 w-3" />

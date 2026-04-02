@@ -8,6 +8,8 @@ export function getRouter() {
     scrollRestoration: true,
     defaultStaleTime: 5 * 60_000,
     defaultGcTime: 5 * 60_000,
+    defaultPendingMs: 0,
+    defaultPendingMinMs: 0,
     defaultErrorComponent: ({ error }) => <ErrorComponent error={error} />,
   })
   return router

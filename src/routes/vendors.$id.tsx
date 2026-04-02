@@ -86,47 +86,71 @@ function Shimmer({ className }: { className?: string }) {
 
 function VendorSkeleton() {
   return (
-    <div className="space-y-6">
-      <Shimmer className="h-4 w-28" />
+    <div>
+      {/* Breadcrumb */}
+      <div className="mb-6 flex items-center gap-1.5">
+        <Shimmer className="h-4 w-12" />
+        <Shimmer className="h-3.5 w-3.5" />
+        <Shimmer className="h-4 w-28" />
+      </div>
+
       <div className="glass-card-solid overflow-hidden shadow-none">
+        {/* Vendor info */}
         <div className="p-6 sm:p-8">
           <div className="flex flex-col sm:flex-row gap-6">
             <Shimmer className="shrink-0 w-full sm:w-80 aspect-video rounded-xl" />
-            <div className="flex-1 space-y-3">
-              <Shimmer className="h-8 w-56" />
+            <div className="flex-1 space-y-2">
+              <div className="flex items-start justify-between gap-4">
+                <Shimmer className="h-8 w-56" />
+                <Shimmer className="hidden sm:block h-10 w-32 rounded-xl" />
+              </div>
               <Shimmer className="h-4 w-32" />
               <Shimmer className="h-4 w-24" />
               <div className="space-y-2 pt-1">
                 <Shimmer className="h-4 w-full max-w-xl" />
                 <Shimmer className="h-4 w-3/4 max-w-md" />
               </div>
+              <Shimmer className="sm:hidden h-10 w-full rounded-xl" />
             </div>
           </div>
         </div>
-        <div className="h-px bg-neutral-100 dark:bg-white/[0.04]" />
-        <div className="p-6 sm:p-8 pb-0 sm:pb-0">
-          <Shimmer className="h-3 w-28" />
-        </div>
-        <div className="mt-4 divide-y divide-neutral-200/60 dark:divide-white/[0.06]">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="flex items-center justify-between px-6 sm:px-8 py-3">
-              <Shimmer className="h-4 w-24" />
-              <Shimmer className="h-3 w-16" />
+
+        {/* Compounds table */}
+        <div className="px-6 sm:px-8 pb-6 sm:pb-8">
+          <Shimmer className="h-3 w-28 mb-4" />
+          <div className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
+            <div className="border-b border-neutral-200/60 dark:border-white/[0.06] bg-neutral-50 dark:bg-white/[0.02] px-4 py-2.5 flex">
+              <Shimmer className="h-3.5 w-16" />
             </div>
-          ))}
-        </div>
-        <div className="h-px bg-neutral-100 dark:bg-white/[0.04]" />
-        <div className="p-6 sm:p-8 space-y-6">
-          <Shimmer className="h-3 w-16" />
-          {[1, 2].map((i) => (
-            <div key={i} className="flex gap-4 py-4">
-              <Shimmer className="h-9 w-9 rounded-full" />
-              <div className="flex-1 space-y-2">
-                <Shimmer className="h-4 w-20" />
-                <Shimmer className="h-3 w-full" />
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="flex items-center justify-between px-4 py-3 border-b last:border-b-0 border-neutral-200/60 dark:border-white/[0.06]">
+                <Shimmer className="h-4 w-24" />
+                <Shimmer className="h-7 w-14 rounded-xl" />
               </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Reviews card */}
+      <div className="mt-6 glass-card-solid overflow-hidden shadow-none p-6 sm:p-8 space-y-6">
+        <Shimmer className="h-3 w-16" />
+        <div className="flex flex-col lg:flex-row gap-6">
+          <div className="flex-1 space-y-3">
+            <Shimmer className="h-12 w-20" />
+            <Shimmer className="h-5 w-32" />
+            <Shimmer className="h-3 w-20" />
+          </div>
+          <div className="flex-1 space-y-3">
+            <Shimmer className="h-4 w-28" />
+            <div className="flex gap-1">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Shimmer key={i} className="h-7 w-7" />
+              ))}
             </div>
-          ))}
+            <Shimmer className="h-24 w-full rounded-xl" />
+            <Shimmer className="h-10 w-32 rounded-xl" />
+          </div>
         </div>
       </div>
     </div>

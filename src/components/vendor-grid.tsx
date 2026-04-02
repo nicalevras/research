@@ -69,18 +69,16 @@ function SkeletonCard() {
   return (
     <div className="rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden flex flex-col animate-pulse">
       <div className="aspect-[16/9] bg-neutral-100 dark:bg-neutral-800" />
-      <div className="p-5 flex flex-col flex-1">
+      <div className="p-5 flex flex-col flex-1 gap-3">
+        <div className="h-5 w-3/4 rounded bg-neutral-200 dark:bg-neutral-700" />
+        <div className="h-5 w-1/2 rounded bg-neutral-100 dark:bg-neutral-800" />
+        <div className="h-4 w-1/3 rounded bg-neutral-100 dark:bg-neutral-800" />
         <div className="space-y-2">
-          <div className="h-4 w-3/4 rounded bg-neutral-200 dark:bg-neutral-700" />
-          <div className="h-3 w-1/2 rounded bg-neutral-100 dark:bg-neutral-800" />
-          <div className="h-3 w-1/3 rounded bg-neutral-100 dark:bg-neutral-800" />
+          <div className="h-3.5 w-full rounded bg-neutral-100 dark:bg-neutral-800" />
+          <div className="h-3.5 w-full rounded bg-neutral-100 dark:bg-neutral-800" />
+          <div className="h-3.5 w-2/3 rounded bg-neutral-100 dark:bg-neutral-800" />
         </div>
-        <div className="mt-5 mb-5 space-y-2">
-          <div className="h-3 w-full rounded bg-neutral-100 dark:bg-neutral-800" />
-          <div className="h-3 w-full rounded bg-neutral-100 dark:bg-neutral-800" />
-          <div className="h-3 w-2/3 rounded bg-neutral-100 dark:bg-neutral-800" />
-        </div>
-        <div className="mt-auto pt-5 border-t border-neutral-200/60 dark:border-white/[0.06] flex gap-5">
+        <div className="mt-auto pt-3 border-t border-neutral-200/60 dark:border-white/[0.06] flex gap-5">
           <div className="h-9 flex-1 rounded-xl bg-neutral-100 dark:bg-neutral-800" />
           <div className="h-9 flex-1 rounded-xl bg-neutral-200 dark:bg-neutral-700" />
         </div>

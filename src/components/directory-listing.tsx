@@ -25,7 +25,18 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
   const searchRef = useRef<HTMLInputElement>(null)
   const [localQuery, setLocalQuery] = useState(searchQuery)
   const [localTags, setLocalTags] = useState<string[]>(() => activeTags ? activeTags.split(',').filter(Boolean) : [])
-  const isLoading = useRouterState({ select: (s) => s.isLoading })
+  const isGridLoading = useRouterState({
+    select: (s) => {
+      if (!s.isLoading) return false
+      return !s.location.pathname.startsWith('/vendors/')
+    },
+  })
+  const isRouteChanging = useRouterState({
+    select: (s) => {
+      if (!s.isLoading) return false
+      return s.resolvedLocation?.pathname !== s.location.pathname && !s.location.pathname.startsWith('/vendors/')
+    },
+  })
 
   useEffect(() => {
     if (document.activeElement !== searchRef.current) {
@@ -95,8 +106,17 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
     <>
       <div className="space-y-4">
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">{heading}</h1>
-          <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-xl text-pretty mt-1.5">{description}</p>
+          {isRouteChanging ? (
+            <>
+              <div className="h-7 w-72 rounded-lg bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
+              <div className="h-4 w-96 max-w-full rounded-lg bg-neutral-100 dark:bg-neutral-800 animate-pulse mt-1.5" />
+            </>
+          ) : (
+            <>
+              <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">{heading}</h1>
+              <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-xl text-pretty mt-1.5">{description}</p>
+            </>
+          )}
         </div>
 
         <div className="flex flex-col sm:flex-row gap-5 sm:gap-3 items-stretch sm:items-center">
@@ -137,9 +157,9 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
                 onChange={(e) => {
                   const val = e.target.value
                   if (val) {
-                    navigate({ to: '/$compound', params: { compound: val }, search: { country: countryFilter || undefined, tags: activeTags || undefined } })
+                    navigate({ to: '/$compound', params: { compound: val }, search: {} })
                   } else {
-                    navigate({ to: '/', search: { country: countryFilter || undefined, tags: activeTags || undefined } })
+                    navigate({ to: '/', search: {} })
                   }
                 }}
                 className="w-full appearance-none rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer dark:[color-scheme:dark]"
@@ -171,7 +191,7 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
 
         <section aria-label="Vendor listings">
           <h2 className="sr-only">Vendors</h2>
-          {isLoading ? <VendorGridSkeleton /> : <VendorGrid data={paginatedVendors} />}
+          {isGridLoading ? <VendorGridSkeleton /> : <VendorGrid data={paginatedVendors} />}
         </section>
 
         {totalPages > 1 && (
@@ -217,5 +237,29 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
         )}
       </div>
     </>
+  )
+}
+
+export function DirectoryListingSkeleton() {
+  return (
+    <div className="space-y-4">
+      <div className="mb-8">
+        <div className="h-7 w-72 rounded-lg bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
+        <div className="h-4 w-96 max-w-full rounded-lg bg-neutral-100 dark:bg-neutral-800 animate-pulse mt-1.5" />
+      </div>
+      <div className="flex flex-col sm:flex-row gap-5 sm:gap-3 items-stretch sm:items-center">
+        <div className="h-10 flex-1 rounded-xl bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
+        <div className="flex gap-3 w-full sm:w-auto">
+          <div className="h-10 flex-1 sm:w-40 rounded-xl bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
+          <div className="h-10 flex-1 sm:w-40 rounded-xl bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
+        </div>
+      </div>
+      <div className="flex gap-1.5 overflow-hidden mx-[34px]">
+        {Array.from({ length: 5 }, (_, i) => (
+          <div key={i} className="h-[33.5px] w-28 shrink-0 rounded-xl bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
+        ))}
+      </div>
+      <VendorGridSkeleton />
+    </div>
   )
 }

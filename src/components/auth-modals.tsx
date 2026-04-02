@@ -259,7 +259,7 @@ function SignUpForm() {
         email,
         password,
         username: username.trim(),
-      } as Parameters<typeof authClient.signUp.email>[0])
+      })
       if (authError) {
         setError(authError.message ?? 'Sign up failed')
       } else {

@@ -92,14 +92,12 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
 
   const handleToggleTag = useCallback(
     (tagId: string) => {
-      setLocalTags((prev) => {
-        const next = prev.includes(tagId) ? prev.filter((t) => t !== tagId) : [...prev, tagId]
-        const tagsParam = next.length > 0 ? next.join(',') : undefined
-        navigate({ to: navTo, params: navParams, search: { ...currentSearch, tags: tagsParam, page: undefined } })
-        return next
-      })
+      const next = localTags.includes(tagId) ? localTags.filter((t) => t !== tagId) : [...localTags, tagId]
+      setLocalTags(next)
+      const tagsParam = next.length > 0 ? next.join(',') : undefined
+      navigate({ to: navTo, params: navParams, search: { ...currentSearch, tags: tagsParam, page: undefined } })
     },
-    [navigate, navTo, navParams, currentSearch],
+    [navigate, navTo, navParams, currentSearch, localTags],
   )
 
   return (

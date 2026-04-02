@@ -443,10 +443,10 @@ function UserReviewCard({ review, onUpdated }: { review: UserReview; onUpdated: 
 }
 
 function AccountPage() {
-  const { session } = Route.useRouteContext() as { session: { user: { name: string; email: string; id: string; username?: string } } }
+  const { session } = Route.useRouteContext()
   const { reviews, hasPassword } = Route.useLoaderData()
   const router = useRouter()
-  const currentUsername = (session.user as Record<string, unknown>).username as string || ''
+  const currentUsername = session.user.username ?? ''
   const isOAuthOnly = !hasPassword
 
   return (

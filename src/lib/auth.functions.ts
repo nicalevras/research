@@ -13,7 +13,7 @@ export const getSession = createServerFn({ method: 'GET' }).handler(async () => 
       name: session.user.name,
       email: session.user.email,
       image: session.user.image,
-      username: (session.user as Record<string, unknown>).username as string | undefined,
+      username: session.user.username,
     },
     session: {
       id: session.session.id,

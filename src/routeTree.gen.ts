@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as CalculatorRouteImport } from './routes/calculator'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as CompoundRouteImport } from './routes/$compound'
 import { Route as IndexRouteImport } from './routes/index'
@@ -25,6 +26,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalculatorRoute = CalculatorRouteImport.update({
+  id: '/calculator',
+  path: '/calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountRoute = AccountRouteImport.update({
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$compound': typeof CompoundRoute
   '/account': typeof AccountRoute
+  '/calculator': typeof CalculatorRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/vendors/$id': typeof VendorsIdRoute
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$compound': typeof CompoundRoute
   '/account': typeof AccountRoute
+  '/calculator': typeof CalculatorRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/vendors/$id': typeof VendorsIdRoute
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$compound': typeof CompoundRoute
   '/account': typeof AccountRoute
+  '/calculator': typeof CalculatorRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/vendors/$id': typeof VendorsIdRoute
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$compound'
     | '/account'
+    | '/calculator'
     | '/reset-password'
     | '/sitemap.xml'
     | '/vendors/$id'
@@ -96,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$compound'
     | '/account'
+    | '/calculator'
     | '/reset-password'
     | '/sitemap.xml'
     | '/vendors/$id'
@@ -105,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$compound'
     | '/account'
+    | '/calculator'
     | '/reset-password'
     | '/sitemap.xml'
     | '/vendors/$id'
@@ -115,6 +127,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CompoundRoute: typeof CompoundRoute
   AccountRoute: typeof AccountRoute
+  CalculatorRoute: typeof CalculatorRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   VendorsIdRoute: typeof VendorsIdRoute
@@ -135,6 +148,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calculator': {
+      id: '/calculator'
+      path: '/calculator'
+      fullPath: '/calculator'
+      preLoaderRoute: typeof CalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account': {
@@ -179,6 +199,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CompoundRoute: CompoundRoute,
   AccountRoute: AccountRoute,
+  CalculatorRoute: CalculatorRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   VendorsIdRoute: VendorsIdRoute,

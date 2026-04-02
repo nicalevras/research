@@ -89,6 +89,8 @@ export function HamburgerMenu() {
       <DropdownLink to="/$compound" params={{ compound: 'cjc-1295' }}>CJC-1295</DropdownLink>
       <DropdownLink to="/$compound" params={{ compound: 'ghk-cu' }}>GHK-Cu</DropdownLink>
       <DropdownDivider />
+      <DropdownLink to="/calculator">Calculator</DropdownLink>
+      <DropdownDivider />
       <DropdownItem>Submit a vendor</DropdownItem>
     </DropdownMenu>
   )

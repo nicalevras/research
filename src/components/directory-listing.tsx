@@ -34,7 +34,8 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
   const isRouteChanging = useRouterState({
     select: (s) => {
       if (!s.isLoading) return false
-      return s.resolvedLocation?.pathname !== s.location.pathname && !s.location.pathname.startsWith('/vendors/')
+      const resolved = s.resolvedLocation?.pathname ?? s.location.pathname
+      return resolved !== s.location.pathname && !s.location.pathname.startsWith('/vendors/')
     },
   })
 

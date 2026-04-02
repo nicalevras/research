@@ -177,6 +177,11 @@ export function NavSearch() {
     }, 300)
   }
 
+  const close = () => {
+    setOpen(false)
+    setQuery('')
+  }
+
   if (!open) {
     return (
       <button
@@ -191,34 +196,68 @@ export function NavSearch() {
   }
 
   return (
-    <div ref={containerRef} className="relative">
-      <SearchIcon className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
-      <input
-        ref={inputRef}
-        type="text"
-        placeholder="Search"
-        value={query}
-        onChange={(e) => handleChange(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === 'Escape') setOpen(false)
-        }}
-        className="w-36 sm:w-48 h-8 rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-8 pr-8 text-sm placeholder-neutral-400 dark:placeholder-neutral-500 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
-      />
-      {query && (
+    <>
+      {/* Mobile: full-width takeover */}
+      <div ref={containerRef} className="md:hidden absolute inset-0 z-10 flex items-center gap-2 px-3 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl rounded-2xl">
+        <SearchIcon className="shrink-0 h-4 w-4 text-neutral-400 dark:text-neutral-500" />
+        <input
+          ref={inputRef}
+          type="text"
+          placeholder="Search vendors, peptides..."
+          value={query}
+          onChange={(e) => handleChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') close()
+          }}
+          className="flex-1 h-8 bg-transparent text-sm placeholder-neutral-400 dark:placeholder-neutral-500 text-neutral-900 dark:text-white focus:outline-none"
+        />
         <button
           type="button"
           onClick={() => {
-            setQuery('')
-            navigate({ to: '/', search: {} })
-            setOpen(false)
+            if (query) {
+              setQuery('')
+              navigate({ to: '/', search: {} })
+            } else {
+              close()
+            }
           }}
-          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300 transition-colors cursor-pointer"
-          aria-label="Clear search"
+          className="shrink-0 inline-flex items-center justify-center rounded-xl h-8 w-8 text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300 transition-colors cursor-pointer"
+          aria-label="Close search"
         >
-          <XIcon className="h-3.5 w-3.5" />
+          <XIcon className="h-4 w-4" />
         </button>
-      )}
-    </div>
+      </div>
+
+      {/* Desktop: inline expanding input */}
+      <div className="hidden md:block relative">
+        <SearchIcon className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
+        <input
+          type="text"
+          placeholder="Search"
+          value={query}
+          onChange={(e) => handleChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') close()
+          }}
+          ref={inputRef}
+          className="w-36 sm:w-48 h-8 rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-8 pr-8 text-sm placeholder-neutral-400 dark:placeholder-neutral-500 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+        />
+        {query && (
+          <button
+            type="button"
+            onClick={() => {
+              setQuery('')
+              navigate({ to: '/', search: {} })
+              close()
+            }}
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300 transition-colors cursor-pointer"
+            aria-label="Clear search"
+          >
+            <XIcon className="h-3.5 w-3.5" />
+          </button>
+        )}
+      </div>
+    </>
   )
 }
 

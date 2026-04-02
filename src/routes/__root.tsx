@@ -70,7 +70,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <AuthModalProvider>
         <div className="mx-auto w-full max-w-6xl flex min-h-screen flex-col">
           <header className="sticky top-4 z-50 mt-4 bg-white/80 dark:bg-neutral-900/80 rounded-2xl border border-neutral-200/60 dark:border-white/[0.06] mx-4 sm:mx-6 lg:mx-8 p-3 backdrop-blur-xl">
-            <div className="flex items-center justify-between">
+            <div className="relative flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-900 dark:bg-white text-base" aria-hidden="true">🧪</div>
                 <Link to="/" className="text-[15px] font-semibold tracking-tight text-neutral-900 dark:text-white">

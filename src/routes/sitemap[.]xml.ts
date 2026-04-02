@@ -10,6 +10,7 @@ export const Route = createFileRoute('/sitemap.xml')({
 
         const urls: { loc: string; priority: string; changefreq: string }[] = [
           { loc: '/', priority: '1.0', changefreq: 'daily' },
+          { loc: '/calculator', priority: '0.8', changefreq: 'monthly' },
         ]
 
         for (const vendor of vendors) {

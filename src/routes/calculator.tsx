@@ -1,13 +1,15 @@
 import { useState } from 'react'
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { SITE_URL } from '~/lib/constants'
-import { CircleAlertIcon } from '~/components/icons'
+import { breadcrumbSchema } from '~/lib/schema'
+import { CircleAlertIcon, ChevronRightIcon } from '~/components/icons'
 
 export const Route = createFileRoute('/calculator')({
   head: () => {
     const pageTitle = 'Peptide Reconstitution Calculator — Peptide Directory'
-    const pageDescription = 'Free peptide reconstitution calculator. Calculate concentration, dose volume, and syringe units for any peptide vial. Supports all U-100 insulin syringe sizes.'
+    const pageDescription = 'Free peptide reconstitution calculator. Calculate concentration, dose volume, and syringe units for any peptide vial.'
     const canonicalUrl = `${SITE_URL}/calculator`
+    const ogImage = `${SITE_URL}/og-image.png`
     return {
       meta: [
         { title: pageTitle },
@@ -15,8 +17,10 @@ export const Route = createFileRoute('/calculator')({
         { property: 'og:title', content: pageTitle },
         { property: 'og:description', content: pageDescription },
         { property: 'og:url', content: canonicalUrl },
+        { property: 'og:image', content: ogImage },
         { name: 'twitter:title', content: pageTitle },
         { name: 'twitter:description', content: pageDescription },
+        { name: 'twitter:image', content: ogImage },
       ],
       links: [{ rel: 'canonical', href: canonicalUrl }],
       scripts: [
@@ -32,6 +36,13 @@ export const Route = createFileRoute('/calculator')({
             operatingSystem: 'Any',
             offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
           }),
+        },
+        {
+          type: 'application/ld+json' as const,
+          children: JSON.stringify(breadcrumbSchema([
+            { name: 'Home', url: '/' },
+            { name: 'Calculator', url: '/calculator' },
+          ])),
         },
       ],
     }
@@ -58,7 +69,7 @@ const SYRINGES: SyringeOption[] = [
 
 const VIAL_OPTIONS = [2, 5, 10, 15]
 const WATER_OPTIONS = [1, 2, 3]
-const DOSE_OPTIONS = [0.25, 0.5, 1, 2.5]
+const DOSE_OPTIONS = [1, 2, 5, 10]
 
 // ── Pill Button ────────────────────────────────────────────────────
 
@@ -87,16 +98,19 @@ function Label({ children }: { children: React.ReactNode }) {
 
 // ── Syringe Scale ──────────────────────────────────────────────────
 
-function SyringeScale({ fillUnits, maxUnits }: { fillUnits: number; maxUnits: number }) {
-  // Always render 0-100 scale (U-100 syringe)
-  const totalUnits = 100
+function SyringeScale({ fillUnits, totalUnits }: { fillUnits: number; totalUnits: number }) {
   const clampedFill = Math.min(Math.max(fillUnits, 0), totalUnits)
   const fillPct = (clampedFill / totalUnits) * 100
 
-  const ticks: { pos: number; major: boolean; label?: string; hidden?: boolean }[] = []
-  for (let i = 0; i <= totalUnits; i += 2) {
-    const isMajor = i % 10 === 0
-    ticks.push({ pos: (i / totalUnits) * 100, major: isMajor, label: isMajor ? String(i) : undefined, hidden: i === 0 })
+  // Tick intervals based on syringe size
+  const majorInterval = totalUnits <= 30 ? 5 : 10
+  const minorInterval = totalUnits <= 30 ? 1 : 2
+
+  const ticks: { pos: number; major: boolean; label?: string }[] = []
+  for (let i = 0; i <= totalUnits; i += minorInterval) {
+    if (i === 0) continue
+    const isMajor = i % majorInterval === 0
+    ticks.push({ pos: (i / totalUnits) * 100, major: isMajor, label: isMajor ? String(i) : undefined })
   }
 
   return (
@@ -104,12 +118,12 @@ function SyringeScale({ fillUnits, maxUnits }: { fillUnits: number; maxUnits: nu
       <div className="relative rounded-lg bg-neutral-100 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/[0.06] h-10 overflow-hidden">
         {/* Fill */}
         <div
-          className="absolute inset-y-0 left-0 bg-neutral-900/10 dark:bg-white/10 transition-all duration-300"
+          className="absolute inset-y-0 left-0 bg-emerald-400/20 dark:bg-emerald-400/15 transition-all duration-300"
           style={{ width: `${fillPct}%` }}
         />
         {/* Tick marks */}
         <div className="absolute inset-0">
-          {ticks.filter((t) => !t.hidden).map((tick) => (
+          {ticks.map((tick) => (
             <div
               key={tick.pos}
               className="absolute top-0 bottom-0 flex flex-col items-center"
@@ -122,33 +136,26 @@ function SyringeScale({ fillUnits, maxUnits }: { fillUnits: number; maxUnits: nu
         {/* Fill marker line */}
         {clampedFill > 0 && clampedFill <= totalUnits && (
           <div
-            className="absolute top-0 bottom-0 w-0.5 bg-neutral-900 dark:bg-white transition-all duration-300 z-10"
+            className="absolute top-0 bottom-0 w-0.5 bg-emerald-500 dark:bg-emerald-400 transition-all duration-300 z-10"
             style={{ left: `${fillPct}%` }}
-          />
-        )}
-        {/* Max syringe capacity indicator */}
-        {maxUnits < totalUnits && (
-          <div
-            className="absolute top-0 bottom-0 w-px bg-red-400/50 dark:bg-red-500/50 z-10"
-            style={{ left: `${(maxUnits / totalUnits) * 100}%` }}
           />
         )}
       </div>
       {/* Labels below */}
       <div className="relative h-4">
-        {ticks.filter((t) => t.label).map((tick) => (
-          <span
-            key={tick.pos}
-            className="absolute text-[10px] tabular-nums text-neutral-400 dark:text-neutral-500 -translate-x-1/2"
-            style={{ left: `${tick.pos}%` }}
-          >
-            {tick.label}
-          </span>
-        ))}
-      </div>
-      <div className="flex items-center justify-between">
-        <span className="text-[10px] text-neutral-400 dark:text-neutral-500">Units</span>
-        <span className="text-[10px] text-neutral-400 dark:text-neutral-500">U-100 insulin syringe</span>
+        <span className="absolute text-[10px] tabular-nums text-neutral-400 dark:text-neutral-500" style={{ left: 0 }}>0</span>
+        {ticks.filter((t) => t.label).map((tick) => {
+          const isLast = tick.pos === 100
+          return (
+            <span
+              key={tick.pos}
+              className={`absolute text-[10px] tabular-nums text-neutral-400 dark:text-neutral-500 ${isLast ? 'right-0' : '-translate-x-1/2'}`}
+              style={isLast ? undefined : { left: `${tick.pos}%` }}
+            >
+              {tick.label}
+            </span>
+          )
+        })}
       </div>
     </div>
   )
@@ -157,29 +164,28 @@ function SyringeScale({ fillUnits, maxUnits }: { fillUnits: number; maxUnits: nu
 // ── Calculator ─────────────────────────────────────────────────────
 
 function CalculatorPage() {
-  const [syringe, setSyringe] = useState<SyringeOption | null>(null)
-  const [vialMg, setVialMg] = useState<number | null>(null)
+  const [syringe, setSyringe] = useState<SyringeOption>(SYRINGES[2])
+  const [vialMg, setVialMg] = useState(10)
   const [customVial, setCustomVial] = useState('')
   const [isCustomVial, setIsCustomVial] = useState(false)
-  const [waterMl, setWaterMl] = useState<number | null>(null)
+  const [waterMl, setWaterMl] = useState(1)
   const [customWater, setCustomWater] = useState('')
   const [isCustomWater, setIsCustomWater] = useState(false)
-  const [doseMg, setDoseMg] = useState<number | null>(null)
+  const [doseMg, setDoseMg] = useState(1)
   const [customDose, setCustomDose] = useState('')
   const [isCustomDose, setIsCustomDose] = useState(false)
 
   // Resolve actual values (custom overrides presets)
-  const actualVial = isCustomVial ? parseFloat(customVial) || 0 : (vialMg ?? 0)
-  const actualWater = isCustomWater ? parseFloat(customWater) || 0 : (waterMl ?? 0)
-  const actualDoseMg = isCustomDose ? parseFloat(customDose) || 0 : (doseMg ?? 0)
+  const actualVial = isCustomVial ? parseFloat(customVial) || 0 : vialMg
+  const actualWater = isCustomWater ? parseFloat(customWater) || 0 : waterMl
+  const actualDoseMg = isCustomDose ? parseFloat(customDose) || 0 : doseMg
 
   // Compute results (internally use mg throughout)
   const concentrationMgPerMl = actualWater > 0 ? actualVial / actualWater : 0
   const doseVolume = concentrationMgPerMl > 0 ? actualDoseMg / concentrationMgPerMl : 0
-  const activeSyringe = syringe ?? SYRINGES[2] // default to 1.0mL for computation
-  const syringeUnits = doseVolume * (activeSyringe.units / activeSyringe.mL)
-  const exceedsSyringe = syringe ? syringeUnits > syringe.units : false
-  const hasResults = actualVial > 0 && actualWater > 0 && actualDoseMg > 0 && syringe !== null
+  const syringeUnits = doseVolume * (syringe.units / syringe.mL)
+  const exceedsSyringe = syringeUnits > syringe.units
+  const hasResults = actualVial > 0 && actualWater > 0 && actualDoseMg > 0
 
   const handleSelectVial = (mg: number) => {
     setVialMg(mg)
@@ -200,36 +206,51 @@ function CalculatorPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div>
+      <nav className="mb-6 flex items-center gap-1.5 text-sm">
+        <Link
+          to="/"
+          className="text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
+        >
+          Home
+        </Link>
+        <ChevronRightIcon className="h-3.5 w-3.5 text-neutral-300 dark:text-neutral-600" />
+        <span className="text-neutral-900 dark:text-white font-medium">Calculator</span>
+      </nav>
+
       <div className="mb-8">
         <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">
           Peptide Reconstitution Calculator
         </h1>
         <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-xl text-pretty mt-1.5">
-          Calculate the exact concentration and syringe units for reconstituting peptides with bacteriostatic water.
+          Free peptide reconstitution calculator for accurate dosing. Calculate concentrations, mixing volumes, and syringe units instantly for any peptide.
         </p>
       </div>
 
       {/* Inputs */}
-      <div className="glass-card-solid p-6 space-y-6">
+      <div className="glass-card-solid shadow-none p-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Syringe Size */}
-        <div className="space-y-2.5">
+        <div className="rounded-2xl border border-neutral-200/60 dark:border-white/[0.06] p-5 space-y-2.5">
           <Label>Syringe Size</Label>
           <div className="flex flex-wrap gap-2">
             {SYRINGES.map((s) => (
-              <Pill key={s.units} active={syringe?.units === s.units} onClick={() => setSyringe(s)}>
-                {s.label} ({s.units}u)
+              <Pill key={s.units} active={syringe.units === s.units} onClick={() => setSyringe(s)}>
+                <span className="flex flex-col items-center leading-tight">
+                  <span>{s.label}</span>
+                  <span className="font-normal text-xs opacity-60">{s.units} units</span>
+                </span>
               </Pill>
             ))}
           </div>
         </div>
 
         {/* Peptide Vial Amount */}
-        <div className="space-y-2.5">
+        <div className="rounded-2xl border border-neutral-200/60 dark:border-white/[0.06] p-5 space-y-2.5">
           <Label>Peptide Vial Amount (mg)</Label>
           <div className="flex flex-wrap gap-2">
             {VIAL_OPTIONS.map((mg) => (
-              <Pill key={mg} active={!isCustomVial && vialMg !== null && vialMg === mg} onClick={() => handleSelectVial(mg)}>
+              <Pill key={mg} active={!isCustomVial && vialMg === mg} onClick={() => handleSelectVial(mg)}>
                 {mg} mg
               </Pill>
             ))}
@@ -251,11 +272,11 @@ function CalculatorPage() {
         </div>
 
         {/* Bacteriostatic Water */}
-        <div className="space-y-2.5">
+        <div className="rounded-2xl border border-neutral-200/60 dark:border-white/[0.06] p-5 space-y-2.5">
           <Label>Bacteriostatic Water (mL)</Label>
           <div className="flex flex-wrap gap-2">
             {WATER_OPTIONS.map((ml) => (
-              <Pill key={ml} active={!isCustomWater && waterMl !== null && waterMl === ml} onClick={() => handleSelectWater(ml)}>
+              <Pill key={ml} active={!isCustomWater && waterMl === ml} onClick={() => handleSelectWater(ml)}>
                 {ml} mL
               </Pill>
             ))}
@@ -277,11 +298,11 @@ function CalculatorPage() {
         </div>
 
         {/* Desired Dose */}
-        <div className="space-y-2.5">
+        <div className="rounded-2xl border border-neutral-200/60 dark:border-white/[0.06] p-5 space-y-2.5">
           <Label>Desired Dose (mg)</Label>
           <div className="flex flex-wrap gap-2">
             {DOSE_OPTIONS.map((mg) => (
-              <Pill key={mg} active={!isCustomDose && doseMg !== null && doseMg === mg} onClick={() => handleSelectDose(mg)}>
+              <Pill key={mg} active={!isCustomDose && doseMg === mg} onClick={() => handleSelectDose(mg)}>
                 {mg} mg
               </Pill>
             ))}
@@ -304,26 +325,29 @@ function CalculatorPage() {
             </div>
           )}
         </div>
+        </div>
       </div>
 
       {/* Results */}
-      <div className="glass-card-solid p-6 mt-6">
+      <div className="glass-card-solid shadow-none p-6 mt-6">
         <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500 mb-5">Results</h2>
 
         {hasResults ? (
           <div className="space-y-5">
+            <SyringeScale fillUnits={syringeUnits} totalUnits={syringe.units} />
+
             {exceedsSyringe ? (
               <div className="flex items-start gap-2.5 rounded-xl bg-red-50 dark:bg-red-500/5 border border-red-200/60 dark:border-red-500/20 p-3.5">
                 <CircleAlertIcon className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
                 <p className="text-sm text-red-600 dark:text-red-400">
-                  This dose requires {syringeUnits.toFixed(1)} units, which exceeds your {syringe!.label} ({syringe!.units}u) syringe capacity. Use a larger syringe or reduce the dose.
+                  This dose requires {syringeUnits.toFixed(1)} units, which exceeds your {syringe.label} ({syringe.units}u) syringe capacity. Use a larger syringe or reduce the dose.
                 </p>
               </div>
             ) : (
               <div className="rounded-xl bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/[0.06] p-4 text-center">
                 <p className="text-sm text-neutral-500 dark:text-neutral-400">
                   For a dose of{' '}
-                  <span className="font-semibold text-neutral-900 dark:text-white">{actualDoseMg} mg</span>
+                  <span className="text-xl font-bold text-neutral-900 dark:text-white tabular-nums">{actualDoseMg} mg</span>
                   {' '}pull the syringe to{' '}
                   <span className="text-xl font-bold text-neutral-900 dark:text-white tabular-nums">{syringeUnits.toFixed(1)}</span>
                   {' '}units
@@ -331,7 +355,7 @@ function CalculatorPage() {
               </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="rounded-xl bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/[0.06] p-4">
                 <p className="text-xs text-neutral-400 dark:text-neutral-500 mb-1">Concentration</p>
                 <p className="text-2xl font-bold tabular-nums text-neutral-900 dark:text-white">
@@ -346,19 +370,10 @@ function CalculatorPage() {
                 </p>
                 <p className="text-xs text-neutral-400 dark:text-neutral-500">mL</p>
               </div>
-              <div className={`rounded-xl border p-4 ${exceedsSyringe ? 'bg-red-50 dark:bg-red-500/5 border-red-200/60 dark:border-red-500/20' : 'bg-neutral-50 dark:bg-white/[0.02] border-neutral-200/60 dark:border-white/[0.06]'}`}>
-                <p className="text-xs text-neutral-400 dark:text-neutral-500 mb-1">Syringe Units</p>
-                <p className={`text-2xl font-bold tabular-nums ${exceedsSyringe ? 'text-red-600 dark:text-red-400' : 'text-neutral-900 dark:text-white'}`}>
-                  {syringeUnits.toFixed(1)}
-                </p>
-                <p className="text-xs text-neutral-400 dark:text-neutral-500">units</p>
-              </div>
             </div>
-
-            <SyringeScale fillUnits={syringeUnits} maxUnits={syringe!.units} />
           </div>
         ) : (
-          <SyringeScale fillUnits={0} maxUnits={100} />
+          <SyringeScale fillUnits={0} totalUnits={syringe.units} />
         )}
       </div>
 

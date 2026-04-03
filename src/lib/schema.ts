@@ -52,7 +52,7 @@ export function breadcrumbSchema(items: { name: string; url: string }[]) {
   }
 }
 
-export function organizationSchema(vendor: Vendor) {
+export function organizationSchema(vendor: Vendor, reviews?: Review[]) {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -72,22 +72,20 @@ export function organizationSchema(vendor: Vendor) {
         worstRating: 1,
       },
     }),
-  }
-}
-
-export function reviewSchema(review: Review, vendorName: string) {
-  return {
-    '@type': 'Review',
-    author: { '@type': 'Person', name: review.username },
-    datePublished: review.createdAt,
-    reviewRating: {
-      '@type': 'Rating',
-      ratingValue: review.rating,
-      bestRating: 5,
-      worstRating: 1,
-    },
-    reviewBody: review.comment,
-    itemReviewed: { '@type': 'Organization', name: vendorName },
+    ...(reviews && reviews.length > 0 && {
+      review: reviews.map((r) => ({
+        '@type': 'Review',
+        author: { '@type': 'Person', name: r.username },
+        datePublished: r.createdAt,
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: r.rating,
+          bestRating: 5,
+          worstRating: 1,
+        },
+        reviewBody: r.comment,
+      })),
+    }),
   }
 }
 

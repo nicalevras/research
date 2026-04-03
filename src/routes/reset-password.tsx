@@ -15,7 +15,10 @@ export const Route = createFileRoute('/reset-password')({
   staleTime: 0,
   gcTime: 0,
   head: () => ({
-    meta: [{ title: 'Reset Password — Peptide Vendor Directory' }],
+    meta: [
+      { title: 'Reset Password — Peptide Vendor Directory' },
+      { name: 'robots', content: 'noindex, nofollow' },
+    ],
   }),
   headers: () => ({
     'Cache-Control': 'private, no-cache, no-store',

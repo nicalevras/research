@@ -3,7 +3,7 @@ import { getVendorById, getVendorCompounds, getVendorReviews } from '~/lib/data'
 import { SITE_URL } from '~/lib/constants'
 import { StarRating } from '~/components/vendor-ui'
 import { ReviewsList } from '~/components/reviews'
-import { breadcrumbSchema, organizationSchema, reviewSchema } from '~/lib/schema'
+import { breadcrumbSchema, organizationSchema } from '~/lib/schema'
 import { CircleAlertIcon, ChevronRightIcon, ExternalLinkIcon, ShoppingCartIcon } from '~/components/icons'
 import { CountryFlag } from '~/components/flags'
 
@@ -53,7 +53,7 @@ export const Route = createFileRoute('/vendors/$id')({
       scripts: [
         {
           type: 'application/ld+json',
-          children: JSON.stringify(organizationSchema(vendor)),
+          children: JSON.stringify(organizationSchema(vendor, reviews)),
         },
         {
           type: 'application/ld+json',
@@ -62,12 +62,6 @@ export const Route = createFileRoute('/vendors/$id')({
             { name: vendor.name, url: `/vendors/${vendor.id}` },
           ])),
         },
-        ...(reviews && reviews.length > 0
-          ? reviews.map((r) => ({
-              type: 'application/ld+json' as const,
-              children: JSON.stringify(reviewSchema(r, vendor.name)),
-            }))
-          : []),
       ],
     }
   },

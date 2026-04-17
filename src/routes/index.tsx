@@ -11,9 +11,9 @@ export const Route = createFileRoute('/')({
   search: {
     middlewares: [stripSearchParams(searchDefaults)],
   },
-  loaderDeps: ({ search }) => ({ page: search.page, q: search.q, country: search.country, tags: search.tags }),
+  loaderDeps: ({ search }) => ({ page: search.page, q: search.q, country: search.country, features: search.features }),
   loader: async ({ deps }) => {
-    const vendors = await filterVendors({ data: { q: deps.q, country: deps.country, tags: deps.tags } })
+    const vendors = await filterVendors({ data: { q: deps.q, country: deps.country, features: deps.features } })
     return { ...deps, vendors }
   },
   head: ({ loaderData }) => {
@@ -66,7 +66,7 @@ export const Route = createFileRoute('/')({
 })
 
 function HomePage() {
-  const { q, country, page, tags } = Route.useSearch()
+  const { q, country, page, features } = Route.useSearch()
   const { vendors } = Route.useLoaderData()
   return (
     <DirectoryListing
@@ -76,7 +76,7 @@ function HomePage() {
       countryFilter={country ?? ''}
       currentPage={page}
       vendors={vendors}
-      activeTags={tags ?? ''}
+      activeFeatures={features ?? ''}
       activeCompound=""
     />
   )

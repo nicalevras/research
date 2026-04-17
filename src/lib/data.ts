@@ -1,8 +1,10 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
-import { eq, and, ilike, or, desc, inArray, avg, count, sql } from 'drizzle-orm'
+import { eq, and, ilike, or, desc, avg, count } from 'drizzle-orm'
+import type { SQL } from 'drizzle-orm'
+import { sql } from 'drizzle-orm'
 import { db } from '~/db'
-import { vendors, compounds, vendorCompounds, vendorTags, reviews, user, account } from '~/db/schema'
+import { vendors, reviews, user, account } from '~/db/schema'
 import { auth } from '~/lib/auth'
 import type { Vendor, Review } from './types'
 
@@ -12,10 +14,16 @@ function rowToVendor(row: typeof vendors.$inferSelect): Vendor {
     name: row.name,
     website: row.website,
     country: row.country,
-    imageUrl: row.imageUrl,
+    compoundNames: row.compoundNames,
+    compoundSlugs: row.compoundSlugs,
+    hasCoa: row.hasCoa,
+    acceptsCreditCard: row.acceptsCreditCard,
+    acceptsAch: row.acceptsAch,
+    acceptsCrypto: row.acceptsCrypto,
+    fastShipping: row.fastShipping,
+    shipsInternational: row.shipsInternational,
     rating: row.rating,
     reviewCount: row.reviewCount,
-    description: row.description,
   }
 }
 
@@ -40,76 +48,40 @@ export const getVendorById = createServerFn({ method: 'GET' })
   })
 
 export const filterVendors = createServerFn({ method: 'GET' })
-  .inputValidator((d: { country?: string; q?: string; tags?: string; compound?: string }) => d)
+  .inputValidator((d: { country?: string; q?: string; features?: string; compound?: string }) => d)
   .handler(async ({ data: filters }) => {
-    const { country, q, tags: tagString, compound } = filters
-    const tagIds = tagString ? tagString.split(',').filter(Boolean) : []
-
-    // Collect vendor ID constraints from join tables
-    let vendorIdPool: string[] | undefined
-
-    // Filter by compound via vendor_compounds
-    if (compound) {
-      const compoundRows = await db
-        .select({ vendorId: vendorCompounds.vendorId })
-        .from(vendorCompounds)
-        .where(eq(vendorCompounds.compoundId, compound))
-
-      const compoundVendorIds = compoundRows.map((r) => r.vendorId)
-      if (compoundVendorIds.length === 0) return []
-      vendorIdPool = compoundVendorIds
-    }
-
-    // Filter by tags via vendor_tags
-    if (tagIds.length > 0) {
-      const taggedVendorRows = await db
-        .select({ vendorId: vendorTags.vendorId })
-        .from(vendorTags)
-        .where(inArray(vendorTags.tagId, tagIds))
-        .groupBy(vendorTags.vendorId)
-
-      const taggedVendorIds = taggedVendorRows.map((r) => r.vendorId)
-      if (taggedVendorIds.length === 0) return []
-
-      // Intersect with compound filter if both are active
-      if (vendorIdPool) {
-        const tagSet = new Set(taggedVendorIds)
-        vendorIdPool = vendorIdPool.filter((id) => tagSet.has(id))
-        if (vendorIdPool.length === 0) return []
-      } else {
-        vendorIdPool = taggedVendorIds
-      }
-    }
-
-    const conditions = []
-
-    if (vendorIdPool) {
-      conditions.push(inArray(vendors.id, vendorIdPool))
-    }
+    const { country, q, features: featureString, compound } = filters
+    const featureIds = featureString ? featureString.split(',').filter(Boolean) : []
+    const conditions: SQL[] = []
 
     if (country) {
       conditions.push(eq(vendors.country, country))
+    }
+
+    if (compound) {
+      conditions.push(sql`${vendors.compoundSlugs} @> ARRAY[${compound}]::text[]`)
+    }
+
+    for (const featureId of featureIds) {
+      if (featureId === 'coa') conditions.push(eq(vendors.hasCoa, true))
+      if (featureId === 'credit-card') conditions.push(eq(vendors.acceptsCreditCard, true))
+      if (featureId === 'ach') conditions.push(eq(vendors.acceptsAch, true))
+      if (featureId === 'crypto') conditions.push(eq(vendors.acceptsCrypto, true))
+      if (featureId === 'fast-shipping') conditions.push(eq(vendors.fastShipping, true))
+      if (featureId === 'international') conditions.push(eq(vendors.shipsInternational, true))
     }
 
     if (q) {
       const escaped = escapeLike(q)
       const pattern = `%${escaped}%`
 
-      // Find vendors linked to compounds matching the query
-      const compoundMatchRows = await db
-        .select({ vendorId: vendorCompounds.vendorId })
-        .from(vendorCompounds)
-        .innerJoin(compounds, eq(vendorCompounds.compoundId, compounds.id))
-        .where(or(ilike(compounds.name, pattern), ilike(compounds.id, pattern)))
-
-      const compoundMatchIds = compoundMatchRows.map((r) => r.vendorId)
-
       conditions.push(
         or(
           ilike(vendors.name, pattern),
           ilike(vendors.country, pattern),
-          ilike(vendors.description, pattern),
-          ...(compoundMatchIds.length > 0 ? [inArray(vendors.id, compoundMatchIds)] : []),
+          ilike(vendors.website, pattern),
+          sql`${vendors.compoundNames}::text ILIKE ${pattern}`,
+          sql`${vendors.compoundSlugs}::text ILIKE ${pattern}`,
         )!,
       )
     }
@@ -121,18 +93,6 @@ export const filterVendors = createServerFn({ method: 'GET' })
       .orderBy(desc(vendors.rating))
 
     return rows.map(rowToVendor)
-  })
-
-export const getVendorCompounds = createServerFn({ method: 'GET' })
-  .inputValidator((d: string) => d)
-  .handler(async ({ data: vendorId }) => {
-    const rows = await db
-      .select({ id: compounds.id, name: compounds.name, category: compounds.category, coaUrl: vendorCompounds.coaUrl })
-      .from(vendorCompounds)
-      .innerJoin(compounds, eq(vendorCompounds.compoundId, compounds.id))
-      .where(eq(vendorCompounds.vendorId, vendorId))
-
-    return rows
   })
 
 // ── Reviews ─────────────────────────────────────────────────────────

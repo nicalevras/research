@@ -1,5 +1,5 @@
 import type { Vendor } from '~/lib/types'
-import { COMPOUNDS, COUNTRIES, TAGS } from '~/lib/constants'
+import { COMPOUNDS, COUNTRIES, FEATURE_FILTERS } from '~/lib/constants'
 import { PillNav } from '~/components/pill-nav'
 import { VendorGrid, VendorGridSkeleton } from '~/components/vendor-grid'
 import { SearchIcon, XIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from '~/components/icons'
@@ -15,16 +15,16 @@ interface DirectoryListingProps {
   countryFilter: string
   currentPage: number
   vendors: Vendor[]
-  activeTags: string
+  activeFeatures: string
   activeCompound: string
 }
 
-export function DirectoryListing({ heading, description, searchQuery, countryFilter, currentPage, vendors, activeTags, activeCompound }: DirectoryListingProps) {
+export function DirectoryListing({ heading, description, searchQuery, countryFilter, currentPage, vendors, activeFeatures, activeCompound }: DirectoryListingProps) {
   const navigate = useNavigate()
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
   const searchRef = useRef<HTMLInputElement>(null)
   const [localQuery, setLocalQuery] = useState(searchQuery)
-  const [localTags, setLocalTags] = useState<string[]>(() => activeTags ? activeTags.split(',').filter(Boolean) : [])
+  const [localFeatures, setLocalFeatures] = useState<string[]>(() => activeFeatures ? activeFeatures.split(',').filter(Boolean) : [])
   const isGridLoading = useRouterState({
     select: (s) => {
       if (!s.isLoading) return false
@@ -46,8 +46,8 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
   }, [searchQuery])
 
   useEffect(() => {
-    setLocalTags(activeTags ? activeTags.split(',').filter(Boolean) : [])
-  }, [activeTags])
+    setLocalFeatures(activeFeatures ? activeFeatures.split(',').filter(Boolean) : [])
+  }, [activeFeatures])
 
   useEffect(() => {
     return () => {
@@ -66,9 +66,9 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
     const s: Record<string, string | number | undefined> = {}
     if (searchQuery) s.q = searchQuery
     if (countryFilter) s.country = countryFilter
-    if (activeTags) s.tags = activeTags
+    if (activeFeatures) s.features = activeFeatures
     return s
-  }, [searchQuery, countryFilter, activeTags])
+  }, [searchQuery, countryFilter, activeFeatures])
 
   const navTo = activeCompound ? ('/$compound' as const) : ('/' as const)
   const navParams = useMemo(() => activeCompound ? { compound: activeCompound } : undefined, [activeCompound])
@@ -91,14 +91,14 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
     [navigate, navTo, navParams, currentSearch],
   )
 
-  const handleToggleTag = useCallback(
-    (tagId: string) => {
-      const next = localTags.includes(tagId) ? localTags.filter((t) => t !== tagId) : [...localTags, tagId]
-      setLocalTags(next)
-      const tagsParam = next.length > 0 ? next.join(',') : undefined
-      navigate({ to: navTo, params: navParams, search: { ...currentSearch, tags: tagsParam, page: undefined } })
+  const handleToggleFeature = useCallback(
+    (featureId: string) => {
+      const next = localFeatures.includes(featureId) ? localFeatures.filter((t) => t !== featureId) : [...localFeatures, featureId]
+      setLocalFeatures(next)
+      const featuresParam = next.length > 0 ? next.join(',') : undefined
+      navigate({ to: navTo, params: navParams, search: { ...currentSearch, features: featuresParam, page: undefined } })
     },
-    [navigate, navTo, navParams, currentSearch, localTags],
+    [navigate, navTo, navParams, currentSearch, localFeatures],
   )
 
   return (
@@ -186,7 +186,7 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
           </div>
         </div>
 
-        <PillNav tags={TAGS} activeTags={localTags} onToggleTag={handleToggleTag} />
+        <PillNav items={FEATURE_FILTERS} activeItems={localFeatures} onToggleItem={handleToggleFeature} />
 
         <section aria-label="Vendor listings">
           <h2 className="sr-only">Vendors</h2>

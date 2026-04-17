@@ -4,19 +4,24 @@ import { ExternalLinkIcon, ShoppingCartIcon, SearchIcon } from '~/components/ico
 import { ReviewStars } from '~/components/reviews'
 import { CountryFlag } from '~/components/flags'
 
+function vendorFeatureLabels(vendor: Vendor) {
+  return [
+    vendor.hasCoa ? 'COA' : undefined,
+    vendor.acceptsCreditCard ? 'Credit Card' : undefined,
+    vendor.acceptsAch ? 'ACH' : undefined,
+    vendor.acceptsCrypto ? 'Crypto' : undefined,
+    vendor.fastShipping ? 'Fast Shipping' : undefined,
+    vendor.shipsInternational ? 'International' : undefined,
+  ].filter(Boolean) as string[]
+}
+
 function VendorCard({ vendor }: { vendor: Vendor }) {
+  const visibleCompounds = vendor.compoundNames.slice(0, 5)
+  const remainingCount = Math.max(0, vendor.compoundNames.length - visibleCompounds.length)
+  const features = vendorFeatureLabels(vendor).slice(0, 3)
+
   return (
     <article className="rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden flex flex-col">
-      <Link
-        to="/vendors/$id"
-        params={{ id: vendor.id }}
-        aria-label={`${vendor.name} image`}
-        className="aspect-[16/9] block bg-neutral-100 dark:bg-neutral-800 overflow-hidden"
-      >
-        {vendor.imageUrl && (
-          <img src={vendor.imageUrl} alt={vendor.name} width={640} height={360} className="h-full w-full object-cover" loading="lazy" />
-        )}
-      </Link>
       <div className="p-5 flex flex-col flex-1 gap-3">
         <Link
           to="/vendors/$id"
@@ -37,9 +42,31 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
           <span>{vendor.country}</span>
         </div>
 
-        <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed line-clamp-3">
-          {vendor.description}
-        </p>
+        <div className="flex flex-wrap gap-1.5">
+          {features.map((feature) => (
+            <span key={feature} className="rounded-lg bg-neutral-100 dark:bg-white/[0.06] px-2 py-1 text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
+              {feature}
+            </span>
+          ))}
+        </div>
+
+        <div className="space-y-1.5">
+          <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+            {vendor.compoundNames.length} compounds
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {visibleCompounds.map((compound, index) => (
+              <span key={`${compound}-${index}`} className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] px-2 py-1 text-[11px] text-neutral-500 dark:text-neutral-400">
+                {compound}
+              </span>
+            ))}
+            {remainingCount > 0 && (
+              <span className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] px-2 py-1 text-[11px] text-neutral-400 dark:text-neutral-500">
+                +{remainingCount}
+              </span>
+            )}
+          </div>
+        </div>
 
         <div className="mt-auto pt-3 border-t border-neutral-200/60 dark:border-white/[0.06] flex gap-5">
           <Link

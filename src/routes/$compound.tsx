@@ -21,9 +21,9 @@ export const Route = createFileRoute('/$compound')({
     }
     return { compound }
   },
-  loaderDeps: ({ search }) => ({ page: search.page, q: search.q, country: search.country, tags: search.tags }),
+  loaderDeps: ({ search }) => ({ page: search.page, q: search.q, country: search.country, features: search.features }),
   loader: async ({ params, deps }) => {
-    const vendors = await filterVendors({ data: { q: deps.q, country: deps.country, tags: deps.tags, compound: params.compound } })
+    const vendors = await filterVendors({ data: { q: deps.q, country: deps.country, features: deps.features, compound: params.compound } })
     return { compound: params.compound, ...deps, vendors }
   },
   head: ({ loaderData }) => {
@@ -73,7 +73,7 @@ export const Route = createFileRoute('/$compound')({
 
 function CompoundPage() {
   const { compound } = Route.useParams()
-  const { q, country, page, tags } = Route.useSearch()
+  const { q, country, page, features } = Route.useSearch()
   const { vendors } = Route.useLoaderData()
 
   const compoundName = VALID_COMPOUNDS.get(compound) ?? compound
@@ -86,7 +86,7 @@ function CompoundPage() {
       countryFilter={country ?? ''}
       currentPage={page}
       vendors={vendors}
-      activeTags={tags ?? ''}
+      activeFeatures={features ?? ''}
       activeCompound={compound}
     />
   )

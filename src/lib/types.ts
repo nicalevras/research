@@ -3,13 +3,24 @@ export interface Vendor {
   name: string
   website: string
   country: string
-  imageUrl: string | null
+  compoundNames: string[]
+  compoundSlugs: string[]
+  hasCoa: boolean
+  acceptsCreditCard: boolean
+  acceptsAch: boolean
+  acceptsCrypto: boolean
+  fastShipping: boolean
+  shipsInternational: boolean
   rating: number
   reviewCount: number
-  description: string
 }
 
-export interface Tag {
+export interface FeatureFilter {
+  id: string
+  name: string
+}
+
+export interface Compound {
   id: string
   name: string
 }

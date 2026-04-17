@@ -1,6 +1,11 @@
 import type { Vendor, Review } from './types'
 import { SITE_URL } from './constants'
 
+function vendorDescription(vendor: Vendor) {
+  const sample = vendor.compoundNames.slice(0, 3).join(', ')
+  return `${vendor.name} lists ${vendor.compoundNames.length} compounds${sample ? ` including ${sample}` : ''}.`
+}
+
 export function itemListSchema(
   vendors: Vendor[],
   listName: string,
@@ -20,7 +25,7 @@ export function itemListSchema(
         '@type': 'Organization',
         name: v.name,
         url: `${SITE_URL}/vendors/${v.id}`,
-        description: v.description,
+        description: vendorDescription(v),
         address: {
           '@type': 'PostalAddress',
           addressCountry: v.country,
@@ -58,7 +63,7 @@ export function organizationSchema(vendor: Vendor, reviews?: Review[]) {
     '@type': 'Organization',
     name: vendor.name,
     url: vendor.website,
-    description: vendor.description,
+    description: vendorDescription(vendor),
     address: {
       '@type': 'PostalAddress',
       addressCountry: vendor.country,
@@ -102,4 +107,3 @@ export function siteSearchSchema() {
     },
   }
 }
-

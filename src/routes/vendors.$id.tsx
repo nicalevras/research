@@ -1,11 +1,12 @@
 import { createFileRoute, Link, notFound } from '@tanstack/react-router'
-import { getVendorById, getVendorCompounds, getVendorReviews } from '~/lib/data'
+import { getVendorById, getVendorReviews } from '~/lib/data'
 import { SITE_URL } from '~/lib/constants'
 import { StarRating } from '~/components/vendor-ui'
 import { ReviewsList } from '~/components/reviews'
 import { breadcrumbSchema, organizationSchema } from '~/lib/schema'
-import { CircleAlertIcon, ChevronRightIcon, ExternalLinkIcon, ShoppingCartIcon } from '~/components/icons'
+import { CircleAlertIcon, ChevronRightIcon, ShoppingCartIcon } from '~/components/icons'
 import { CountryFlag } from '~/components/flags'
+import type { Vendor } from '~/lib/types'
 
 function VendorNotFound() {
   return (
@@ -19,24 +20,37 @@ function VendorNotFound() {
   )
 }
 
+function vendorDescription(vendor: Vendor) {
+  const sample = vendor.compoundNames.slice(0, 3).join(', ')
+  return `${vendor.name} lists ${vendor.compoundNames.length} compounds${sample ? ` including ${sample}` : ''}.`
+}
+
+function vendorFeatures(vendor: Vendor) {
+  return [
+    vendor.hasCoa ? 'COA Available' : undefined,
+    vendor.acceptsCreditCard ? 'Credit Card' : undefined,
+    vendor.acceptsAch ? 'ACH' : undefined,
+    vendor.acceptsCrypto ? 'Crypto' : undefined,
+    vendor.fastShipping ? 'Fast Shipping' : undefined,
+    vendor.shipsInternational ? 'International' : undefined,
+  ].filter(Boolean) as string[]
+}
+
 export const Route = createFileRoute('/vendors/$id')({
   loader: async ({ params: { id } }) => {
     const vendor = await getVendorById({ data: id })
     if (!vendor) throw notFound()
-    const [compounds, reviews] = await Promise.all([
-      getVendorCompounds({ data: vendor.id }),
-      getVendorReviews({ data: vendor.id }),
-    ])
-    return { vendor, compounds, reviews }
+    const reviews = await getVendorReviews({ data: vendor.id })
+    return { vendor, reviews }
   },
   head: ({ loaderData }) => {
     const vendor = loaderData?.vendor
     const reviews = loaderData?.reviews
     if (!vendor) return { meta: [], links: [] }
     const pageTitle = `${vendor.name} — Peptide Vendor Profile`
-    const pageDescription = vendor.description.slice(0, 160)
+    const pageDescription = vendorDescription(vendor).slice(0, 160)
     const canonicalUrl = `${SITE_URL}/vendors/${vendor.id}`
-    const ogImage = vendor.imageUrl || `${SITE_URL}/og-image.png`
+    const ogImage = `${SITE_URL}/og-image.png`
     return {
       meta: [
         { title: pageTitle },
@@ -152,7 +166,8 @@ function VendorSkeleton() {
 }
 
 function VendorDetailPage() {
-  const { vendor, compounds, reviews } = Route.useLoaderData()
+  const { vendor, reviews } = Route.useLoaderData()
+  const features = vendorFeatures(vendor)
 
   return (
     <div>
@@ -172,13 +187,8 @@ function VendorDetailPage() {
       <div className="glass-card-solid overflow-hidden shadow-none">
         {/* Vendor info */}
         <div className="p-6 sm:p-8">
-          <div className="flex flex-col sm:flex-row gap-6">
-            <div className="shrink-0 w-full sm:w-80 aspect-video rounded-xl bg-neutral-100 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
-              {vendor.imageUrl && (
-                <img src={vendor.imageUrl} alt={vendor.name} width={640} height={360} className="h-full w-full object-cover" />
-              )}
-            </div>
-            <div className="flex-1 min-w-0 space-y-2">
+          <div className="space-y-4">
+            <div className="min-w-0 space-y-2">
               <div className="flex items-start justify-between gap-4">
                 <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">
                   {vendor.name}
@@ -205,9 +215,13 @@ function VendorDetailPage() {
                 <CountryFlag country={vendor.country} />
                 <span>{vendor.country}</span>
               </div>
-              <p className="text-sm leading-relaxed text-neutral-500 dark:text-neutral-400 max-w-2xl text-pretty">
-                {vendor.description}
-              </p>
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {features.map((feature) => (
+                  <span key={feature} className="rounded-lg bg-neutral-100 dark:bg-white/[0.06] px-2.5 py-1.5 text-xs font-medium text-neutral-600 dark:text-neutral-300">
+                    {feature}
+                  </span>
+                ))}
+              </div>
               <a
                 href={vendor.website}
                 target="_blank"
@@ -222,41 +236,32 @@ function VendorDetailPage() {
         </div>
 
         {/* Compounds table */}
-        {compounds.length > 0 && (
+        {vendor.compoundNames.length > 0 && (
           <section className="px-6 sm:px-8 pb-6 sm:pb-8">
             <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500 mb-4">Available Peptides</h2>
             <div className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
               <table className="w-full text-[13px] border-collapse">
                 <colgroup>
-                  <col className="w-1/2" />
                   <col />
-                  <col className="w-1/2" />
+                  <col className="w-40" />
                 </colgroup>
                 <thead>
                   <tr className="border-b border-neutral-200/60 dark:border-white/[0.06] bg-neutral-50 dark:bg-white/[0.02]">
                     <th className="px-4 py-2.5 text-left text-[13px] font-bold text-neutral-500 dark:text-neutral-400">Peptide</th>
-                    <th className="px-4 py-2.5 text-left text-[13px] font-bold text-neutral-500 dark:text-neutral-400">COA</th>
                     <th className="px-4 py-2.5 text-right text-[13px] font-bold text-neutral-500 dark:text-neutral-400">Link</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-neutral-200/60 dark:divide-white/[0.06]">
-                  {compounds.map((compound) => (
-                    <tr key={compound.id} className="hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition-colors">
-                      <td className="px-4 py-3 font-semibold text-neutral-700 dark:text-neutral-200">{compound.name}</td>
-                      <td className="px-4 py-3 text-left">
-                        {compound.coaUrl ? (
-                          <a
-                            href={compound.coaUrl}
-                            target="_blank"
-                            rel="noopener noreferrer nofollow"
-                            className="inline-flex items-center gap-1 font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors whitespace-nowrap"
-                          >
-                            View
-                            <ExternalLinkIcon className="h-3.5 w-3.5" />
-                          </a>
-                        ) : (
-                          <span className="text-neutral-300 dark:text-neutral-600">—</span>
-                        )}
+                  {vendor.compoundNames.map((compoundName, index) => (
+                    <tr key={`${compoundName}-${index}`} className="hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition-colors">
+                      <td className="px-4 py-3 font-semibold text-neutral-700 dark:text-neutral-200">
+                        <Link
+                          to="/$compound"
+                          params={{ compound: vendor.compoundSlugs[index] }}
+                          className="hover:underline"
+                        >
+                          {compoundName}
+                        </Link>
                       </td>
                       <td className="px-4 py-3 text-right">
                         <a

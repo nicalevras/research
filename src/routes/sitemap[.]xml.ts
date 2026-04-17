@@ -1,12 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { SITE_URL, COMPOUNDS } from '~/lib/constants'
-import { filterVendors } from '~/lib/data'
+import { SITE_URL } from '~/lib/constants'
+import { filterVendors, getCompounds } from '~/lib/data'
 
 export const Route = createFileRoute('/sitemap.xml')({
   server: {
     handlers: {
       GET: async () => {
-        const vendors = await filterVendors({ data: {} })
+        const [vendors, compounds] = await Promise.all([
+          filterVendors({ data: {} }),
+          getCompounds(),
+        ])
 
         const urls: { loc: string; priority: string; changefreq: string }[] = [
           { loc: '/', priority: '1.0', changefreq: 'daily' },
@@ -17,7 +20,7 @@ export const Route = createFileRoute('/sitemap.xml')({
           urls.push({ loc: `/vendors/${vendor.id}`, priority: '0.8', changefreq: 'weekly' })
         }
 
-        for (const compound of COMPOUNDS) {
+        for (const compound of compounds) {
           urls.push({ loc: `/${compound.id}`, priority: '0.7', changefreq: 'weekly' })
         }
 

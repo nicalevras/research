@@ -14,9 +14,15 @@ import { HamburgerMenu, UserMenu, NavSearch, PeptidesDropdown } from '~/componen
 import { AuthModalProvider } from '~/lib/auth-context'
 import { AuthModals } from '~/components/auth-modals'
 import { SITE_URL } from '~/lib/constants'
+import { getCompounds } from '~/lib/data'
+import type { Compound } from '~/lib/types'
 import appCss from '~/styles/app.css?url'
 
 export const Route = createRootRoute({
+  loader: async () => {
+    const compounds = await getCompounds()
+    return { compounds }
+  },
   head: () => ({
     meta: [
       { charSet: 'utf-8' },
@@ -40,12 +46,12 @@ export const Route = createRootRoute({
     ],
   }),
   errorComponent: (props: ErrorComponentProps) => (
-    <RootDocument>
+    <RootDocument compounds={[]}>
       <DefaultCatchBoundary {...props} />
     </RootDocument>
   ),
   notFoundComponent: () => (
-    <RootDocument>
+    <RootDocument compounds={[]}>
       <NotFound />
     </RootDocument>
   ),
@@ -53,14 +59,16 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
+  const { compounds } = Route.useLoaderData()
+
   return (
-    <RootDocument>
+    <RootDocument compounds={compounds}>
       <Outlet />
     </RootDocument>
   )
 }
 
-function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
+function RootDocument({ children, compounds }: Readonly<{ children: ReactNode; compounds: Compound[] }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -80,14 +88,14 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
                   <div className="h-4 w-px bg-neutral-200 dark:bg-white/10" />
                   <nav className="flex items-center gap-6">
                     <Link to="/" activeOptions={{ exact: true }} activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Home</Link>
-                    <PeptidesDropdown />
+                    <PeptidesDropdown compounds={compounds} />
                     <Link to="/calculator" className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Calculator</Link>
                   </nav>
                 </div>
               </div>
               <div className="flex items-center gap-2.5">
                 <NavSearch />
-                <div className="md:hidden"><HamburgerMenu /></div>
+                <div className="md:hidden"><HamburgerMenu compounds={compounds} /></div>
                 <UserMenu />
               </div>
             </div>
@@ -96,21 +104,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <main className="flex-1 px-4 sm:px-6 lg:px-8 pt-6">{children}</main>
 
           <footer className="mx-auto w-full px-4 sm:px-6 lg:px-8 mt-16 border-t border-neutral-200/60 dark:border-white/[0.06] py-8">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-neutral-400 dark:text-neutral-500">
-              <div className="flex items-center gap-4">
-                <Link to="/$compound" params={{ compound: 'bpc-157' }} className="hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors">
-                  BPC-157
-                </Link>
-                <Link to="/$compound" params={{ compound: 'tb-500' }} className="hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors">
-                  TB-500
-                </Link>
-                <Link to="/$compound" params={{ compound: 'nad-plus' }} className="hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors">
-                  NAD+
-                </Link>
-                <Link to="/$compound" params={{ compound: 'ipamorelin' }} className="hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors">
-                  Ipamorelin
-                </Link>
-              </div>
+            <div className="flex items-center justify-center text-sm text-neutral-400 dark:text-neutral-500">
               <span>&copy; {new Date().getFullYear()} Peptide Directory</span>
             </div>
           </footer>

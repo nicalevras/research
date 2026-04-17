@@ -4,7 +4,7 @@ import { DirectoryListing, PAGE_SIZE } from '~/components/directory-listing'
 import { siteSearchSchema, itemListSchema, breadcrumbSchema } from '~/lib/schema'
 import { SITE_URL } from '~/lib/constants'
 import { searchDefaults, searchSchema } from '~/lib/search'
-import { filterVendors } from '~/lib/data'
+import { filterVendors, getCompounds } from '~/lib/data'
 
 export const Route = createFileRoute('/')({
   validateSearch: zodValidator(searchSchema),
@@ -13,8 +13,11 @@ export const Route = createFileRoute('/')({
   },
   loaderDeps: ({ search }) => ({ page: search.page, q: search.q, country: search.country, features: search.features }),
   loader: async ({ deps }) => {
-    const vendors = await filterVendors({ data: { q: deps.q, country: deps.country, features: deps.features } })
-    return { ...deps, vendors }
+    const [vendors, compounds] = await Promise.all([
+      filterVendors({ data: { q: deps.q, country: deps.country, features: deps.features } }),
+      getCompounds(),
+    ])
+    return { ...deps, vendors, compounds }
   },
   head: ({ loaderData }) => {
     const { page, q, country } = loaderData ?? {}
@@ -67,7 +70,7 @@ export const Route = createFileRoute('/')({
 
 function HomePage() {
   const { q, country, page, features } = Route.useSearch()
-  const { vendors } = Route.useLoaderData()
+  const { vendors, compounds } = Route.useLoaderData()
   return (
     <DirectoryListing
       heading="Peptide Vendor Directory"
@@ -76,6 +79,7 @@ function HomePage() {
       countryFilter={country ?? ''}
       currentPage={page}
       vendors={vendors}
+      compounds={compounds}
       activeFeatures={features ?? ''}
       activeCompound=""
     />

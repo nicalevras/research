@@ -5,7 +5,7 @@ import { useTheme } from '~/lib/use-theme'
 import { useAuthModal } from '~/lib/auth-context'
 import { authClient } from '~/lib/auth-client'
 import { MenuIcon, UserIcon, SunIcon, MoonIcon, LogInIcon, UserPlusIcon, LogOutIcon, SettingsIcon, SearchIcon, XIcon, ChevronDownIcon } from '~/components/icons'
-import { COMPOUNDS } from '~/lib/constants'
+import type { Compound } from '~/lib/types'
 
 function DropdownMenu({ trigger, children, align = 'right' }: { trigger: ReactNode; children: ReactNode; align?: 'left' | 'right' }) {
   const [open, setOpen] = useState(false)
@@ -74,20 +74,25 @@ function DropdownDivider() {
   return <div className="my-1 h-px bg-neutral-100 dark:bg-white/[0.04]" />
 }
 
-export function HamburgerMenu() {
+export function HamburgerMenu({ compounds }: { compounds: Compound[] }) {
   return (
     <DropdownMenu
       align="right"
       trigger={<MenuIcon className="h-5 w-5" strokeWidth={1.5} />}
     >
       <DropdownLink to="/">All Vendors</DropdownLink>
-      <DropdownDivider />
-      <DropdownLink to="/$compound" params={{ compound: 'bpc-157' }}>BPC-157</DropdownLink>
-      <DropdownLink to="/$compound" params={{ compound: 'tb-500' }}>TB-500</DropdownLink>
-      <DropdownLink to="/$compound" params={{ compound: 'nad-plus' }}>NAD+</DropdownLink>
-      <DropdownLink to="/$compound" params={{ compound: 'ipamorelin' }}>Ipamorelin</DropdownLink>
-      <DropdownLink to="/$compound" params={{ compound: 'cjc-1295' }}>CJC-1295</DropdownLink>
-      <DropdownLink to="/$compound" params={{ compound: 'ghk-cu' }}>GHK-Cu</DropdownLink>
+      {compounds.length > 0 && (
+        <>
+          <DropdownDivider />
+          <div className="max-h-64 overflow-y-auto">
+            {compounds.map((compound) => (
+              <DropdownLink key={compound.id} to="/$compound" params={{ compound: compound.id }}>
+                {compound.name}
+              </DropdownLink>
+            ))}
+          </div>
+        </>
+      )}
       <DropdownDivider />
       <DropdownLink to="/calculator">Calculator</DropdownLink>
       <DropdownDivider />
@@ -270,11 +275,11 @@ export function NavSearch() {
   )
 }
 
-export function PeptidesDropdown() {
+export function PeptidesDropdown({ compounds }: { compounds: Compound[] }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const pathname = useRouterState({ select: (s) => s.location.pathname })
-  const isActive = COMPOUNDS.some((c) => pathname === `/${c.id}`)
+  const isActive = compounds.some((c) => pathname === `/${c.id}`)
 
   useEffect(() => {
     const handle = (e: MouseEvent) => {
@@ -289,14 +294,15 @@ export function PeptidesDropdown() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
         className={`inline-flex items-center gap-1 text-sm leading-none font-medium hover:text-neutral-900 dark:hover:text-white transition-colors cursor-pointer ${isActive ? 'text-neutral-900 dark:text-white' : 'text-neutral-500 dark:text-neutral-400'}`}
       >
         Peptides
         <ChevronDownIcon className="h-3 w-3" />
       </button>
-      {open && (
-        <div className="absolute left-0 top-full mt-3 z-50 min-w-[180px] max-h-80 overflow-y-auto rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] py-1 shadow-lg">
-          {COMPOUNDS.map((compound) => (
+      {compounds.length > 0 && (
+        <div className={`${open ? '' : 'hidden'} absolute left-0 top-full mt-3 z-50 min-w-[180px] max-h-80 overflow-y-auto rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] py-1 shadow-lg`}>
+          {compounds.map((compound) => (
             <Link
               key={compound.id}
               to="/$compound"

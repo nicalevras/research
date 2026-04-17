@@ -1,39 +1,35 @@
 import { createFileRoute, notFound, stripSearchParams } from '@tanstack/react-router'
 import { zodValidator } from '@tanstack/zod-adapter'
 import { DirectoryListing, PAGE_SIZE } from '~/components/directory-listing'
-import { COMPOUNDS, SITE_URL } from '~/lib/constants'
+import { SITE_URL } from '~/lib/constants'
 import { itemListSchema, breadcrumbSchema } from '~/lib/schema'
 import { searchDefaults, searchSchema } from '~/lib/search'
-import { filterVendors } from '~/lib/data'
-
-const VALID_COMPOUNDS = new Map(
-  COMPOUNDS.map((c) => [c.id, c.name]),
-)
+import { filterVendors, getCompounds } from '~/lib/data'
 
 export const Route = createFileRoute('/$compound')({
   validateSearch: zodValidator(searchSchema),
   search: {
     middlewares: [stripSearchParams(searchDefaults)],
   },
-  parseParams: ({ compound }) => {
-    if (!VALID_COMPOUNDS.has(compound)) {
-      throw notFound()
-    }
-    return { compound }
-  },
   loaderDeps: ({ search }) => ({ page: search.page, q: search.q, country: search.country, features: search.features }),
   loader: async ({ params, deps }) => {
+    const compounds = await getCompounds()
+    const compoundRecord = compounds.find((c) => c.id === params.compound)
+    if (!compoundRecord) {
+      throw notFound()
+    }
+
     const vendors = await filterVendors({ data: { q: deps.q, country: deps.country, features: deps.features, compound: params.compound } })
-    return { compound: params.compound, ...deps, vendors }
+    return { compound: params.compound, compoundName: compoundRecord.name, compounds, ...deps, vendors }
   },
   head: ({ loaderData }) => {
-    const { page, q, country, compound } = loaderData ?? {}
+    const { page, q, country, compound, compoundName } = loaderData ?? {}
     if (!compound) return { meta: [], links: [] }
-    const compoundName = VALID_COMPOUNDS.get(compound) ?? compound
+    const name = compoundName ?? compound
     const isFiltered = !!q
     const pageSuffix = page && page > 1 ? ` — Page ${page}` : ''
-    const pageTitle = `${compoundName} Vendors — Peptide Suppliers${pageSuffix}`
-    const pageDescription = `Find and compare vendors selling ${compoundName}. Verified ratings and reviews for every supplier.`
+    const pageTitle = `${name} Vendors — Peptide Suppliers${pageSuffix}`
+    const pageDescription = `Find and compare vendors selling ${name}. Verified ratings and reviews for every supplier.`
     const canonicalParams = new URLSearchParams()
     if (country) canonicalParams.set('country', country)
     if (page && page > 1) canonicalParams.set('page', String(page))
@@ -58,8 +54,8 @@ export const Route = createFileRoute('/$compound')({
         const start = ((p ?? 1) - 1) * PAGE_SIZE
         const paginatedVendors = vendors.slice(start, start + PAGE_SIZE)
         return [
-          { type: 'application/ld+json' as const, children: JSON.stringify(itemListSchema(paginatedVendors, `${compoundName} Vendors`, `/${compound}`)) },
-          { type: 'application/ld+json' as const, children: JSON.stringify(breadcrumbSchema([{ name: 'Home', url: '/' }, { name: `${compoundName} Vendors`, url: `/${compound}` }])) },
+          { type: 'application/ld+json' as const, children: JSON.stringify(itemListSchema(paginatedVendors, `${name} Vendors`, `/${compound}`)) },
+          { type: 'application/ld+json' as const, children: JSON.stringify(breadcrumbSchema([{ name: 'Home', url: '/' }, { name: `${name} Vendors`, url: `/${compound}` }])) },
         ]
       })(),
     }
@@ -74,9 +70,7 @@ export const Route = createFileRoute('/$compound')({
 function CompoundPage() {
   const { compound } = Route.useParams()
   const { q, country, page, features } = Route.useSearch()
-  const { vendors } = Route.useLoaderData()
-
-  const compoundName = VALID_COMPOUNDS.get(compound) ?? compound
+  const { vendors, compounds, compoundName } = Route.useLoaderData()
 
   return (
     <DirectoryListing
@@ -86,6 +80,7 @@ function CompoundPage() {
       countryFilter={country ?? ''}
       currentPage={page}
       vendors={vendors}
+      compounds={compounds}
       activeFeatures={features ?? ''}
       activeCompound={compound}
     />

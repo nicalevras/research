@@ -1,5 +1,5 @@
-import type { Vendor } from '~/lib/types'
-import { COMPOUNDS, COUNTRIES, FEATURE_FILTERS } from '~/lib/constants'
+import type { Compound, Vendor } from '~/lib/types'
+import { COUNTRIES, FEATURE_FILTERS } from '~/lib/constants'
 import { PillNav } from '~/components/pill-nav'
 import { VendorGrid, VendorGridSkeleton } from '~/components/vendor-grid'
 import { SearchIcon, XIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from '~/components/icons'
@@ -15,11 +15,12 @@ interface DirectoryListingProps {
   countryFilter: string
   currentPage: number
   vendors: Vendor[]
+  compounds: Compound[]
   activeFeatures: string
   activeCompound: string
 }
 
-export function DirectoryListing({ heading, description, searchQuery, countryFilter, currentPage, vendors, activeFeatures, activeCompound }: DirectoryListingProps) {
+export function DirectoryListing({ heading, description, searchQuery, countryFilter, currentPage, vendors, compounds, activeFeatures, activeCompound }: DirectoryListingProps) {
   const navigate = useNavigate()
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
   const searchRef = useRef<HTMLInputElement>(null)
@@ -164,7 +165,7 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
                 className="w-full appearance-none rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer dark:[color-scheme:dark]"
               >
                 <option value="">All Peptides</option>
-                {COMPOUNDS.map((c) => (
+                {compounds.map((c) => (
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
               </select>

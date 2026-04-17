@@ -1,12 +1,17 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
-import { eq, and, ilike, or, desc, avg, count } from 'drizzle-orm'
+import { eq, and, ilike, or, desc, asc, avg, count } from 'drizzle-orm'
 import type { SQL } from 'drizzle-orm'
 import { sql } from 'drizzle-orm'
 import { db } from '~/db'
-import { vendors, reviews, user, account } from '~/db/schema'
+import { vendors, reviews, user, account, compounds } from '~/db/schema'
 import { auth } from '~/lib/auth'
-import type { Vendor, Review } from './types'
+import type { Vendor, Review, Compound } from './types'
+
+const COMPOUND_REGISTRY_CACHE_TTL_MS = 5 * 60_000
+
+let compoundsCache: { data: Compound[]; expiresAt: number } | undefined
+let compoundsRequest: Promise<Compound[]> | undefined
 
 function rowToVendor(row: typeof vendors.$inferSelect): Vendor {
   return {
@@ -25,6 +30,35 @@ function rowToVendor(row: typeof vendors.$inferSelect): Vendor {
     rating: row.rating,
     reviewCount: row.reviewCount,
   }
+}
+
+async function loadCompounds(): Promise<Compound[]> {
+  const now = Date.now()
+  if (compoundsCache && compoundsCache.expiresAt > now) {
+    return compoundsCache.data
+  }
+
+  if (!compoundsRequest) {
+    compoundsRequest = db
+      .select({
+        id: compounds.id,
+        name: compounds.name,
+      })
+      .from(compounds)
+      .orderBy(asc(compounds.sortOrder), asc(compounds.name))
+      .then((rows) => {
+        compoundsCache = {
+          data: rows,
+          expiresAt: Date.now() + COMPOUND_REGISTRY_CACHE_TTL_MS,
+        }
+        return rows
+      })
+      .finally(() => {
+        compoundsRequest = undefined
+      })
+  }
+
+  return compoundsRequest
 }
 
 function escapeLike(str: string): string {
@@ -46,6 +80,9 @@ export const getVendorById = createServerFn({ method: 'GET' })
     })
     return row ? rowToVendor(row) : undefined
   })
+
+export const getCompounds = createServerFn({ method: 'GET' })
+  .handler(loadCompounds)
 
 export const filterVendors = createServerFn({ method: 'GET' })
   .inputValidator((d: { country?: string; q?: string; features?: string; compound?: string }) => d)

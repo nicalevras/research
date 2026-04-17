@@ -1,4 +1,4 @@
-import type { Vendor, Review } from './types'
+import type { Vendor, VendorSummary, Review } from './types'
 import { SITE_URL } from './constants'
 
 function vendorDescription(vendor: Vendor) {
@@ -6,8 +6,12 @@ function vendorDescription(vendor: Vendor) {
   return `${vendor.name} lists ${vendor.compoundNames.length} compounds${sample ? ` including ${sample}` : ''}.`
 }
 
+function vendorSummaryDescription(vendor: VendorSummary) {
+  return `${vendor.name} is listed in the Peptide Vendor Directory.`
+}
+
 export function itemListSchema(
-  vendors: Vendor[],
+  vendors: VendorSummary[],
   listName: string,
   listUrl: string,
 ) {
@@ -25,7 +29,7 @@ export function itemListSchema(
         '@type': 'Organization',
         name: v.name,
         url: `${SITE_URL}/vendors/${v.id}`,
-        description: vendorDescription(v),
+        description: vendorSummaryDescription(v),
         address: {
           '@type': 'PostalAddress',
           addressCountry: v.country,

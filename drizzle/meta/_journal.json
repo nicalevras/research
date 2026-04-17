@@ -43,6 +43,20 @@
       "when": 1776426678587,
       "tag": "0005_regular_outlaw_kid",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1776438944256,
+      "tag": "0006_new_juggernaut",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1776439536361,
+      "tag": "0007_loud_master_mold",
+      "breakpoints": true
     }
   ]
 }

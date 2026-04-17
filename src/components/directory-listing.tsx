@@ -1,4 +1,4 @@
-import type { Compound, Vendor } from '~/lib/types'
+import type { Compound, VendorSummary } from '~/lib/types'
 import { COUNTRIES, FEATURE_FILTERS } from '~/lib/constants'
 import { PillNav } from '~/components/pill-nav'
 import { VendorGrid, VendorGridSkeleton } from '~/components/vendor-grid'
@@ -14,7 +14,7 @@ interface DirectoryListingProps {
   searchQuery: string
   countryFilter: string
   currentPage: number
-  vendors: Vendor[]
+  vendors: VendorSummary[]
   compounds: Compound[]
   activeFeatures: string
   activeCompound: string

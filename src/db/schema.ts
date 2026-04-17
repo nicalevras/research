@@ -1,4 +1,4 @@
-import { pgTable, text, integer, real, timestamp, boolean, index, uniqueIndex, primaryKey } from 'drizzle-orm/pg-core'
+import { pgTable, text, integer, real, timestamp, boolean, index, uniqueIndex, primaryKey, check } from 'drizzle-orm/pg-core'
 import { relations, sql } from 'drizzle-orm'
 
 // ── Better Auth tables ──────────────────────────────────────────────
@@ -64,6 +64,8 @@ export const vendors = pgTable('vendors', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   website: text('website').notNull(),
+  promoCode: text('promo_code'),
+  promoDiscountPercent: integer('promo_discount_percent'),
   country: text('country').notNull(),
   compoundNames: text('compound_names').array().notNull(),
   compoundSlugs: text('compound_slugs').array().notNull(),
@@ -78,6 +80,7 @@ export const vendors = pgTable('vendors', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 }, (t) => [
+  check('chk_vendors_promo_discount_percent_range', sql`${t.promoDiscountPercent} IS NULL OR (${t.promoDiscountPercent} > 0 AND ${t.promoDiscountPercent} <= 100)`),
   index('idx_vendors_country').on(t.country),
   index('idx_vendors_compound_slugs').using('gin', t.compoundSlugs),
 ])

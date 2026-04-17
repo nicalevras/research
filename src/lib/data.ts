@@ -1,26 +1,43 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
-import { eq, and, ilike, or, desc, asc, avg, count } from 'drizzle-orm'
+import { eq, and, ilike, or, desc, asc, avg, count, isNotNull } from 'drizzle-orm'
 import type { SQL } from 'drizzle-orm'
 import { sql } from 'drizzle-orm'
 import { db } from '~/db'
 import { vendors, reviews, user, account, compounds, vendorFavorites } from '~/db/schema'
 import { auth } from '~/lib/auth'
-import type { Vendor, Review, Compound } from './types'
+import type { Vendor, VendorSummary, Review, Compound } from './types'
 
 const COMPOUND_REGISTRY_CACHE_TTL_MS = 5 * 60_000
 
 let compoundsCache: { data: Compound[]; expiresAt: number } | undefined
 let compoundsRequest: Promise<Compound[]> | undefined
 
-function rowToVendor(row: typeof vendors.$inferSelect): Vendor {
+const vendorSummaryColumns = {
+  id: vendors.id,
+  name: vendors.name,
+  website: vendors.website,
+  promoCode: vendors.promoCode,
+  promoDiscountPercent: vendors.promoDiscountPercent,
+  country: vendors.country,
+  hasCoa: vendors.hasCoa,
+  acceptsCreditCard: vendors.acceptsCreditCard,
+  acceptsAch: vendors.acceptsAch,
+  acceptsCrypto: vendors.acceptsCrypto,
+  fastShipping: vendors.fastShipping,
+  shipsInternational: vendors.shipsInternational,
+  rating: vendors.rating,
+  reviewCount: vendors.reviewCount,
+}
+
+function rowToVendorSummary(row: VendorSummary): VendorSummary {
   return {
     id: row.id,
     name: row.name,
     website: row.website,
+    promoCode: row.promoCode,
+    promoDiscountPercent: row.promoDiscountPercent,
     country: row.country,
-    compoundNames: row.compoundNames,
-    compoundSlugs: row.compoundSlugs,
     hasCoa: row.hasCoa,
     acceptsCreditCard: row.acceptsCreditCard,
     acceptsAch: row.acceptsAch,
@@ -29,6 +46,14 @@ function rowToVendor(row: typeof vendors.$inferSelect): Vendor {
     shipsInternational: row.shipsInternational,
     rating: row.rating,
     reviewCount: row.reviewCount,
+  }
+}
+
+function rowToVendor(row: typeof vendors.$inferSelect): Vendor {
+  return {
+    ...rowToVendorSummary(row),
+    compoundNames: row.compoundNames,
+    compoundSlugs: row.compoundSlugs,
   }
 }
 
@@ -106,6 +131,7 @@ export const filterVendors = createServerFn({ method: 'GET' })
       if (featureId === 'crypto') conditions.push(eq(vendors.acceptsCrypto, true))
       if (featureId === 'fast-shipping') conditions.push(eq(vendors.fastShipping, true))
       if (featureId === 'international') conditions.push(eq(vendors.shipsInternational, true))
+      if (featureId === 'promo-code') conditions.push(isNotNull(vendors.promoCode))
     }
 
     if (q) {
@@ -124,12 +150,12 @@ export const filterVendors = createServerFn({ method: 'GET' })
     }
 
     const rows = await db
-      .select()
+      .select(vendorSummaryColumns)
       .from(vendors)
       .where(conditions.length > 0 ? and(...conditions) : undefined)
       .orderBy(desc(vendors.rating))
 
-    return rows.map(rowToVendor)
+    return rows.map(rowToVendorSummary)
   })
 
 // ── Favorites ──────────────────────────────────────────────────────
@@ -156,13 +182,13 @@ export const getFavoriteVendors = createServerFn({ method: 'GET' })
     if (!session) throw new Error('Unauthorized')
 
     const rows = await db
-      .select()
+      .select(vendorSummaryColumns)
       .from(vendorFavorites)
       .innerJoin(vendors, eq(vendorFavorites.vendorId, vendors.id))
       .where(eq(vendorFavorites.userId, session.user.id))
       .orderBy(desc(vendorFavorites.createdAt), asc(vendors.name))
 
-    return rows.map((row) => row.vendors).map(rowToVendor)
+    return rows.map(rowToVendorSummary)
   })
 
 export const setVendorFavorite = createServerFn({ method: 'POST' })

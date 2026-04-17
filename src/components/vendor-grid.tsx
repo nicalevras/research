@@ -1,25 +1,14 @@
-import type { Vendor } from '~/lib/types'
+import type { VendorSummary } from '~/lib/types'
 import { Link } from '@tanstack/react-router'
 import { ExternalLinkIcon, ShoppingCartIcon, SearchIcon } from '~/components/icons'
 import { ReviewStars } from '~/components/reviews'
 import { CountryFlag } from '~/components/flags'
 import { FavoriteButton } from '~/components/favorite-button'
+import { getVendorFeatureLabels } from '~/lib/constants'
+import { PromoCodeBadge } from '~/components/promo-code'
 
-function vendorFeatureLabels(vendor: Vendor) {
-  return [
-    vendor.hasCoa ? 'COA' : undefined,
-    vendor.acceptsCreditCard ? 'Credit Card' : undefined,
-    vendor.acceptsAch ? 'ACH' : undefined,
-    vendor.acceptsCrypto ? 'Crypto' : undefined,
-    vendor.fastShipping ? 'Fast Shipping' : undefined,
-    vendor.shipsInternational ? 'International' : undefined,
-  ].filter(Boolean) as string[]
-}
-
-function VendorCard({ vendor, initialFavorited = false }: { vendor: Vendor; initialFavorited?: boolean }) {
-  const visibleCompounds = vendor.compoundNames.slice(0, 5)
-  const remainingCount = Math.max(0, vendor.compoundNames.length - visibleCompounds.length)
-  const features = vendorFeatureLabels(vendor).slice(0, 3)
+function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummary; initialFavorited?: boolean }) {
+  const features = getVendorFeatureLabels(vendor).slice(0, 3)
 
   return (
     <article className="rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden flex flex-col">
@@ -46,30 +35,14 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: Vendor; init
           <span>{vendor.country}</span>
         </div>
 
+        <PromoCodeBadge code={vendor.promoCode} discountPercent={vendor.promoDiscountPercent} />
+
         <div className="flex flex-wrap gap-1.5">
           {features.map((feature) => (
             <span key={feature} className="rounded-lg bg-neutral-100 dark:bg-white/[0.06] px-2 py-1 text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
               {feature}
             </span>
           ))}
-        </div>
-
-        <div className="space-y-1.5">
-          <p className="text-xs font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
-            {vendor.compoundNames.length} compounds
-          </p>
-          <div className="flex flex-wrap gap-1.5">
-            {visibleCompounds.map((compound, index) => (
-              <span key={`${compound}-${index}`} className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] px-2 py-1 text-[11px] text-neutral-500 dark:text-neutral-400">
-                {compound}
-              </span>
-            ))}
-            {remainingCount > 0 && (
-              <span className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] px-2 py-1 text-[11px] text-neutral-400 dark:text-neutral-500">
-                +{remainingCount}
-              </span>
-            )}
-          </div>
         </div>
 
         <div className="mt-auto pt-3 border-t border-neutral-200/60 dark:border-white/[0.06] flex gap-5">
@@ -99,16 +72,12 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: Vendor; init
 function SkeletonCard() {
   return (
     <div className="rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden flex flex-col animate-pulse">
-      <div className="aspect-[16/9] bg-neutral-100 dark:bg-neutral-800" />
       <div className="p-5 flex flex-col flex-1 gap-3">
         <div className="h-5 w-3/4 rounded bg-neutral-200 dark:bg-neutral-700" />
         <div className="h-5 w-1/2 rounded bg-neutral-100 dark:bg-neutral-800" />
         <div className="h-4 w-1/3 rounded bg-neutral-100 dark:bg-neutral-800" />
-        <div className="space-y-2">
-          <div className="h-3.5 w-full rounded bg-neutral-100 dark:bg-neutral-800" />
-          <div className="h-3.5 w-full rounded bg-neutral-100 dark:bg-neutral-800" />
-          <div className="h-3.5 w-2/3 rounded bg-neutral-100 dark:bg-neutral-800" />
-        </div>
+        <div className="h-7 w-36 rounded-lg bg-neutral-100 dark:bg-neutral-800" />
+        <div className="h-6 w-2/3 rounded bg-neutral-100 dark:bg-neutral-800" />
         <div className="mt-auto pt-3 border-t border-neutral-200/60 dark:border-white/[0.06] flex gap-5">
           <div className="h-9 flex-1 rounded-xl bg-neutral-100 dark:bg-neutral-800" />
           <div className="h-9 flex-1 rounded-xl bg-neutral-200 dark:bg-neutral-700" />
@@ -129,7 +98,7 @@ export function VendorGridSkeleton() {
 }
 
 interface VendorGridProps {
-  data: Vendor[]
+  data: VendorSummary[]
   initialFavorites?: boolean
   emptyTitle?: string
   emptyDescription?: string

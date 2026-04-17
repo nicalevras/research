@@ -86,6 +86,37 @@ function parseCompounds(value: string): string[] {
     .filter(Boolean)
 }
 
+function readPromoCode(row: CsvRow): string | null {
+  const promoCodeKey = ['PROMO_CODE', 'PROMO CODE', 'Promo Code'].find((key) => key in row)
+  if (!promoCodeKey) return 'VIALSOURCE'
+
+  const promoCode = row[promoCodeKey]?.trim()
+  return promoCode || null
+}
+
+function readPromoDiscountPercent(row: CsvRow, promoCode: string | null): number | null {
+  const discountKey = [
+    'PROMO_DISCOUNT_PERCENT',
+    'PROMO DISCOUNT PERCENT',
+    'PROMO DISCOUNT %',
+    'DISCOUNT_PERCENT',
+    'DISCOUNT PERCENT',
+    'Discount Percent',
+  ].find((key) => key in row)
+
+  if (!discountKey) return promoCode ? 10 : null
+
+  const rawDiscount = row[discountKey]?.replace('%', '').trim()
+  if (!rawDiscount) return null
+
+  const discountPercent = Number(rawDiscount)
+  if (!Number.isInteger(discountPercent) || discountPercent <= 0 || discountPercent > 100) {
+    throw new Error(`Invalid promo discount percent: ${row[discountKey]}`)
+  }
+
+  return discountPercent
+}
+
 function readVendorCsv() {
   const csvPath = resolve(process.cwd(), process.env.VENDOR_CSV_PATH ?? '../AFF VENDORS - HERMES - Sheet1.csv')
   const text = readFileSync(csvPath, 'utf-8')
@@ -112,10 +143,14 @@ function buildSeedData(rows: CsvRow[]) {
       compoundMap.set(compoundSlug, compoundName)
     })
 
+    const promoCode = readPromoCode(row)
+
     return {
       id,
       name,
       website: row.URL,
+      promoCode,
+      promoDiscountPercent: readPromoDiscountPercent(row, promoCode),
       country: row.Country || 'USA',
       compoundNames,
       compoundSlugs,

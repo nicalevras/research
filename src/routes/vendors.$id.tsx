@@ -1,12 +1,13 @@
 import { createFileRoute, Link, notFound } from '@tanstack/react-router'
 import { getVendorById, getVendorReviews } from '~/lib/data'
-import { SITE_URL } from '~/lib/constants'
+import { getVendorFeatureLabels, SITE_URL } from '~/lib/constants'
 import { StarRating } from '~/components/vendor-ui'
 import { ReviewsList } from '~/components/reviews'
 import { breadcrumbSchema, organizationSchema } from '~/lib/schema'
 import { CircleAlertIcon, ChevronRightIcon, ShoppingCartIcon } from '~/components/icons'
 import { CountryFlag } from '~/components/flags'
 import { FavoriteButton } from '~/components/favorite-button'
+import { PromoCodeBadge } from '~/components/promo-code'
 import type { Vendor } from '~/lib/types'
 
 function VendorNotFound() {
@@ -24,17 +25,6 @@ function VendorNotFound() {
 function vendorDescription(vendor: Vendor) {
   const sample = vendor.compoundNames.slice(0, 3).join(', ')
   return `${vendor.name} lists ${vendor.compoundNames.length} compounds${sample ? ` including ${sample}` : ''}.`
-}
-
-function vendorFeatures(vendor: Vendor) {
-  return [
-    vendor.hasCoa ? 'COA Available' : undefined,
-    vendor.acceptsCreditCard ? 'Credit Card' : undefined,
-    vendor.acceptsAch ? 'ACH' : undefined,
-    vendor.acceptsCrypto ? 'Crypto' : undefined,
-    vendor.fastShipping ? 'Fast Shipping' : undefined,
-    vendor.shipsInternational ? 'International' : undefined,
-  ].filter(Boolean) as string[]
 }
 
 export const Route = createFileRoute('/vendors/$id')({
@@ -168,7 +158,7 @@ function VendorSkeleton() {
 
 function VendorDetailPage() {
   const { vendor, reviews } = Route.useLoaderData()
-  const features = vendorFeatures(vendor)
+  const features = getVendorFeatureLabels(vendor)
 
   return (
     <div>
@@ -219,6 +209,7 @@ function VendorDetailPage() {
                 <CountryFlag country={vendor.country} />
                 <span>{vendor.country}</span>
               </div>
+              <PromoCodeBadge code={vendor.promoCode} discountPercent={vendor.promoDiscountPercent} />
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {features.map((feature) => (
                   <span key={feature} className="rounded-lg bg-neutral-100 dark:bg-white/[0.06] px-2.5 py-1.5 text-xs font-medium text-neutral-600 dark:text-neutral-300">

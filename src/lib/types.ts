@@ -1,10 +1,10 @@
-export interface Vendor {
+export interface VendorSummary {
   id: string
   name: string
   website: string
+  promoCode: string | null
+  promoDiscountPercent: number | null
   country: string
-  compoundNames: string[]
-  compoundSlugs: string[]
   hasCoa: boolean
   acceptsCreditCard: boolean
   acceptsAch: boolean
@@ -13,6 +13,11 @@ export interface Vendor {
   shipsInternational: boolean
   rating: number
   reviewCount: number
+}
+
+export interface Vendor extends VendorSummary {
+  compoundNames: string[]
+  compoundSlugs: string[]
 }
 
 export interface FeatureFilter {

@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { ExternalLinkIcon, ShoppingCartIcon, SearchIcon } from '~/components/icons'
 import { ReviewStars } from '~/components/reviews'
 import { CountryFlag } from '~/components/flags'
+import { FavoriteButton } from '~/components/favorite-button'
 
 function vendorFeatureLabels(vendor: Vendor) {
   return [
@@ -15,7 +16,7 @@ function vendorFeatureLabels(vendor: Vendor) {
   ].filter(Boolean) as string[]
 }
 
-function VendorCard({ vendor }: { vendor: Vendor }) {
+function VendorCard({ vendor, initialFavorited = false }: { vendor: Vendor; initialFavorited?: boolean }) {
   const visibleCompounds = vendor.compoundNames.slice(0, 5)
   const remainingCount = Math.max(0, vendor.compoundNames.length - visibleCompounds.length)
   const features = vendorFeatureLabels(vendor).slice(0, 3)
@@ -23,13 +24,16 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
   return (
     <article className="rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden flex flex-col">
       <div className="p-5 flex flex-col flex-1 gap-3">
-        <Link
-          to="/vendors/$id"
-          params={{ id: vendor.id }}
-          className="block text-base font-bold text-neutral-900 dark:text-white hover:underline"
-        >
-          {vendor.name}
-        </Link>
+        <div className="flex items-start justify-between gap-3">
+          <Link
+            to="/vendors/$id"
+            params={{ id: vendor.id }}
+            className="block min-w-0 text-base font-bold text-neutral-900 dark:text-white hover:underline"
+          >
+            {vendor.name}
+          </Link>
+          <FavoriteButton vendorId={vendor.id} initialFavorited={initialFavorited} />
+        </div>
         <div className="flex items-center gap-1 h-5">
           <span className="text-sm font-semibold tabular-nums text-neutral-900 dark:text-white">{vendor.rating.toFixed(1)}</span>
           <ReviewStars rating={vendor.rating} size="xs" />
@@ -126,17 +130,20 @@ export function VendorGridSkeleton() {
 
 interface VendorGridProps {
   data: Vendor[]
+  initialFavorites?: boolean
+  emptyTitle?: string
+  emptyDescription?: string
 }
 
-export function VendorGrid({ data }: VendorGridProps) {
+export function VendorGrid({ data, initialFavorites = false, emptyTitle = 'No vendors found', emptyDescription = 'Try adjusting your filters' }: VendorGridProps) {
   if (data.length === 0) {
     return (
       <div className="rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] py-20 text-center">
         <div className="mx-auto mb-3 h-10 w-10 rounded-xl bg-neutral-100 dark:bg-white/[0.06] flex items-center justify-center">
           <SearchIcon className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
         </div>
-        <p className="text-sm font-medium text-neutral-600 dark:text-neutral-300">No vendors found</p>
-        <p className="text-sm text-neutral-400 dark:text-neutral-500 mt-1">Try adjusting your filters</p>
+        <p className="text-sm font-medium text-neutral-600 dark:text-neutral-300">{emptyTitle}</p>
+        <p className="text-sm text-neutral-400 dark:text-neutral-500 mt-1">{emptyDescription}</p>
       </div>
     )
   }
@@ -144,7 +151,7 @@ export function VendorGrid({ data }: VendorGridProps) {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
       {data.map((vendor) => (
-        <VendorCard key={vendor.id} vendor={vendor} />
+        <VendorCard key={vendor.id} vendor={vendor} initialFavorited={initialFavorites} />
       ))}
     </div>
   )

@@ -2,17 +2,20 @@ import { createContext, useContext, useState, useCallback, useMemo } from 'react
 import type { ReactNode } from 'react'
 
 type AuthModal = 'sign-in' | 'sign-up' | 'forgot-password' | null
+type AuthModalOptions = { message?: string }
 
 interface AuthModalContextValue {
   modal: AuthModal
-  openSignIn: () => void
-  openSignUp: () => void
-  openForgotPassword: () => void
+  message: string | null
+  openSignIn: (options?: AuthModalOptions) => void
+  openSignUp: (options?: AuthModalOptions) => void
+  openForgotPassword: (options?: AuthModalOptions) => void
   closeModal: () => void
 }
 
 const AuthModalContext = createContext<AuthModalContextValue>({
   modal: null,
+  message: null,
   openSignIn: () => {},
   openSignUp: () => {},
   openForgotPassword: () => {},
@@ -21,13 +24,26 @@ const AuthModalContext = createContext<AuthModalContextValue>({
 
 export function AuthModalProvider({ children }: { children: ReactNode }) {
   const [modal, setModal] = useState<AuthModal>(null)
+  const [message, setMessage] = useState<string | null>(null)
 
-  const openSignIn = useCallback(() => setModal('sign-in'), [])
-  const openSignUp = useCallback(() => setModal('sign-up'), [])
-  const openForgotPassword = useCallback(() => setModal('forgot-password'), [])
-  const closeModal = useCallback(() => setModal(null), [])
+  const openSignIn = useCallback((options?: AuthModalOptions) => {
+    setMessage(options?.message ?? null)
+    setModal('sign-in')
+  }, [])
+  const openSignUp = useCallback((options?: AuthModalOptions) => {
+    setMessage(options?.message ?? null)
+    setModal('sign-up')
+  }, [])
+  const openForgotPassword = useCallback((options?: AuthModalOptions) => {
+    setMessage(options?.message ?? null)
+    setModal('forgot-password')
+  }, [])
+  const closeModal = useCallback(() => {
+    setModal(null)
+    setMessage(null)
+  }, [])
 
-  const value = useMemo(() => ({ modal, openSignIn, openSignUp, openForgotPassword, closeModal }), [modal, openSignIn, openSignUp, openForgotPassword, closeModal])
+  const value = useMemo(() => ({ modal, message, openSignIn, openSignUp, openForgotPassword, closeModal }), [modal, message, openSignIn, openSignUp, openForgotPassword, closeModal])
 
   return (
     <AuthModalContext.Provider value={value}>

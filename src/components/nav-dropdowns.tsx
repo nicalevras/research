@@ -4,7 +4,7 @@ import { Link, useNavigate, useRouter, useRouterState } from '@tanstack/react-ro
 import { useTheme } from '~/lib/use-theme'
 import { useAuthModal } from '~/lib/auth-context'
 import { authClient } from '~/lib/auth-client'
-import { MenuIcon, UserIcon, SunIcon, MoonIcon, LogInIcon, UserPlusIcon, LogOutIcon, SettingsIcon, SearchIcon, XIcon, ChevronDownIcon } from '~/components/icons'
+import { MenuIcon, UserIcon, SunIcon, MoonIcon, LogInIcon, UserPlusIcon, LogOutIcon, SettingsIcon, SearchIcon, XIcon, ChevronDownIcon, HeartIcon } from '~/components/icons'
 import type { Compound } from '~/lib/types'
 
 function DropdownMenu({ trigger, children, align = 'right' }: { trigger: ReactNode; children: ReactNode; align?: 'left' | 'right' }) {
@@ -123,6 +123,10 @@ export function UserMenu() {
           <DropdownLink to="/account">
             <SettingsIcon className="h-4 w-4" strokeWidth={1.5} />
             Account
+          </DropdownLink>
+          <DropdownLink to="/favorites">
+            <HeartIcon className="h-4 w-4" strokeWidth={1.5} />
+            Favorites
           </DropdownLink>
           <DropdownDivider />
           <DropdownItem onClick={handleSignOut}>

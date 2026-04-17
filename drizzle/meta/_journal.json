@@ -36,6 +36,13 @@
       "when": 1776385489141,
       "tag": "0004_csv_schema_reset",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1776426678587,
+      "tag": "0005_regular_outlaw_kid",
+      "breakpoints": true
     }
   ]
 }

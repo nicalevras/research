@@ -248,7 +248,7 @@ export function ReviewForm({ vendorId, existingReview, onDone }: {
         ) : (
           <button
             type="button"
-            onClick={openSignIn}
+            onClick={() => openSignIn()}
             className="rounded-xl bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors cursor-pointer"
           >
             Sign in to review

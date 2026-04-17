@@ -109,6 +109,14 @@ export function StarIcon(props: IconProps) {
   )
 }
 
+export function HeartIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M19.5 12.6 12 20l-7.5-7.4A5 5 0 0 1 12 6a5 5 0 0 1 7.5 6.6Z" />
+    </Icon>
+  )
+}
+
 export function SunIcon(props: IconProps) {
   return (
     <Icon {...props}>

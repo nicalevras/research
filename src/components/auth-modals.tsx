@@ -113,7 +113,7 @@ function ForgotPasswordForm() {
         </div>
         <button
           type="button"
-          onClick={openSignIn}
+          onClick={() => openSignIn()}
           className="text-sm font-medium text-neutral-900 dark:text-white hover:underline cursor-pointer"
         >
           Back to Sign In
@@ -142,7 +142,7 @@ function ForgotPasswordForm() {
       </button>
 
       <p className="text-center text-sm text-neutral-500 dark:text-neutral-400">
-        <button type="button" onClick={openSignIn} className="font-medium text-neutral-900 dark:text-white hover:underline cursor-pointer">
+        <button type="button" onClick={() => openSignIn()} className="font-medium text-neutral-900 dark:text-white hover:underline cursor-pointer">
           Back to Sign In
         </button>
       </p>
@@ -151,7 +151,7 @@ function ForgotPasswordForm() {
 }
 
 function SignInForm() {
-  const { closeModal, openSignUp, openForgotPassword } = useAuthModal()
+  const { closeModal, openSignUp, openForgotPassword, message } = useAuthModal()
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -191,7 +191,7 @@ function SignInForm() {
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="text-center mb-6">
         <h2 className="text-lg font-semibold text-neutral-900 dark:text-white">Sign In</h2>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">Welcome back</p>
+        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">{message ?? 'Welcome back'}</p>
       </div>
 
       <GoogleButton onClick={handleGoogle} />
@@ -203,7 +203,7 @@ function SignInForm() {
       <div className="flex justify-end">
         <button
           type="button"
-          onClick={openForgotPassword}
+          onClick={() => openForgotPassword()}
           className="text-xs text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors cursor-pointer"
         >
           Forgot password?
@@ -222,7 +222,7 @@ function SignInForm() {
 
       <p className="text-center text-sm text-neutral-500 dark:text-neutral-400">
         Don&apos;t have an account?{' '}
-        <button type="button" onClick={openSignUp} className="font-medium text-neutral-900 dark:text-white hover:underline cursor-pointer">
+        <button type="button" onClick={() => openSignUp()} className="font-medium text-neutral-900 dark:text-white hover:underline cursor-pointer">
           Sign Up
         </button>
       </p>
@@ -307,7 +307,7 @@ function SignUpForm() {
 
       <p className="text-center text-sm text-neutral-500 dark:text-neutral-400">
         Already have an account?{' '}
-        <button type="button" onClick={openSignIn} className="font-medium text-neutral-900 dark:text-white hover:underline cursor-pointer">
+        <button type="button" onClick={() => openSignIn()} className="font-medium text-neutral-900 dark:text-white hover:underline cursor-pointer">
           Sign In
         </button>
       </p>

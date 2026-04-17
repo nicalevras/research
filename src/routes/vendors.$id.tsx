@@ -6,6 +6,7 @@ import { ReviewsList } from '~/components/reviews'
 import { breadcrumbSchema, organizationSchema } from '~/lib/schema'
 import { CircleAlertIcon, ChevronRightIcon, ShoppingCartIcon } from '~/components/icons'
 import { CountryFlag } from '~/components/flags'
+import { FavoriteButton } from '~/components/favorite-button'
 import type { Vendor } from '~/lib/types'
 
 function VendorNotFound() {
@@ -193,15 +194,18 @@ function VendorDetailPage() {
                 <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">
                   {vendor.name}
                 </h1>
-                <a
-                  href={vendor.website}
-                  target="_blank"
-                  rel="noopener noreferrer nofollow"
-                  className="hidden sm:inline-flex items-center justify-center gap-2 rounded-xl bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors shrink-0"
-                >
-                  <ShoppingCartIcon className="h-4 w-4" />
-                  Shop Now
-                </a>
+                <div className="hidden sm:flex items-center gap-3 shrink-0">
+                  <FavoriteButton vendorId={vendor.id} variant="button" />
+                  <a
+                    href={vendor.website}
+                    target="_blank"
+                    rel="noopener noreferrer nofollow"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
+                  >
+                    <ShoppingCartIcon className="h-4 w-4" />
+                    Shop Now
+                  </a>
+                </div>
               </div>
               <div className="flex items-center gap-1.5">
                 <StarRating rating={vendor.rating} />
@@ -222,15 +226,18 @@ function VendorDetailPage() {
                   </span>
                 ))}
               </div>
-              <a
-                href={vendor.website}
-                target="_blank"
-                rel="noopener noreferrer nofollow"
-                className="sm:hidden inline-flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors mt-2"
-              >
-                <ShoppingCartIcon className="h-4 w-4" />
-                Shop Now
-              </a>
+              <div className="sm:hidden grid grid-cols-2 gap-3 mt-2">
+                <FavoriteButton vendorId={vendor.id} variant="button" className="w-full" />
+                <a
+                  href={vendor.website}
+                  target="_blank"
+                  rel="noopener noreferrer nofollow"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
+                >
+                  <ShoppingCartIcon className="h-4 w-4" />
+                  Shop Now
+                </a>
+              </div>
             </div>
           </div>
         </div>

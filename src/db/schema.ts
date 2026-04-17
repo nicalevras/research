@@ -1,4 +1,4 @@
-import { pgTable, text, integer, real, timestamp, boolean, index, uniqueIndex } from 'drizzle-orm/pg-core'
+import { pgTable, text, integer, real, timestamp, boolean, index, uniqueIndex, primaryKey } from 'drizzle-orm/pg-core'
 import { relations, sql } from 'drizzle-orm'
 
 // ── Better Auth tables ──────────────────────────────────────────────
@@ -82,6 +82,16 @@ export const vendors = pgTable('vendors', {
   index('idx_vendors_compound_slugs').using('gin', t.compoundSlugs),
 ])
 
+export const vendorFavorites = pgTable('vendor_favorites', {
+  userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  vendorId: text('vendor_id').notNull().references(() => vendors.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+}, (t) => [
+  primaryKey({ name: 'pk_vendor_favorites', columns: [t.userId, t.vendorId] }),
+  index('idx_vendor_favorites_user_created_at').on(t.userId, t.createdAt),
+  index('idx_vendor_favorites_vendor').on(t.vendorId),
+])
+
 export const reviews = pgTable('reviews', {
   id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
   userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
@@ -101,8 +111,14 @@ export const reviewsRelations = relations(reviews, ({ one }) => ({
   vendor: one(vendors, { fields: [reviews.vendorId], references: [vendors.id] }),
 }))
 
+export const vendorFavoritesRelations = relations(vendorFavorites, ({ one }) => ({
+  user: one(user, { fields: [vendorFavorites.userId], references: [user.id] }),
+  vendor: one(vendors, { fields: [vendorFavorites.vendorId], references: [vendors.id] }),
+}))
+
 export const vendorsRelations = relations(vendors, ({ many }) => ({
   reviews: many(reviews),
+  favorites: many(vendorFavorites),
 }))
 
 export const compounds = pgTable('compounds', {

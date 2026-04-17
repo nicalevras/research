@@ -4,6 +4,8 @@ import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { nitro } from 'nitro/vite'
 
+const PRIVATE_ROUTES = new Set(['/account', '/favorites'])
+
 export default defineConfig({
   server: {
     port: 3000,
@@ -18,9 +20,15 @@ export default defineConfig({
       prerender: {
         enabled: true,
         crawlLinks: true,
+        filter: ({ path }) => !PRIVATE_ROUTES.has(path.split('?')[0]),
       },
     }),
     viteReact(),
-    nitro(),
+    nitro({
+      routeRules: {
+        '/account': { prerender: false },
+        '/favorites': { prerender: false },
+      },
+    }),
   ],
 })

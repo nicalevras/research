@@ -4,7 +4,7 @@ import { eq, and, ilike, or, desc, asc, avg, count } from 'drizzle-orm'
 import type { SQL } from 'drizzle-orm'
 import { sql } from 'drizzle-orm'
 import { db } from '~/db'
-import { vendors, reviews, user, account, compounds } from '~/db/schema'
+import { vendors, reviews, user, account, compounds, vendorFavorites } from '~/db/schema'
 import { auth } from '~/lib/auth'
 import type { Vendor, Review, Compound } from './types'
 
@@ -130,6 +130,71 @@ export const filterVendors = createServerFn({ method: 'GET' })
       .orderBy(desc(vendors.rating))
 
     return rows.map(rowToVendor)
+  })
+
+// ── Favorites ──────────────────────────────────────────────────────
+
+export const getFavoriteVendorIds = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    const headers = getRequestHeaders()
+    const session = await auth.api.getSession({ headers })
+    if (!session) return []
+
+    const rows = await db
+      .select({ vendorId: vendorFavorites.vendorId })
+      .from(vendorFavorites)
+      .where(eq(vendorFavorites.userId, session.user.id))
+      .orderBy(desc(vendorFavorites.createdAt))
+
+    return rows.map((row) => row.vendorId)
+  })
+
+export const getFavoriteVendors = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    const headers = getRequestHeaders()
+    const session = await auth.api.getSession({ headers })
+    if (!session) throw new Error('Unauthorized')
+
+    const rows = await db
+      .select()
+      .from(vendorFavorites)
+      .innerJoin(vendors, eq(vendorFavorites.vendorId, vendors.id))
+      .where(eq(vendorFavorites.userId, session.user.id))
+      .orderBy(desc(vendorFavorites.createdAt), asc(vendors.name))
+
+    return rows.map((row) => row.vendors).map(rowToVendor)
+  })
+
+export const setVendorFavorite = createServerFn({ method: 'POST' })
+  .inputValidator((d: { vendorId: string; favorited: boolean }) => d)
+  .handler(async ({ data }) => {
+    const headers = getRequestHeaders()
+    const session = await auth.api.getSession({ headers })
+    if (!session) throw new Error('Unauthorized')
+
+    const [vendor] = await db
+      .select({ id: vendors.id })
+      .from(vendors)
+      .where(eq(vendors.id, data.vendorId))
+      .limit(1)
+
+    if (!vendor) throw new Error('Vendor not found')
+
+    if (data.favorited) {
+      await db
+        .insert(vendorFavorites)
+        .values({
+          userId: session.user.id,
+          vendorId: data.vendorId,
+        })
+        .onConflictDoNothing()
+    } else {
+      await db
+        .delete(vendorFavorites)
+        .where(and(eq(vendorFavorites.userId, session.user.id), eq(vendorFavorites.vendorId, data.vendorId)))
+    }
+
+    return { vendorId: data.vendorId, favorited: data.favorited }
   })
 
 // ── Reviews ─────────────────────────────────────────────────────────

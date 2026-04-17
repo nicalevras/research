@@ -1,0 +1,1 @@
+ALTER TABLE "vendors" ADD COLUMN "verified" boolean DEFAULT true NOT NULL;

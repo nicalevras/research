@@ -1,9 +1,11 @@
 export interface VendorSummary {
   id: string
   name: string
-  website: string
+  description: string
+  logoUrl: string | null
   promoCode: string | null
   promoDiscountPercent: number | null
+  verified: boolean
   country: string
   hasCoa: boolean
   acceptsCreditCard: boolean
@@ -16,6 +18,7 @@ export interface VendorSummary {
 }
 
 export interface Vendor extends VendorSummary {
+  website: string
   compoundNames: string[]
   compoundSlugs: string[]
 }

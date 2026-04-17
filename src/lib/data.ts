@@ -16,9 +16,11 @@ let compoundsRequest: Promise<Compound[]> | undefined
 const vendorSummaryColumns = {
   id: vendors.id,
   name: vendors.name,
-  website: vendors.website,
+  description: vendors.description,
+  logoUrl: vendors.logoUrl,
   promoCode: vendors.promoCode,
   promoDiscountPercent: vendors.promoDiscountPercent,
+  verified: vendors.verified,
   country: vendors.country,
   hasCoa: vendors.hasCoa,
   acceptsCreditCard: vendors.acceptsCreditCard,
@@ -34,9 +36,11 @@ function rowToVendorSummary(row: VendorSummary): VendorSummary {
   return {
     id: row.id,
     name: row.name,
-    website: row.website,
+    description: row.description,
+    logoUrl: row.logoUrl,
     promoCode: row.promoCode,
     promoDiscountPercent: row.promoDiscountPercent,
+    verified: row.verified,
     country: row.country,
     hasCoa: row.hasCoa,
     acceptsCreditCard: row.acceptsCreditCard,
@@ -52,6 +56,7 @@ function rowToVendorSummary(row: VendorSummary): VendorSummary {
 function rowToVendor(row: typeof vendors.$inferSelect): Vendor {
   return {
     ...rowToVendorSummary(row),
+    website: row.website,
     compoundNames: row.compoundNames,
     compoundSlugs: row.compoundSlugs,
   }

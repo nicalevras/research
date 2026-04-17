@@ -117,6 +117,18 @@ function readPromoDiscountPercent(row: CsvRow, promoCode: string | null): number
   return discountPercent
 }
 
+function readVerified(row: CsvRow): boolean {
+  const verifiedKey = ['VERIFIED', 'Verified', 'verified'].find((key) => key in row)
+  if (!verifiedKey) return true
+  return parseBoolean(row[verifiedKey] ?? '')
+}
+
+function readDescription(row: CsvRow, vendorName: string): string {
+  const descriptionKey = ['DESCRIPTION', 'Description', 'description'].find((key) => key in row)
+  const description = descriptionKey ? row[descriptionKey]?.trim() : ''
+  return description || `${vendorName} is a peptide vendor listed in the Peptide Vendor Directory.`
+}
+
 function readVendorCsv() {
   const csvPath = resolve(process.cwd(), process.env.VENDOR_CSV_PATH ?? '../AFF VENDORS - HERMES - Sheet1.csv')
   const text = readFileSync(csvPath, 'utf-8')
@@ -149,8 +161,10 @@ function buildSeedData(rows: CsvRow[]) {
       id,
       name,
       website: row.URL,
+      description: readDescription(row, name),
       promoCode,
       promoDiscountPercent: readPromoDiscountPercent(row, promoCode),
+      verified: readVerified(row),
       country: row.Country || 'USA',
       compoundNames,
       compoundSlugs,

@@ -23,8 +23,7 @@ function VendorNotFound() {
 }
 
 function vendorDescription(vendor: Vendor) {
-  const sample = vendor.compoundNames.slice(0, 3).join(', ')
-  return `${vendor.name} lists ${vendor.compoundNames.length} compounds${sample ? ` including ${sample}` : ''}.`
+  return vendor.description
 }
 
 export const Route = createFileRoute('/vendors/$id')({
@@ -209,6 +208,9 @@ function VendorDetailPage() {
                 <CountryFlag country={vendor.country} />
                 <span>{vendor.country}</span>
               </div>
+              <p className="max-w-3xl text-sm leading-6 text-neutral-600 dark:text-neutral-300">
+                {vendor.description}
+              </p>
               <PromoCodeBadge code={vendor.promoCode} discountPercent={vendor.promoDiscountPercent} />
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {features.map((feature) => (

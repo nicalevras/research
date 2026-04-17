@@ -2,12 +2,11 @@ import type { Vendor, VendorSummary, Review } from './types'
 import { SITE_URL } from './constants'
 
 function vendorDescription(vendor: Vendor) {
-  const sample = vendor.compoundNames.slice(0, 3).join(', ')
-  return `${vendor.name} lists ${vendor.compoundNames.length} compounds${sample ? ` including ${sample}` : ''}.`
+  return vendor.description
 }
 
 function vendorSummaryDescription(vendor: VendorSummary) {
-  return `${vendor.name} is listed in the Peptide Vendor Directory.`
+  return vendor.description
 }
 
 export function itemListSchema(

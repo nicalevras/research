@@ -1,68 +1,114 @@
 import type { VendorSummary } from '~/lib/types'
 import { Link } from '@tanstack/react-router'
-import { ExternalLinkIcon, ShoppingCartIcon, SearchIcon } from '~/components/icons'
+import { BadgeCheckIcon, ExternalLinkIcon, FileIcon, SearchIcon } from '~/components/icons'
 import { ReviewStars } from '~/components/reviews'
 import { CountryFlag } from '~/components/flags'
 import { FavoriteButton } from '~/components/favorite-button'
-import { getVendorFeatureLabels } from '~/lib/constants'
+import { FEATURE_LABELS } from '~/lib/constants'
 import { PromoCodeBadge } from '~/components/promo-code'
 
-function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummary; initialFavorited?: boolean }) {
-  const features = getVendorFeatureLabels(vendor).slice(0, 3)
+function vendorInitial(name: string) {
+  return name.trim().charAt(0).toUpperCase() || '?'
+}
+
+function VendorLogo({ vendor }: { vendor: VendorSummary }) {
+  const fallback = (
+    <span className="flex h-full w-full items-center justify-center text-2xl font-semibold text-neutral-400 dark:text-neutral-500">
+      {vendorInitial(vendor.name)}
+    </span>
+  )
+
+  if (!vendor.logoUrl) return fallback
 
   return (
-    <article className="rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden flex flex-col">
-      <div className="p-5 flex flex-col flex-1 gap-3">
-        <div className="flex items-start justify-between gap-3">
-          <Link
-            to="/vendors/$id"
-            params={{ id: vendor.id }}
-            className="block min-w-0 text-base font-bold text-neutral-900 dark:text-white hover:underline"
-          >
-            {vendor.name}
-          </Link>
-          <FavoriteButton vendorId={vendor.id} initialFavorited={initialFavorited} />
-        </div>
-        <div className="flex items-center gap-1 h-5">
-          <span className="text-sm font-semibold tabular-nums text-neutral-900 dark:text-white">{vendor.rating.toFixed(1)}</span>
-          <ReviewStars rating={vendor.rating} size="xs" />
-          <span className="text-[11px] text-neutral-400 dark:text-neutral-500">
-            {vendor.reviewCount > 0 ? `(${vendor.reviewCount})` : '(No reviews)'}
+    <div className="relative h-full w-full">
+      {fallback}
+      <img
+        src={vendor.logoUrl}
+        alt={`${vendor.name} logo`}
+        className="absolute inset-0 h-full w-full object-cover"
+        loading="lazy"
+        onError={(event) => {
+          event.currentTarget.style.display = 'none'
+        }}
+      />
+    </div>
+  )
+}
+
+function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummary; initialFavorited?: boolean }) {
+  const reviewLabel = vendor.reviewCount > 0
+    ? `(${vendor.reviewCount} ${vendor.reviewCount === 1 ? 'review' : 'reviews'})`
+    : '(No reviews)'
+
+  return (
+    <article className="flex h-full flex-col rounded-lg border border-neutral-200/80 bg-white p-5 dark:border-white/[0.08] dark:bg-neutral-900">
+      <div className="flex flex-1 flex-col gap-5">
+        <header>
+          <div className="flex min-w-0 items-start gap-4">
+            <div className="flex h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50 dark:border-white/[0.08] dark:bg-white/[0.04]">
+              <VendorLogo vendor={vendor} />
+            </div>
+            <div className="min-w-0 flex-1">
+              <Link
+                to="/vendors/$id"
+                params={{ id: vendor.id }}
+                className="block truncate text-xl font-semibold leading-tight text-neutral-950 transition-colors hover:text-neutral-700 dark:text-white dark:hover:text-neutral-300"
+              >
+                {vendor.name}
+              </Link>
+              <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-600 dark:bg-white/[0.06] dark:text-neutral-300">
+                  <CountryFlag country={vendor.country} />
+                  {vendor.country}
+                </span>
+                {vendor.verified && (
+                  <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-600 dark:bg-white/[0.06] dark:text-neutral-300">
+                    <BadgeCheckIcon className="h-3.5 w-3.5 text-sky-500" aria-hidden="true" />
+                    Verified
+                  </span>
+                )}
+                {vendor.hasCoa && (
+                  <span className="inline-flex shrink-0 items-center rounded-lg bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-600 dark:bg-white/[0.06] dark:text-neutral-300">
+                    <FileIcon className="mr-1 h-3.5 w-3.5 text-emerald-500 dark:text-emerald-300" aria-hidden="true" />
+                    {FEATURE_LABELS.coa}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <ReviewStars rating={vendor.rating} size="lg" />
+          <span className="text-lg font-semibold tabular-nums text-neutral-950 dark:text-white">
+            {vendor.rating.toFixed(1)}
+          </span>
+          <span className="text-base text-neutral-500 dark:text-neutral-400">
+            {reviewLabel}
           </span>
         </div>
-        <div className="flex items-center gap-1.5 text-[12px] text-neutral-500 dark:text-neutral-400">
-          <CountryFlag country={vendor.country} />
-          <span>{vendor.country}</span>
-        </div>
 
-        <PromoCodeBadge code={vendor.promoCode} discountPercent={vendor.promoDiscountPercent} />
+        <p className="min-h-14 line-clamp-2 text-base leading-7 text-neutral-500 dark:text-neutral-300">
+          {vendor.description}
+        </p>
 
-        <div className="flex flex-wrap gap-1.5">
-          {features.map((feature) => (
-            <span key={feature} className="rounded-lg bg-neutral-100 dark:bg-white/[0.06] px-2 py-1 text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
-              {feature}
-            </span>
-          ))}
-        </div>
+        <PromoCodeBadge code={vendor.promoCode} discountPercent={vendor.promoDiscountPercent} className="w-full text-base" />
 
-        <div className="mt-auto pt-3 border-t border-neutral-200/60 dark:border-white/[0.06] flex gap-5">
+        <div className="mt-auto flex items-center gap-3">
           <Link
             to="/vendors/$id"
             params={{ id: vendor.id }}
-            className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-neutral-200/60 dark:border-white/[0.06] px-3.5 py-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors flex-1"
+            className="inline-flex min-h-14 flex-1 items-center justify-center gap-3 rounded-lg bg-black px-5 py-4 text-base font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
           >
-            <ExternalLinkIcon className="h-4 w-4" />
-            Learn more
+            View Vendor
+            <ExternalLinkIcon className="h-5 w-5" />
           </Link>
-          <a
-            href={vendor.website}
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-            className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-neutral-900 dark:bg-white px-3.5 py-1.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors flex-1"
-          >
-            <ShoppingCartIcon className="h-4 w-4" />
-            Shop Now
-          </a>
+          <FavoriteButton
+            vendorId={vendor.id}
+            initialFavorited={initialFavorited}
+            className="h-14 w-14"
+          />
         </div>
       </div>
     </article>
@@ -71,17 +117,25 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummar
 
 function SkeletonCard() {
   return (
-    <div className="rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden flex flex-col animate-pulse">
-      <div className="p-5 flex flex-col flex-1 gap-3">
-        <div className="h-5 w-3/4 rounded bg-neutral-200 dark:bg-neutral-700" />
-        <div className="h-5 w-1/2 rounded bg-neutral-100 dark:bg-neutral-800" />
-        <div className="h-4 w-1/3 rounded bg-neutral-100 dark:bg-neutral-800" />
-        <div className="h-7 w-36 rounded-lg bg-neutral-100 dark:bg-neutral-800" />
-        <div className="h-6 w-2/3 rounded bg-neutral-100 dark:bg-neutral-800" />
-        <div className="mt-auto pt-3 border-t border-neutral-200/60 dark:border-white/[0.06] flex gap-5">
-          <div className="h-9 flex-1 rounded-xl bg-neutral-100 dark:bg-neutral-800" />
-          <div className="h-9 flex-1 rounded-xl bg-neutral-200 dark:bg-neutral-700" />
+    <div className="flex h-full flex-col rounded-lg border border-neutral-200/80 bg-white p-5 dark:border-white/[0.08] dark:bg-neutral-900">
+      <div className="flex flex-1 animate-pulse flex-col gap-5">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <div className="h-14 w-14 rounded-lg bg-neutral-100 dark:bg-neutral-800" />
+            <div className="space-y-3">
+              <div className="h-7 w-36 rounded bg-neutral-200 dark:bg-neutral-700" />
+              <div className="h-5 w-24 rounded bg-neutral-100 dark:bg-neutral-800" />
+            </div>
+          </div>
+          <div className="h-10 w-10 rounded-lg bg-neutral-100 dark:bg-neutral-800" />
         </div>
+        <div className="h-6 w-52 rounded bg-neutral-100 dark:bg-neutral-800" />
+        <div className="space-y-3">
+          <div className="h-4 w-full rounded bg-neutral-100 dark:bg-neutral-800" />
+          <div className="h-4 w-4/5 rounded bg-neutral-100 dark:bg-neutral-800" />
+        </div>
+        <div className="h-12 w-full rounded-lg bg-emerald-50 dark:bg-emerald-400/10" />
+        <div className="mt-auto h-14 w-full rounded-lg bg-neutral-200 dark:bg-neutral-700" />
       </div>
     </div>
   )

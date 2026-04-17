@@ -27,9 +27,9 @@ export function FavoriteButton({ vendorId, variant = 'icon', initialFavorited = 
         onClick={handleClick}
         disabled={authPending || toggling}
         aria-pressed={active}
-        className={`inline-flex items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-colors cursor-pointer disabled:opacity-50 ${active ? 'border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-300 dark:hover:bg-rose-500/15' : 'border-neutral-200/60 bg-white/70 text-neutral-700 hover:bg-neutral-50 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-neutral-200 dark:hover:bg-white/[0.08]'} ${className}`}
+        className={`inline-flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors cursor-pointer disabled:opacity-50 ${active ? 'border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-300 dark:hover:bg-rose-500/15' : 'border-neutral-200/60 bg-white/70 text-neutral-700 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-neutral-200 dark:hover:border-rose-500/20 dark:hover:bg-rose-500/10 dark:hover:text-rose-300'} ${className}`}
       >
-        <HeartIcon className="h-4 w-4" fill={active ? 'currentColor' : 'none'} strokeWidth={active ? 0 : 1.8} />
+        <HeartIcon className="h-5 w-5" fill={active ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={active ? 0 : 1.6} />
         {active ? 'Saved' : 'Save'}
       </button>
     )
@@ -43,9 +43,9 @@ export function FavoriteButton({ vendorId, variant = 'icon', initialFavorited = 
       aria-label={label}
       aria-pressed={active}
       title={label}
-      className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border transition-colors cursor-pointer disabled:opacity-50 ${active ? 'border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-300 dark:hover:bg-rose-500/15' : 'border-neutral-200/60 bg-white/70 text-neutral-400 hover:bg-neutral-50 hover:text-neutral-700 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-neutral-500 dark:hover:bg-white/[0.08] dark:hover:text-neutral-200'} ${className}`}
+      className={`inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border transition-colors cursor-pointer disabled:opacity-50 ${active ? 'border-rose-200 bg-rose-50 text-rose-600 hover:bg-rose-100 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-300 dark:hover:bg-rose-500/15' : 'border-neutral-200/60 bg-white/70 text-neutral-400 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-neutral-500 dark:hover:border-rose-500/20 dark:hover:bg-rose-500/10 dark:hover:text-rose-300'} ${className}`}
     >
-      <HeartIcon className="h-4 w-4" fill={active ? 'currentColor' : 'none'} strokeWidth={active ? 0 : 1.8} />
+      <HeartIcon className="h-5 w-5" fill={active ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={active ? 0 : 1.6} />
     </button>
   )
 }

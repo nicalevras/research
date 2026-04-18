@@ -105,7 +105,7 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
   return (
     <>
       <div className="space-y-4">
-        <div className="mb-8">
+        <div className="rounded-lg border border-neutral-200/80 bg-white px-5 py-20 dark:border-white/[0.08] dark:bg-neutral-900">
           {isRouteChanging ? (
             <>
               <div className="h-7 w-72 rounded-lg bg-neutral-200 dark:bg-neutral-800 animate-pulse" />

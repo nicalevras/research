@@ -6,35 +6,7 @@ import { CountryFlag } from '~/components/flags'
 import { FavoriteButton } from '~/components/favorite-button'
 import { FEATURE_LABELS } from '~/lib/constants'
 import { PromoCodeBadge } from '~/components/promo-code'
-
-function vendorInitial(name: string) {
-  return name.trim().charAt(0).toUpperCase() || '?'
-}
-
-function VendorLogo({ vendor }: { vendor: VendorSummary }) {
-  const fallback = (
-    <span className="flex h-full w-full items-center justify-center text-2xl font-semibold text-neutral-400 dark:text-neutral-500">
-      {vendorInitial(vendor.name)}
-    </span>
-  )
-
-  if (!vendor.logoUrl) return fallback
-
-  return (
-    <div className="relative h-full w-full">
-      {fallback}
-      <img
-        src={vendor.logoUrl}
-        alt={`${vendor.name} logo`}
-        className="absolute inset-0 h-full w-full object-cover"
-        loading="lazy"
-        onError={(event) => {
-          event.currentTarget.style.display = 'none'
-        }}
-      />
-    </div>
-  )
-}
+import { VendorAvatar } from '~/components/vendor-avatar'
 
 function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummary; initialFavorited?: boolean }) {
   const reviewLabel = vendor.reviewCount > 0
@@ -43,11 +15,11 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummar
 
   return (
     <article className="flex h-full flex-col rounded-lg border border-neutral-200/80 bg-white p-5 dark:border-white/[0.08] dark:bg-neutral-900">
-      <div className="flex flex-1 flex-col gap-5">
+      <div className="flex flex-1 flex-col gap-4">
         <header>
           <div className="flex min-w-0 items-start gap-4">
             <div className="flex h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50 dark:border-white/[0.08] dark:bg-white/[0.04]">
-              <VendorLogo vendor={vendor} />
+              <VendorAvatar vendor={vendor} />
             </div>
             <div className="min-w-0 flex-1">
               <Link
@@ -93,13 +65,13 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummar
           {vendor.description}
         </p>
 
-        <PromoCodeBadge code={vendor.promoCode} discountPercent={vendor.promoDiscountPercent} className="w-full text-base" />
+        <PromoCodeBadge code={vendor.promoCode} discountPercent={vendor.promoDiscountPercent} size="compact" className="text-base" />
 
-        <div className="mt-auto flex items-center gap-3">
+        <div className="flex items-center gap-3">
           <Link
             to="/vendors/$id"
             params={{ id: vendor.id }}
-            className="inline-flex min-h-14 flex-1 items-center justify-center gap-3 rounded-lg bg-black px-5 py-4 text-base font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
+            className="inline-flex min-h-12 flex-1 items-center justify-center gap-3 rounded-lg bg-black px-5 py-3 text-base font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
           >
             View Vendor
             <ExternalLinkIcon className="h-5 w-5" />
@@ -107,7 +79,7 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummar
           <FavoriteButton
             vendorId={vendor.id}
             initialFavorited={initialFavorited}
-            className="h-14 w-14"
+            className="h-12 w-12"
           />
         </div>
       </div>
@@ -118,7 +90,7 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummar
 function SkeletonCard() {
   return (
     <div className="flex h-full flex-col rounded-lg border border-neutral-200/80 bg-white p-5 dark:border-white/[0.08] dark:bg-neutral-900">
-      <div className="flex flex-1 animate-pulse flex-col gap-5">
+      <div className="flex flex-1 animate-pulse flex-col gap-4">
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-4">
             <div className="h-14 w-14 rounded-lg bg-neutral-100 dark:bg-neutral-800" />
@@ -134,8 +106,8 @@ function SkeletonCard() {
           <div className="h-4 w-full rounded bg-neutral-100 dark:bg-neutral-800" />
           <div className="h-4 w-4/5 rounded bg-neutral-100 dark:bg-neutral-800" />
         </div>
-        <div className="h-12 w-full rounded-lg bg-emerald-50 dark:bg-emerald-400/10" />
-        <div className="mt-auto h-14 w-full rounded-lg bg-neutral-200 dark:bg-neutral-700" />
+        <div className="h-10 w-full rounded-lg bg-emerald-50 dark:bg-emerald-400/10" />
+        <div className="h-12 w-full rounded-lg bg-neutral-200 dark:bg-neutral-700" />
       </div>
     </div>
   )

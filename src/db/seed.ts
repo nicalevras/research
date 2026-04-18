@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { resolve } from 'node:path'
 import postgres from 'postgres'
 import { drizzle } from 'drizzle-orm/postgres-js'
@@ -13,6 +13,16 @@ const client = postgres(connectionString)
 const db = drizzle(client, { schema })
 
 type CsvRow = Record<string, string>
+
+const VENDOR_IMAGE_BASE_PATH = '/images/vendor-images'
+const VENDOR_IMAGE_DIR = 'public/images/vendor-images'
+const VENDOR_LOGO_FILE_OVERRIDES: Record<string, string> = {
+  genpeptide: 'gen_peptides.webp',
+  'midwest-peptide': 'midwest_peptides.webp',
+  nextgenpeps: 'next_gen_peptides.webp',
+  'nura-peptide': 'nura_peptides.webp',
+  s1research: 's1_research_peptides.webp',
+}
 
 function parseCsv(text: string): CsvRow[] {
   const rows: string[][] = []
@@ -129,6 +139,24 @@ function readDescription(row: CsvRow, vendorName: string): string {
   return description || `${vendorName} is a peptide vendor listed in the Peptide Vendor Directory.`
 }
 
+function readVendorLogoFiles() {
+  const imageDir = resolve(process.cwd(), VENDOR_IMAGE_DIR)
+  if (!existsSync(imageDir)) return new Set<string>()
+
+  return new Set(readdirSync(imageDir).filter((file) => file.endsWith('.webp')))
+}
+
+function readVendorLogoUrl(vendorId: string, logoFiles: Set<string>): string | null {
+  const underscoredId = vendorId.replace(/-/g, '_')
+  const logoFile = VENDOR_LOGO_FILE_OVERRIDES[vendorId]
+    ?? [
+      `${underscoredId}.webp`,
+      `${underscoredId}_peptides.webp`,
+    ].find((candidate) => logoFiles.has(candidate))
+
+  return logoFile ? `${VENDOR_IMAGE_BASE_PATH}/${logoFile}` : null
+}
+
 function readVendorCsv() {
   const csvPath = resolve(process.cwd(), process.env.VENDOR_CSV_PATH ?? '../AFF VENDORS - HERMES - Sheet1.csv')
   const text = readFileSync(csvPath, 'utf-8')
@@ -138,6 +166,7 @@ function readVendorCsv() {
 function buildSeedData(rows: CsvRow[]) {
   const compoundMap = new Map<string, string>()
   const vendorIds = new Set<string>()
+  const vendorLogoFiles = readVendorLogoFiles()
 
   const vendors = rows.map((row) => {
     const name = row.Vendor
@@ -162,6 +191,7 @@ function buildSeedData(rows: CsvRow[]) {
       name,
       website: row.URL,
       description: readDescription(row, name),
+      logoUrl: readVendorLogoUrl(id, vendorLogoFiles),
       promoCode,
       promoDiscountPercent: readPromoDiscountPercent(row, promoCode),
       verified: readVerified(row),

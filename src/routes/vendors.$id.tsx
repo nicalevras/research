@@ -1,13 +1,14 @@
 import { createFileRoute, Link, notFound } from '@tanstack/react-router'
+import type { ReactNode } from 'react'
 import { getVendorById, getVendorReviews } from '~/lib/data'
-import { getVendorFeatureLabels, SITE_URL } from '~/lib/constants'
-import { StarRating } from '~/components/vendor-ui'
-import { ReviewsList } from '~/components/reviews'
+import { FEATURE_FILTERS, FEATURE_LABELS, SITE_URL } from '~/lib/constants'
+import { ReviewsList, ReviewStars } from '~/components/reviews'
 import { breadcrumbSchema, organizationSchema } from '~/lib/schema'
-import { CircleAlertIcon, ChevronRightIcon, ShoppingCartIcon } from '~/components/icons'
+import { BadgeCheckIcon, BitcoinIcon, CircleAlertIcon, ChevronRightIcon, ExternalLinkIcon, FileIcon } from '~/components/icons'
 import { CountryFlag } from '~/components/flags'
 import { FavoriteButton } from '~/components/favorite-button'
 import { PromoCodeBadge } from '~/components/promo-code'
+import { VendorAvatar } from '~/components/vendor-avatar'
 import type { Vendor } from '~/lib/types'
 
 function VendorNotFound() {
@@ -24,6 +25,24 @@ function VendorNotFound() {
 
 function vendorDescription(vendor: Vendor) {
   return vendor.description
+}
+
+type DetailItem = {
+  label: string
+  icon: ReactNode
+}
+
+const FEATURE_FILTER_BY_ID = new Map(FEATURE_FILTERS.map((feature) => [feature.id, feature]))
+
+function isDetailItem(item: DetailItem | undefined): item is DetailItem {
+  return Boolean(item)
+}
+
+function featureFilterIcon(featureId: string, className: string): ReactNode {
+  if (featureId === 'crypto') return <BitcoinIcon className={className} aria-hidden="true" />
+
+  const emoji = FEATURE_FILTER_BY_ID.get(featureId)?.emoji
+  return emoji ? <span className="shrink-0" aria-hidden="true">{emoji}</span> : null
 }
 
 export const Route = createFileRoute('/vendors/$id')({
@@ -92,46 +111,60 @@ function VendorSkeleton() {
         <Shimmer className="h-4 w-28" />
       </div>
 
-      <div className="glass-card-solid overflow-hidden shadow-none">
-        {/* Vendor info */}
-        <div className="p-6 sm:p-8">
-          <div className="flex flex-col sm:flex-row gap-6">
-            <Shimmer className="shrink-0 w-full sm:w-80 aspect-video rounded-xl" />
-            <div className="flex-1 space-y-2">
-              <div className="flex items-start justify-between gap-4">
-                <Shimmer className="h-8 w-56" />
-                <Shimmer className="hidden sm:block h-10 w-32 rounded-xl" />
+      <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(320px,420px)]">
+        <div className="glass-card-solid overflow-hidden shadow-none p-5">
+          <div className="space-y-4">
+            <div className="flex items-start gap-4">
+              <Shimmer className="h-14 w-14 shrink-0 rounded-lg" />
+              <div className="min-w-0 flex-1 space-y-3">
+                <Shimmer className="h-7 w-56 max-w-full" />
+                <Shimmer className="h-5 w-52 max-w-full" />
               </div>
-              <Shimmer className="h-4 w-32" />
-              <Shimmer className="h-4 w-24" />
-              <div className="space-y-2 pt-1">
-                <Shimmer className="h-4 w-full max-w-xl" />
-                <Shimmer className="h-4 w-3/4 max-w-md" />
-              </div>
-              <Shimmer className="sm:hidden h-10 w-full rounded-xl" />
             </div>
+            <div className="space-y-2">
+              <Shimmer className="h-4 w-full max-w-xl" />
+              <Shimmer className="h-4 w-3/4 max-w-md" />
+            </div>
+            <Shimmer className="h-12 w-full rounded-lg" />
+            <Shimmer className="h-11 w-full rounded-lg" />
           </div>
         </div>
 
-        {/* Compounds table */}
-        <div className="px-6 sm:px-8 pb-6 sm:pb-8">
-          <Shimmer className="h-3 w-28 mb-4" />
-          <div className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
-            <div className="border-b border-neutral-200/60 dark:border-white/[0.06] bg-neutral-50 dark:bg-white/[0.02] px-4 py-2.5 flex">
-              <Shimmer className="h-3.5 w-16" />
-            </div>
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="flex items-center justify-between px-4 py-3 border-b last:border-b-0 border-neutral-200/60 dark:border-white/[0.06]">
-                <Shimmer className="h-4 w-24" />
-                <Shimmer className="h-7 w-14 rounded-xl" />
+        <div className="glass-card-solid overflow-hidden shadow-none p-5">
+          <div className="space-y-5">
+            <div className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
+              <div className="border-b border-neutral-200/60 dark:border-white/[0.06] bg-neutral-50 dark:bg-white/[0.02] px-4 py-2.5">
+                <Shimmer className="h-3.5 w-28" />
               </div>
-            ))}
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="grid grid-cols-[1fr_1.4fr] gap-4 border-b border-neutral-200/60 px-4 py-3 last:border-b-0 dark:border-white/[0.06]">
+                  <Shimmer className="h-4 w-20" />
+                  <Shimmer className="h-4 w-full" />
+                </div>
+              ))}
+            </div>
           </div>
+        </div>
+      </section>
+
+      {/* Compounds table */}
+      <div className="mt-6 glass-card-solid overflow-hidden shadow-none p-5">
+        <Shimmer className="h-3 w-28 mb-4" />
+        <div className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
+          <div className="border-b border-neutral-200/60 dark:border-white/[0.06] bg-neutral-50 dark:bg-white/[0.02] px-4 py-2.5 flex">
+            <Shimmer className="h-3.5 w-16" />
+          </div>
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex items-center justify-between px-4 py-3 border-b last:border-b-0 border-neutral-200/60 dark:border-white/[0.06]">
+              <Shimmer className="h-4 w-24" />
+              <Shimmer className="h-7 w-14 rounded-xl" />
+            </div>
+          ))}
         </div>
       </div>
 
       {/* Reviews card */}
-      <div className="mt-6 glass-card-solid overflow-hidden shadow-none p-6 sm:p-8 space-y-6">
+      <div className="mt-6 glass-card-solid overflow-hidden shadow-none p-5 space-y-6">
         <Shimmer className="h-3 w-16" />
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="flex-1 space-y-3">
@@ -157,7 +190,59 @@ function VendorSkeleton() {
 
 function VendorDetailPage() {
   const { vendor, reviews } = Route.useLoaderData()
-  const features = getVendorFeatureLabels(vendor)
+  const detailIconClass = 'h-3.5 w-3.5 shrink-0'
+  const paymentFeatures: DetailItem[] = ([
+    vendor.acceptsCreditCard ? { label: 'Credit Card', icon: featureFilterIcon('credit-card', detailIconClass) } : undefined,
+    vendor.acceptsAch ? { label: 'ACH', icon: featureFilterIcon('ach', detailIconClass) } : undefined,
+    vendor.acceptsCrypto ? { label: 'Crypto', icon: featureFilterIcon('crypto', detailIconClass) } : undefined,
+  ] as Array<DetailItem | undefined>).filter(isDetailItem)
+  const shippingFeatures: DetailItem[] = ([
+    vendor.fastShipping ? { label: FEATURE_LABELS['fast-shipping'], icon: featureFilterIcon('fast-shipping', detailIconClass) } : undefined,
+    vendor.shipsInternational ? { label: FEATURE_LABELS.international, icon: featureFilterIcon('international', detailIconClass) } : undefined,
+  ] as Array<DetailItem | undefined>).filter(isDetailItem)
+  const detailItems = (items: DetailItem[]) => (
+    <span className="inline-flex flex-wrap items-center justify-end gap-x-2 gap-y-1">
+      {items.map((item) => (
+        <span key={item.label} className="inline-flex items-center gap-1.5">
+          {item.icon}
+          {item.label}
+        </span>
+      ))}
+    </span>
+  )
+  const quickInfoRows = [
+    {
+      label: 'Status',
+      value: vendor.verified ? (
+        <span className="inline-flex items-center justify-end gap-1.5">
+          <BadgeCheckIcon className={`${detailIconClass} text-sky-500`} aria-hidden="true" />
+          Verified
+        </span>
+      ) : 'Not listed',
+      muted: !vendor.verified,
+    },
+    {
+      label: 'Country',
+      value: (
+        <span className="inline-flex items-center justify-end gap-1.5">
+          <CountryFlag country={vendor.country} />
+          {vendor.country}
+        </span>
+      ),
+    },
+    {
+      label: 'COAs',
+      value: vendor.hasCoa ? (
+        <span className="inline-flex items-center justify-end gap-1.5">
+          <FileIcon className={`${detailIconClass} text-emerald-500 dark:text-emerald-300`} aria-hidden="true" />
+          {FEATURE_LABELS.coa}
+        </span>
+      ) : 'Not listed',
+      muted: !vendor.hasCoa,
+    },
+    { label: 'Payments', value: paymentFeatures.length > 0 ? detailItems(paymentFeatures) : 'Not listed', muted: paymentFeatures.length === 0 },
+    { label: 'Shipping', value: shippingFeatures.length > 0 ? detailItems(shippingFeatures) : 'Not listed', muted: shippingFeatures.length === 0 },
+  ]
 
   return (
     <div>
@@ -174,117 +259,126 @@ function VendorDetailPage() {
         </span>
       </nav>
 
-      <div className="glass-card-solid overflow-hidden shadow-none">
-        {/* Vendor info */}
-        <div className="p-6 sm:p-8">
+      <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(320px,420px)]">
+        <div className="glass-card-solid overflow-hidden shadow-none p-5">
           <div className="space-y-4">
-            <div className="min-w-0 space-y-2">
-              <div className="flex items-start justify-between gap-4">
-                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">
-                  {vendor.name}
-                </h1>
-                <div className="hidden sm:flex items-center gap-3 shrink-0">
-                  <FavoriteButton vendorId={vendor.id} variant="button" />
-                  <a
-                    href={vendor.website}
-                    target="_blank"
-                    rel="noopener noreferrer nofollow"
-                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
-                  >
-                    <ShoppingCartIcon className="h-4 w-4" />
-                    Shop Now
-                  </a>
+            <header className="flex min-w-0 flex-col gap-4">
+              <div className="relative flex min-w-0 items-start gap-4 pr-12">
+                <div className="flex h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50 dark:border-white/[0.08] dark:bg-white/[0.04]">
+                  <VendorAvatar vendor={vendor} />
                 </div>
+                <div className="min-w-0 flex-1">
+                  <h1 className="truncate text-xl font-semibold leading-tight text-neutral-950 dark:text-white">
+                    {vendor.name}
+                  </h1>
+                  <div className="mt-1.5 flex flex-wrap items-center gap-3">
+                    <ReviewStars rating={vendor.rating} size="lg" />
+                    <span className="text-lg font-semibold tabular-nums text-neutral-950 dark:text-white">
+                      {vendor.rating.toFixed(1)}
+                    </span>
+                    <span className="text-base text-neutral-500 dark:text-neutral-400">
+                      {vendor.reviewCount > 0 ? `(${vendor.reviewCount} ${vendor.reviewCount === 1 ? 'review' : 'reviews'})` : '(No reviews)'}
+                    </span>
+                  </div>
+                </div>
+                <FavoriteButton vendorId={vendor.id} className="absolute right-0 top-0 h-10 w-10" />
               </div>
-              <div className="flex items-center gap-1.5">
-                <StarRating rating={vendor.rating} />
-                <span className="text-sm text-neutral-500 dark:text-neutral-400">
-                  {vendor.reviewCount > 0
-                    ? `(${vendor.reviewCount} ${vendor.reviewCount === 1 ? 'review' : 'reviews'})`
-                    : '(No reviews)'}
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5 text-sm text-neutral-500 dark:text-neutral-400">
-                <CountryFlag country={vendor.country} />
-                <span>{vendor.country}</span>
-              </div>
-              <p className="max-w-3xl text-sm leading-6 text-neutral-600 dark:text-neutral-300">
-                {vendor.description}
-              </p>
-              <PromoCodeBadge code={vendor.promoCode} discountPercent={vendor.promoDiscountPercent} />
-              <div className="flex flex-wrap gap-1.5 pt-1">
-                {features.map((feature) => (
-                  <span key={feature} className="rounded-lg bg-neutral-100 dark:bg-white/[0.06] px-2.5 py-1.5 text-xs font-medium text-neutral-600 dark:text-neutral-300">
-                    {feature}
-                  </span>
-                ))}
-              </div>
-              <div className="sm:hidden grid grid-cols-2 gap-3 mt-2">
-                <FavoriteButton vendorId={vendor.id} variant="button" className="w-full" />
-                <a
-                  href={vendor.website}
-                  target="_blank"
-                  rel="noopener noreferrer nofollow"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
-                >
-                  <ShoppingCartIcon className="h-4 w-4" />
-                  Shop Now
-                </a>
-              </div>
-            </div>
+            </header>
+
+            <p className="max-w-3xl text-base leading-7 text-neutral-500 dark:text-neutral-300">
+              {vendor.description}
+            </p>
+
+            <PromoCodeBadge code={vendor.promoCode} discountPercent={vendor.promoDiscountPercent} />
+
+            <a
+              href={vendor.website}
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+              className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-neutral-900 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
+            >
+              View Website
+              <ExternalLinkIcon className="h-4 w-4" />
+            </a>
           </div>
         </div>
 
-        {/* Compounds table */}
-        {vendor.compoundNames.length > 0 && (
-          <section className="px-6 sm:px-8 pb-6 sm:pb-8">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500 mb-4">Available Peptides</h2>
+        <aside className="glass-card-solid overflow-hidden shadow-none p-5">
+          <div className="space-y-5">
             <div className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
               <table className="w-full text-[13px] border-collapse">
-                <colgroup>
-                  <col />
-                  <col className="w-40" />
-                </colgroup>
                 <thead>
                   <tr className="border-b border-neutral-200/60 dark:border-white/[0.06] bg-neutral-50 dark:bg-white/[0.02]">
-                    <th className="px-4 py-2.5 text-left text-[13px] font-bold text-neutral-500 dark:text-neutral-400">Peptide</th>
-                    <th className="px-4 py-2.5 text-right text-[13px] font-bold text-neutral-500 dark:text-neutral-400">Link</th>
+                    <th colSpan={2} className="px-4 py-2.5 text-left text-[13px] font-bold text-neutral-900 dark:text-white">
+                      Vendor Details
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-neutral-200/60 dark:divide-white/[0.06]">
-                  {vendor.compoundNames.map((compoundName, index) => (
-                    <tr key={`${compoundName}-${index}`} className="hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition-colors">
-                      <td className="px-4 py-3 font-semibold text-neutral-700 dark:text-neutral-200">
-                        <Link
-                          to="/$compound"
-                          params={{ compound: vendor.compoundSlugs[index] }}
-                          className="hover:underline"
-                        >
-                          {compoundName}
-                        </Link>
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <a
-                          href={vendor.website}
-                          target="_blank"
-                          rel="noopener noreferrer nofollow"
-                          className="inline-flex items-center justify-center rounded-xl bg-neutral-900 dark:bg-white px-3 py-1.5 text-xs font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
-                        >
-                          Buy
-                        </a>
+                  {quickInfoRows.map((row) => (
+                    <tr key={row.label}>
+                      <th scope="row" className="px-4 py-3 text-left text-[13px] font-semibold text-neutral-500 dark:text-neutral-400">
+                        {row.label}
+                      </th>
+                      <td className={`px-4 py-3 text-right text-[13px] font-semibold leading-5 ${row.muted ? 'text-neutral-400 dark:text-neutral-500' : 'text-neutral-900 dark:text-white'}`}>
+                        {row.value}
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-          </section>
-        )}
+          </div>
+        </aside>
+      </section>
 
-      </div>
+      {/* Compounds table */}
+      {vendor.compoundNames.length > 0 && (
+        <section className="mt-6 glass-card-solid overflow-hidden shadow-none p-5">
+          <div className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
+            <table className="w-full text-[13px] border-collapse">
+              <colgroup>
+                <col />
+                <col className="w-40" />
+              </colgroup>
+              <thead>
+                <tr className="border-b border-neutral-200/60 dark:border-white/[0.06] bg-neutral-50 dark:bg-white/[0.02]">
+                  <th className="px-4 py-2.5 text-left text-[13px] font-bold text-neutral-900 dark:text-white">Available Peptides</th>
+                  <th className="px-4 py-2.5 text-right text-[13px] font-bold text-neutral-900 dark:text-white" aria-label="Vendor link" />
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-neutral-200/60 dark:divide-white/[0.06]">
+                {vendor.compoundNames.map((compoundName, index) => (
+                  <tr key={`${compoundName}-${index}`} className="hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition-colors">
+                    <td className="px-4 py-3 font-semibold text-neutral-700 dark:text-neutral-200">
+                      <Link
+                        to="/$compound"
+                        params={{ compound: vendor.compoundSlugs[index] }}
+                        className="hover:underline"
+                      >
+                        {compoundName}
+                      </Link>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <a
+                        href={vendor.website}
+                        target="_blank"
+                        rel="noopener noreferrer nofollow"
+                        className="inline-flex items-center justify-center rounded-xl bg-neutral-900 dark:bg-white px-3 py-1.5 text-xs font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
+                      >
+                        Buy
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
 
       {/* Reviews card */}
-      <div className="mt-6 glass-card-solid overflow-hidden shadow-none p-6 sm:p-8 space-y-6">
+      <div className="mt-6 glass-card-solid overflow-hidden shadow-none p-5 space-y-6">
         <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
           Reviews
         </h2>

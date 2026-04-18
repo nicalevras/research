@@ -80,16 +80,6 @@ export function CopyIcon(props: IconProps) {
   )
 }
 
-export function ShoppingCartIcon(props: IconProps) {
-  return (
-    <Icon {...props}>
-      <circle cx="8" cy="21" r="1" />
-      <circle cx="19" cy="21" r="1" />
-      <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
-    </Icon>
-  )
-}
-
 export function CircleAlertIcon(props: IconProps) {
   return (
     <Icon {...props}>
@@ -123,14 +113,11 @@ export function BadgeCheckIcon(props: IconProps) {
   )
 }
 
-export function SparklesIcon(props: IconProps) {
+export function TagIcon(props: IconProps) {
   return (
     <Icon {...props}>
-      <path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z" />
-      <path d="M5 3v3" />
-      <path d="M3.5 4.5h3" />
-      <path d="M19 17v3" />
-      <path d="M17.5 18.5h3" />
+      <path d="M12.59 2.59A2 2 0 0 0 11.17 2H4a2 2 0 0 0-2 2v7.17a2 2 0 0 0 .59 1.42l8.7 8.7a2.42 2.42 0 0 0 3.42 0l6.58-6.58a2.42 2.42 0 0 0 0-3.42Z" />
+      <circle cx="7.5" cy="7.5" r="1" />
     </Icon>
   )
 }

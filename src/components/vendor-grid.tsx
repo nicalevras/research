@@ -61,7 +61,7 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummar
           </span>
         </div>
 
-        <p className="min-h-14 line-clamp-2 text-base leading-7 text-neutral-500 dark:text-neutral-300">
+        <p className="min-h-14 line-clamp-3 text-base leading-7 text-neutral-500 dark:text-neutral-300">
           {vendor.description}
         </p>
 

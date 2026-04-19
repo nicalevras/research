@@ -5,6 +5,7 @@ interface CopyButtonProps {
   value: string
   className?: string
   label?: string
+  unstyled?: boolean
 }
 
 async function writeClipboard(value: string) {
@@ -27,7 +28,7 @@ async function writeClipboard(value: string) {
   textarea.remove()
 }
 
-export function CopyButton({ value, className = '', label = 'Copy' }: CopyButtonProps) {
+export function CopyButton({ value, className = '', label = 'Copy', unstyled = false }: CopyButtonProps) {
   const [copied, setCopied] = useState(false)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const tooltipText = copied ? 'Copied' : 'Copy'
@@ -49,7 +50,7 @@ export function CopyButton({ value, className = '', label = 'Copy' }: CopyButton
   return (
     <button
       type="button"
-      className={`group/copy relative inline-flex shrink-0 items-center justify-center rounded-lg border transition-colors cursor-pointer disabled:opacity-50 ${className}`}
+      className={`group/copy relative inline-flex shrink-0 items-center justify-center transition-colors cursor-pointer disabled:opacity-50 ${unstyled ? '' : 'rounded-lg border'} ${className}`}
       onClick={handleCopy}
       aria-label={`${label} ${value}`}
     >

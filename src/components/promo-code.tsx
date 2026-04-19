@@ -13,23 +13,28 @@ export function PromoCodeBadge({ code, discountPercent, className = '', size = '
 
   const isCompact = size === 'compact'
   const iconClass = isCompact ? 'h-4 w-4' : 'h-5 w-5'
-  const copyButtonClass = isCompact ? 'h-7 w-7' : 'h-8 w-8'
+  const copyButtonClass = isCompact ? 'h-6 w-6' : 'h-7 w-7'
 
   return (
-    <div className={`flex w-full max-w-full items-center gap-3 rounded-lg border border-emerald-100 bg-emerald-50 p-2 text-sm text-emerald-900 dark:border-emerald-400/20 dark:bg-emerald-400/10 dark:text-emerald-100 ${className}`}>
-      <span className="inline-flex shrink-0 items-center gap-2 font-semibold">
-        <TagIcon className={`${iconClass} text-emerald-600 dark:text-emerald-300`} />
+    <div className={`flex w-full max-w-full items-center gap-3 rounded-lg border border-neutral-200/80 bg-neutral-50 p-2 text-sm text-neutral-700 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-neutral-200 ${className}`}>
+      <span className="inline-flex shrink-0 items-center gap-2 font-semibold text-neutral-700 dark:text-neutral-200">
+        <TagIcon className={`${iconClass} text-neutral-500 dark:text-neutral-400`} />
         {discountPercent ? `${discountPercent}% off` : 'Promo code'}
       </span>
-      <span className="h-5 w-px shrink-0 bg-emerald-200 dark:bg-emerald-400/30" aria-hidden="true" />
-      <code className="min-w-0 flex-1 break-all font-semibold tracking-normal text-emerald-800 dark:text-white">
-        {code}
-      </code>
-      <CopyButton
-        value={code}
-        label="Copy promo code"
-        className={`${copyButtonClass} border-emerald-200/80 bg-white/60 text-emerald-700 hover:bg-white hover:text-emerald-900 dark:border-emerald-400/20 dark:bg-white/10 dark:text-emerald-100 dark:hover:bg-white/15`}
-      />
+      <span className="h-5 w-px shrink-0 bg-neutral-200 dark:bg-white/[0.08]" aria-hidden="true" />
+      <div className="group/code min-w-0 flex-1 rounded-md border border-neutral-200/80 bg-white/80 transition-colors hover:border-emerald-200 hover:bg-emerald-50/60 dark:border-white/[0.08] dark:bg-white/[0.06] dark:hover:border-emerald-400/20 dark:hover:bg-emerald-400/10">
+        <div className="flex min-w-0 items-center gap-2 px-2 py-1">
+          <code className="min-w-0 flex-1 break-all font-semibold tracking-normal text-neutral-950 dark:text-white">
+            {code}
+          </code>
+          <CopyButton
+            value={code}
+            label="Copy promo code"
+            unstyled
+            className={`${copyButtonClass} rounded-md text-neutral-500 hover:text-emerald-700 dark:text-neutral-300 dark:hover:text-emerald-200`}
+          />
+        </div>
+      </div>
     </div>
   )
 }

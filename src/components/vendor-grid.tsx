@@ -1,6 +1,6 @@
 import type { VendorSummary } from '~/lib/types'
 import { Link } from '@tanstack/react-router'
-import { BadgeCheckIcon, ExternalLinkIcon, FileIcon, SearchIcon } from '~/components/icons'
+import { BadgeCheckIcon, FileIcon, SearchIcon } from '~/components/icons'
 import { ReviewStars } from '~/components/reviews'
 import { CountryFlag } from '~/components/flags'
 import { FavoriteButton } from '~/components/favorite-button'
@@ -17,19 +17,26 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummar
     <article className="flex h-full flex-col rounded-lg border border-neutral-200/80 bg-white p-5 dark:border-white/[0.08] dark:bg-neutral-900">
       <div className="flex flex-1 flex-col gap-4">
         <header>
-          <div className="flex min-w-0 items-start gap-4">
+          <div className="flex min-w-0 items-start gap-2">
             <div className="flex h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50 dark:border-white/[0.08] dark:bg-white/[0.04]">
               <VendorAvatar vendor={vendor} />
             </div>
             <div className="min-w-0 flex-1">
-              <Link
-                to="/vendors/$id"
-                params={{ id: vendor.id }}
-                className="block truncate text-xl font-semibold leading-tight text-neutral-950 transition-colors hover:text-neutral-700 dark:text-white dark:hover:text-neutral-300"
-              >
-                {vendor.name}
-              </Link>
-              <div className="mt-3 flex flex-wrap items-center gap-1.5">
+              <div className="flex min-w-0 items-start gap-2">
+                <Link
+                  to="/vendors/$id"
+                  params={{ id: vendor.id }}
+                  className="block min-w-0 flex-1 truncate text-xl font-semibold leading-none text-neutral-950 transition-colors hover:text-neutral-700 dark:text-white dark:hover:text-neutral-300"
+                >
+                  {vendor.name}
+                </Link>
+                <FavoriteButton
+                  vendorId={vendor.id}
+                  initialFavorited={initialFavorited}
+                  className="-mt-1"
+                />
+              </div>
+              <div className="mt-1 flex flex-wrap items-center gap-1.5">
                 <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-600 dark:bg-white/[0.06] dark:text-neutral-300">
                   <CountryFlag country={vendor.country} />
                   {vendor.country}
@@ -51,17 +58,17 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummar
           </div>
         </header>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3 leading-none">
           <ReviewStars rating={vendor.rating} size="lg" />
-          <span className="text-lg font-semibold tabular-nums text-neutral-950 dark:text-white">
+          <span className="text-lg font-semibold leading-none tabular-nums text-neutral-950 dark:text-white">
             {vendor.rating.toFixed(1)}
           </span>
-          <span className="text-base text-neutral-500 dark:text-neutral-400">
+          <span className="text-base leading-none text-neutral-500 dark:text-neutral-400">
             {reviewLabel}
           </span>
         </div>
 
-        <p className="min-h-14 line-clamp-3 text-base leading-7 text-neutral-500 dark:text-neutral-300">
+        <p className="-mt-1.5 min-h-14 line-clamp-3 text-base leading-7 text-neutral-500 dark:text-neutral-300">
           {vendor.description}
         </p>
 
@@ -73,14 +80,8 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummar
             params={{ id: vendor.id }}
             className="inline-flex min-h-12 flex-1 items-center justify-center gap-3 rounded-lg bg-black px-5 py-3 text-base font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
           >
-            View Vendor
-            <ExternalLinkIcon className="h-5 w-5" />
+            Vendor Profile
           </Link>
-          <FavoriteButton
-            vendorId={vendor.id}
-            initialFavorited={initialFavorited}
-            className="h-12 w-12"
-          />
         </div>
       </div>
     </article>

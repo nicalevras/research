@@ -263,25 +263,25 @@ function VendorDetailPage() {
         <div className="glass-card-solid overflow-hidden shadow-none p-5">
           <div className="space-y-4">
             <header className="flex min-w-0 flex-col gap-4">
-              <div className="relative flex min-w-0 items-start gap-4 pr-12">
+              <div className="relative flex min-w-0 items-start gap-4 pr-10">
                 <div className="flex h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50 dark:border-white/[0.08] dark:bg-white/[0.04]">
                   <VendorAvatar vendor={vendor} />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h1 className="truncate text-xl font-semibold leading-tight text-neutral-950 dark:text-white">
+                  <h1 className="truncate text-xl font-semibold leading-none text-neutral-950 dark:text-white">
                     {vendor.name}
                   </h1>
-                  <div className="mt-1.5 flex flex-wrap items-center gap-3">
+                  <div className="mt-1.5 flex flex-wrap items-center gap-3 leading-none">
                     <ReviewStars rating={vendor.rating} size="lg" />
-                    <span className="text-lg font-semibold tabular-nums text-neutral-950 dark:text-white">
+                    <span className="text-lg font-semibold leading-none tabular-nums text-neutral-950 dark:text-white">
                       {vendor.rating.toFixed(1)}
                     </span>
-                    <span className="text-base text-neutral-500 dark:text-neutral-400">
+                    <span className="text-base leading-none text-neutral-500 dark:text-neutral-400">
                       {vendor.reviewCount > 0 ? `(${vendor.reviewCount} ${vendor.reviewCount === 1 ? 'review' : 'reviews'})` : '(No reviews)'}
                     </span>
                   </div>
                 </div>
-                <FavoriteButton vendorId={vendor.id} className="absolute right-0 top-0 h-10 w-10" />
+                <FavoriteButton vendorId={vendor.id} className="absolute right-0 top-0" />
               </div>
             </header>
 
@@ -306,10 +306,10 @@ function VendorDetailPage() {
         <aside className="glass-card-solid overflow-hidden shadow-none p-5">
           <div className="space-y-5">
             <div className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
-              <table className="w-full text-[13px] border-collapse">
+              <table className="w-full text-sm border-collapse">
                 <thead>
                   <tr className="border-b border-neutral-200/60 dark:border-white/[0.06] bg-neutral-50 dark:bg-white/[0.02]">
-                    <th colSpan={2} className="px-4 py-2.5 text-left text-[13px] font-bold text-neutral-900 dark:text-white">
+                    <th colSpan={2} className="px-4 py-2.5 text-left text-sm font-bold text-neutral-900 dark:text-white">
                       Vendor Details
                     </th>
                   </tr>
@@ -317,10 +317,10 @@ function VendorDetailPage() {
                 <tbody className="divide-y divide-neutral-200/60 dark:divide-white/[0.06]">
                   {quickInfoRows.map((row) => (
                     <tr key={row.label}>
-                      <th scope="row" className="px-4 py-3 text-left text-[13px] font-semibold text-neutral-500 dark:text-neutral-400">
+                      <th scope="row" className="px-4 py-3 text-left text-sm font-semibold text-neutral-500 dark:text-neutral-400">
                         {row.label}
                       </th>
-                      <td className={`px-4 py-3 text-right text-[13px] font-semibold leading-5 ${row.muted ? 'text-neutral-400 dark:text-neutral-500' : 'text-neutral-900 dark:text-white'}`}>
+                      <td className={`px-4 py-3 text-right text-sm font-semibold leading-5 ${row.muted ? 'text-neutral-400 dark:text-neutral-500' : 'text-neutral-900 dark:text-white'}`}>
                         {row.value}
                       </td>
                     </tr>
@@ -336,15 +336,15 @@ function VendorDetailPage() {
       {vendor.compoundNames.length > 0 && (
         <section className="mt-6 glass-card-solid overflow-hidden shadow-none p-5">
           <div className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
-            <table className="w-full text-[13px] border-collapse">
+            <table className="w-full text-sm border-collapse">
               <colgroup>
                 <col />
                 <col className="w-40" />
               </colgroup>
               <thead>
                 <tr className="border-b border-neutral-200/60 dark:border-white/[0.06] bg-neutral-50 dark:bg-white/[0.02]">
-                  <th className="px-4 py-2.5 text-left text-[13px] font-bold text-neutral-900 dark:text-white">Available Peptides</th>
-                  <th className="px-4 py-2.5 text-right text-[13px] font-bold text-neutral-900 dark:text-white" aria-label="Vendor link" />
+                  <th className="px-4 py-2.5 text-left text-sm font-bold text-neutral-900 dark:text-white">Available Peptides</th>
+                  <th className="px-4 py-2.5 text-right text-sm font-bold text-neutral-900 dark:text-white" aria-label="Vendor link" />
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-200/60 dark:divide-white/[0.06]">

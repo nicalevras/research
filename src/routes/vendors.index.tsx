@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { zodValidator } from '@tanstack/zod-adapter'
 import { DirectoryListing } from '~/components/directory-listing'
 import { SITE_URL } from '~/lib/constants'
@@ -8,17 +8,6 @@ import { filterVendors, getCompounds } from '~/lib/data'
 
 export const Route = createFileRoute('/vendors/')({
   validateSearch: zodValidator(vendorDirectorySearchSchema),
-  beforeLoad: ({ location }) => {
-    const searchParams = new URLSearchParams(location.searchStr)
-    if (searchParams.has('page')) {
-      searchParams.delete('page')
-      const query = searchParams.toString()
-      throw redirect({
-        href: `/vendors${query ? `?${query}` : ''}${location.hash ? `#${location.hash}` : ''}`,
-        statusCode: 301,
-      })
-    }
-  },
   loaderDeps: ({ search }) => ({ q: search.q, country: search.country, features: search.features }),
   loader: async ({ deps }) => {
     const [vendors, compounds] = await Promise.all([

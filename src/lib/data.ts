@@ -21,6 +21,7 @@ const vendorSummaryColumns = {
   promoCode: vendors.promoCode,
   promoDiscountPercent: vendors.promoDiscountPercent,
   verified: vendors.verified,
+  featured: vendors.featured,
   country: vendors.country,
   hasCoa: vendors.hasCoa,
   acceptsCreditCard: vendors.acceptsCreditCard,
@@ -41,6 +42,7 @@ function rowToVendorSummary(row: VendorSummary): VendorSummary {
     promoCode: row.promoCode,
     promoDiscountPercent: row.promoDiscountPercent,
     verified: row.verified,
+    featured: row.featured,
     country: row.country,
     hasCoa: row.hasCoa,
     acceptsCreditCard: row.acceptsCreditCard,
@@ -113,6 +115,17 @@ export const getVendorById = createServerFn({ method: 'GET' })
 
 export const getCompounds = createServerFn({ method: 'GET' })
   .handler(loadCompounds)
+
+export const getFeaturedVendors = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    const rows = await db
+      .select(vendorSummaryColumns)
+      .from(vendors)
+      .where(eq(vendors.featured, true))
+      .orderBy(desc(vendors.rating), asc(vendors.name))
+
+    return rows.map(rowToVendorSummary)
+  })
 
 export const filterVendors = createServerFn({ method: 'GET' })
   .inputValidator((d: { country?: string; q?: string; features?: string; compound?: string }) => d)
@@ -242,8 +255,8 @@ async function recalcVendorRating(vendorId: string) {
   await db
     .update(vendors)
     .set({
-      rating: result.avgRating ? parseFloat(String(result.avgRating)) : 0,
-      reviewCount: result.total,
+      rating: result?.avgRating ? parseFloat(String(result.avgRating)) : 0,
+      reviewCount: result?.total ?? 0,
       updatedAt: new Date(),
     })
     .where(eq(vendors.id, vendorId))

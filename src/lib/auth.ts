@@ -1,4 +1,5 @@
 import { betterAuth } from 'better-auth'
+import type { BetterAuthOptions } from 'better-auth'
 import { reactStartCookies } from 'better-auth/react-start'
 import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { db } from '~/db'
@@ -9,8 +10,55 @@ import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
+type UserCreateBeforeHook = NonNullable<NonNullable<NonNullable<BetterAuthOptions['databaseHooks']>['user']>['create']>['before']
+type UserCreateData = Parameters<NonNullable<UserCreateBeforeHook>>[0] & { username?: string }
+
 function escapeHtml(str: string): string {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+}
+
+function sanitizeName(value: string) {
+  const name = value.replace(/[^a-zA-Z\s'-]/g, '').trim().slice(0, 50)
+  return name || 'User'
+}
+
+function sanitizeUsername(value: string) {
+  let username = value.replace(/[^a-zA-Z0-9_-]/g, '')
+  if (!username) username = `user${Date.now().toString(36)}`
+  if (username.length < 2) username = `${username}_${Date.now().toString(36)}`
+  return username.slice(0, 30)
+}
+
+function fallbackUsernameFromEmail(email: string) {
+  const localPart = email.split('@')[0] ?? ''
+  return localPart.replace(/[^a-zA-Z0-9_-]/g, '') || `user${Date.now()}`
+}
+
+async function uniqueUsername(username: string) {
+  let desired = username
+
+  for (let attempt = 0; attempt < 5; attempt++) {
+    const existing = await db
+      .select({ id: userTable.id })
+      .from(userTable)
+      .where(eq(sql`lower(${userTable.username})`, desired.toLowerCase()))
+      .limit(1)
+
+    if (existing.length === 0) return desired
+
+    const suffix = crypto.randomUUID().slice(0, 6)
+    desired = `${username.slice(0, 23)}_${suffix}`
+  }
+
+  return desired
+}
+
+const prepareUserForCreate: NonNullable<UserCreateBeforeHook> = async (incomingUser) => {
+  const user: UserCreateData = { ...incomingUser }
+  user.name = sanitizeName(user.name || user.email.split('@')[0] || 'User')
+  user.username = await uniqueUsername(sanitizeUsername(user.username || fallbackUsernameFromEmail(user.email)))
+
+  return { data: user }
 }
 
 export const auth = betterAuth({
@@ -94,53 +142,7 @@ export const auth = betterAuth({
   databaseHooks: {
     user: {
       create: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        before: (async (user: any) => {
-          // Validate and sanitize name
-          if (!user.name) {
-            user.name = (user.email as string).split('@')[0] || 'User'
-          }
-          // Strip anything that isn't letters, spaces, hyphens, or apostrophes, then trim and cap length
-          user.name = (user.name as string).replace(/[^a-zA-Z\s'-]/g, '').trim().slice(0, 50)
-          if (!(user.name as string)) {
-            user.name = 'User'
-          }
-          // If no username provided (e.g. OAuth), generate from email
-          if (!user.username) {
-            const base = (user.email as string).split('@')[0].replace(/[^a-zA-Z0-9_-]/g, '')
-            user.username = base || `user${Date.now()}`
-          }
-          // Sanitize: strip any characters that aren't alphanumeric, hyphens, or underscores
-          user.username = (user.username as string).replace(/[^a-zA-Z0-9_-]/g, '')
-          if (!(user.username as string)) {
-            user.username = `user${Date.now().toString(36)}`
-          }
-          // Enforce minimum length
-          if ((user.username as string).length < 2) {
-            user.username = `${user.username}_${Date.now().toString(36)}`
-          }
-          // Enforce maximum length
-          if ((user.username as string).length > 30) {
-            user.username = (user.username as string).slice(0, 30)
-          }
-          // Ensure username uniqueness with retry loop
-          let desired = user.username as string
-          for (let attempt = 0; attempt < 5; attempt++) {
-            const existing = await db
-              .select({ id: userTable.id })
-              .from(userTable)
-              .where(eq(sql`lower(${userTable.username})`, desired.toLowerCase()))
-              .limit(1)
-            if (existing.length === 0) {
-              user.username = desired
-              break
-            }
-            // Append random suffix and retry
-            const suffix = crypto.randomUUID().slice(0, 6)
-            desired = `${(user.username as string).slice(0, 23)}_${suffix}`
-          }
-          return user
-        }) as any,
+        before: prepareUserForCreate,
       },
     },
   },

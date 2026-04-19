@@ -67,6 +67,14 @@ const SYRINGES: SyringeOption[] = [
   { mL: 1.0, units: 100, label: '1.0 mL' },
 ]
 
+function readDefaultSyringe(): SyringeOption {
+  const syringe = SYRINGES[2] ?? SYRINGES[0]
+  if (!syringe) throw new Error('At least one syringe option is required')
+  return syringe
+}
+
+const DEFAULT_SYRINGE = readDefaultSyringe()
+
 const VIAL_OPTIONS = [2, 5, 10, 15]
 const WATER_OPTIONS = [1, 2, 3]
 const DOSE_OPTIONS = [1, 2, 5, 10]
@@ -164,7 +172,7 @@ function SyringeScale({ fillUnits, totalUnits }: { fillUnits: number; totalUnits
 // ── Calculator ─────────────────────────────────────────────────────
 
 function CalculatorPage() {
-  const [syringe, setSyringe] = useState<SyringeOption>(SYRINGES[2])
+  const [syringe, setSyringe] = useState<SyringeOption>(DEFAULT_SYRINGE)
   const [vialMg, setVialMg] = useState(10)
   const [customVial, setCustomVial] = useState('')
   const [isCustomVial, setIsCustomVial] = useState(false)

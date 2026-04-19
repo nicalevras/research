@@ -1,5 +1,3 @@
-import type { VendorSummary } from '~/lib/types'
-
 export const SITE_URL = process.env.SITE_URL || ''
 
 export const FEATURE_LABELS = {
@@ -21,18 +19,6 @@ export const FEATURE_FILTERS: { id: string; name: string; emoji: string }[] = [
   { id: 'international', name: FEATURE_LABELS.international, emoji: '🌍' },
   { id: 'fast-shipping', name: FEATURE_LABELS['fast-shipping'], emoji: '⚡' },
 ]
-
-export function getVendorFeatureLabels(vendor: VendorSummary) {
-  return [
-    vendor.hasCoa ? FEATURE_LABELS.coa : undefined,
-    vendor.acceptsCreditCard ? FEATURE_LABELS['credit-card'] : undefined,
-    vendor.acceptsAch ? FEATURE_LABELS.ach : undefined,
-    vendor.acceptsCrypto ? FEATURE_LABELS.crypto : undefined,
-    vendor.promoCode ? FEATURE_LABELS['promo-code'] : undefined,
-    vendor.shipsInternational ? FEATURE_LABELS.international : undefined,
-    vendor.fastShipping ? FEATURE_LABELS['fast-shipping'] : undefined,
-  ].filter(Boolean) as string[]
-}
 
 export const COUNTRIES = [
   'All Countries',

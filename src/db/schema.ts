@@ -69,6 +69,7 @@ export const vendors = pgTable('vendors', {
   promoCode: text('promo_code'),
   promoDiscountPercent: integer('promo_discount_percent'),
   verified: boolean('verified').notNull().default(true),
+  featured: boolean('featured').notNull().default(false),
   country: text('country').notNull(),
   compoundNames: text('compound_names').array().notNull(),
   compoundSlugs: text('compound_slugs').array().notNull(),

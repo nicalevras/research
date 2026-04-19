@@ -13,6 +13,8 @@ export const Route = createFileRoute('/sitemap.xml')({
 
         const urls: { loc: string; priority: string; changefreq: string }[] = [
           { loc: '/', priority: '1.0', changefreq: 'daily' },
+          { loc: '/vendors', priority: '0.9', changefreq: 'daily' },
+          { loc: '/peptides', priority: '0.9', changefreq: 'weekly' },
           { loc: '/calculator', priority: '0.8', changefreq: 'monthly' },
         ]
 
@@ -21,7 +23,7 @@ export const Route = createFileRoute('/sitemap.xml')({
         }
 
         for (const compound of compounds) {
-          urls.push({ loc: `/${compound.id}`, priority: '0.7', changefreq: 'weekly' })
+          urls.push({ loc: `/peptides/${compound.id}`, priority: '0.7', changefreq: 'weekly' })
         }
 
         const xml = `<?xml version="1.0" encoding="UTF-8"?>

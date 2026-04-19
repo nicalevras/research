@@ -4,8 +4,7 @@ import { Link, useNavigate, useRouter, useRouterState } from '@tanstack/react-ro
 import { useTheme } from '~/lib/use-theme'
 import { useAuthModal } from '~/lib/auth-context'
 import { authClient } from '~/lib/auth-client'
-import { MenuIcon, UserIcon, SunIcon, MoonIcon, LogInIcon, UserPlusIcon, LogOutIcon, SettingsIcon, SearchIcon, XIcon, ChevronDownIcon, HeartIcon } from '~/components/icons'
-import type { Compound } from '~/lib/types'
+import { MenuIcon, UserIcon, SunIcon, MoonIcon, LogInIcon, UserPlusIcon, LogOutIcon, SettingsIcon, SearchIcon, XIcon, HeartIcon } from '~/components/icons'
 
 function DropdownMenu({ trigger, children, align = 'right' }: { trigger: ReactNode; children: ReactNode; align?: 'left' | 'right' }) {
   const [open, setOpen] = useState(false)
@@ -58,11 +57,10 @@ function DropdownItem({ children, onClick }: { children: ReactNode; onClick?: ()
   )
 }
 
-function DropdownLink({ to, params, children }: { to: string; params?: Record<string, string>; children: ReactNode }) {
+function DropdownLink({ to, children }: { to: string; children: ReactNode }) {
   return (
     <Link
       to={to}
-      params={params}
       className="flex w-full items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors"
     >
       {children}
@@ -74,25 +72,14 @@ function DropdownDivider() {
   return <div className="my-1 h-px bg-neutral-100 dark:bg-white/[0.04]" />
 }
 
-export function HamburgerMenu({ compounds }: { compounds: Compound[] }) {
+export function HamburgerMenu() {
   return (
     <DropdownMenu
       align="right"
       trigger={<MenuIcon className="h-5 w-5" strokeWidth={1.5} />}
     >
-      <DropdownLink to="/">All Vendors</DropdownLink>
-      {compounds.length > 0 && (
-        <>
-          <DropdownDivider />
-          <div className="max-h-64 overflow-y-auto">
-            {compounds.map((compound) => (
-              <DropdownLink key={compound.id} to="/$compound" params={{ compound: compound.id }}>
-                {compound.name}
-              </DropdownLink>
-            ))}
-          </div>
-        </>
-      )}
+      <DropdownLink to="/vendors">All Vendors</DropdownLink>
+      <DropdownLink to="/peptides">All Peptides</DropdownLink>
       <DropdownDivider />
       <DropdownLink to="/calculator">Calculator</DropdownLink>
       <DropdownDivider />
@@ -190,7 +177,7 @@ export function NavSearch() {
     setQuery(value)
     if (debounceRef.current) clearTimeout(debounceRef.current)
     debounceRef.current = setTimeout(() => {
-      navigate({ to: '/', search: { q: value || undefined } })
+      navigate({ to: '/vendors', search: { q: value || undefined } })
     }, 300)
   }
 
@@ -234,7 +221,7 @@ export function NavSearch() {
             onClick={() => {
               if (query) {
                 setQuery('')
-                navigate({ to: '/', search: {} })
+                navigate({ to: '/vendors', search: {} })
               } else {
                 close()
               }
@@ -266,7 +253,7 @@ export function NavSearch() {
             type="button"
             onClick={() => {
               setQuery('')
-              navigate({ to: '/', search: {} })
+              navigate({ to: '/vendors', search: {} })
             }}
             className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300 transition-colors cursor-pointer"
             aria-label="Clear search"
@@ -275,50 +262,6 @@ export function NavSearch() {
           </button>
         )}
       </div>
-    </div>
-  )
-}
-
-export function PeptidesDropdown({ compounds }: { compounds: Compound[] }) {
-  const [open, setOpen] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
-  const pathname = useRouterState({ select: (s) => s.location.pathname })
-  const isActive = compounds.some((c) => pathname === `/${c.id}`)
-
-  useEffect(() => {
-    const handle = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
-    }
-    document.addEventListener('mousedown', handle)
-    return () => document.removeEventListener('mousedown', handle)
-  }, [])
-
-  return (
-    <div ref={ref} className="relative flex items-center">
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        aria-expanded={open}
-        className={`inline-flex items-center gap-1 text-sm leading-none font-medium hover:text-neutral-900 dark:hover:text-white transition-colors cursor-pointer ${isActive ? 'text-neutral-900 dark:text-white' : 'text-neutral-500 dark:text-neutral-400'}`}
-      >
-        Peptides
-        <ChevronDownIcon className="h-3 w-3" />
-      </button>
-      {compounds.length > 0 && (
-        <div className={`${open ? '' : 'hidden'} absolute left-0 top-full mt-3 z-50 min-w-[180px] max-h-80 overflow-y-auto rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] py-1 shadow-lg`}>
-          {compounds.map((compound) => (
-            <Link
-              key={compound.id}
-              to="/$compound"
-              params={{ compound: compound.id }}
-              onClick={() => setOpen(false)}
-              className="flex w-full items-center gap-2 px-3 py-2 text-sm text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors text-left"
-            >
-              {compound.name}
-            </Link>
-          ))}
-        </div>
-      )}
     </div>
   )
 }

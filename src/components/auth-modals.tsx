@@ -77,7 +77,7 @@ function Divider() {
 }
 
 function ForgotPasswordForm() {
-  const { closeModal, openSignIn } = useAuthModal()
+  const { openSignIn } = useAuthModal()
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [sent, setSent] = useState(false)

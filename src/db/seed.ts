@@ -96,6 +96,12 @@ function parseCompounds(value: string): string[] {
     .filter(Boolean)
 }
 
+function requiredField(row: CsvRow, key: string, label = key): string {
+  const value = row[key]?.trim()
+  if (!value) throw new Error(`Missing required CSV field: ${label}`)
+  return value
+}
+
 function readPromoCode(row: CsvRow): string | null {
   const promoCodeKey = ['PROMO_CODE', 'PROMO CODE', 'Promo Code'].find((key) => key in row)
   if (!promoCodeKey) return 'VIALSOURCE'
@@ -131,6 +137,12 @@ function readVerified(row: CsvRow): boolean {
   const verifiedKey = ['VERIFIED', 'Verified', 'verified'].find((key) => key in row)
   if (!verifiedKey) return true
   return parseBoolean(row[verifiedKey] ?? '')
+}
+
+function readFeatured(row: CsvRow): boolean {
+  const featuredKey = ['FEATURED', 'Featured', 'featured'].find((key) => key in row)
+  if (!featuredKey) return false
+  return parseBoolean(row[featuredKey] ?? '')
 }
 
 function readDescription(row: CsvRow, vendorName: string): string {
@@ -169,14 +181,15 @@ function buildSeedData(rows: CsvRow[]) {
   const vendorLogoFiles = readVendorLogoFiles()
 
   const vendors = rows.map((row) => {
-    const name = row.Vendor
+    const name = requiredField(row, 'Vendor')
     const id = slugify(name)
     if (!id) throw new Error(`Missing vendor id for ${name}`)
     if (vendorIds.has(id)) throw new Error(`Duplicate vendor id: ${id}`)
     vendorIds.add(id)
 
-    const compoundNames = parseCompounds(row.Compounds)
+    const compoundNames = parseCompounds(requiredField(row, 'Compounds', `${name} compounds`))
     const compoundSlugs = compoundNames.map(slugify)
+    const website = requiredField(row, 'URL', `${name} URL`)
 
     compoundNames.forEach((compoundName, index) => {
       const compoundSlug = compoundSlugs[index]
@@ -189,21 +202,22 @@ function buildSeedData(rows: CsvRow[]) {
     return {
       id,
       name,
-      website: row.URL,
+      website,
       description: readDescription(row, name),
       logoUrl: readVendorLogoUrl(id, vendorLogoFiles),
       promoCode,
       promoDiscountPercent: readPromoDiscountPercent(row, promoCode),
       verified: readVerified(row),
+      featured: readFeatured(row),
       country: row.Country || 'USA',
       compoundNames,
       compoundSlugs,
-      hasCoa: parseBoolean(row.COA),
-      acceptsCreditCard: parseBoolean(row['CREDIT CARD']),
-      acceptsAch: parseBoolean(row.ACH),
-      acceptsCrypto: parseBoolean(row.CRYPTO),
-      fastShipping: parseBoolean(row['FAST SHIPPING']),
-      shipsInternational: parseBoolean(row.INTERNATIONAL),
+      hasCoa: parseBoolean(row.COA ?? ''),
+      acceptsCreditCard: parseBoolean(row['CREDIT CARD'] ?? ''),
+      acceptsAch: parseBoolean(row.ACH ?? ''),
+      acceptsCrypto: parseBoolean(row.CRYPTO ?? ''),
+      fastShipping: parseBoolean(row['FAST SHIPPING'] ?? ''),
+      shipsInternational: parseBoolean(row.INTERNATIONAL ?? ''),
       rating: 0,
       reviewCount: 0,
     } satisfies typeof schema.vendors.$inferInsert

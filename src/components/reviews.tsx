@@ -121,7 +121,7 @@ export function ReviewStars({ rating, size = 'sm' }: { rating: number; size?: 'x
   )
 }
 
-export function RatingSummary({ reviews }: { reviews: Review[] }) {
+function RatingSummary({ reviews }: { reviews: Review[] }) {
   const total = reviews.length
   const avg = total > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / total : 0
   const dist = [5, 4, 3, 2, 1].map((star) => ({
@@ -137,7 +137,7 @@ export function RatingSummary({ reviews }: { reviews: Review[] }) {
           <span className="text-sm text-neutral-500 dark:text-neutral-400">out of 5</span>
         </div>
         <ReviewStars rating={avg} size="lg" />
-        <p className="text-[13px] text-neutral-500 dark:text-neutral-400">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           {total} {total === 1 ? 'review' : 'reviews'}
         </p>
       </div>
@@ -146,14 +146,14 @@ export function RatingSummary({ reviews }: { reviews: Review[] }) {
           const pct = total > 0 ? (count / total) * 100 : 0
           return (
             <div key={star} className="flex items-center gap-2.5">
-              <span className="w-4 text-right text-[13px] tabular-nums font-bold text-neutral-600 dark:text-neutral-300">{star}</span>
+              <span className="w-4 text-right text-sm tabular-nums font-bold text-neutral-600 dark:text-neutral-300">{star}</span>
               <div className="flex-1 h-2.5 rounded-full bg-neutral-200/70 dark:bg-white/[0.06] overflow-hidden">
                 <div
                   className="h-full rounded-full bg-neutral-900 dark:bg-white transition-all duration-500"
                   style={{ width: `${pct}%` }}
                 />
               </div>
-              <span className="w-4 text-left text-[13px] tabular-nums text-neutral-400 dark:text-neutral-500">{count}</span>
+              <span className="w-4 text-left text-sm tabular-nums text-neutral-400 dark:text-neutral-500">{count}</span>
             </div>
           )
         })}
@@ -175,7 +175,7 @@ function Avatar({ name }: { name: string }) {
   )
 }
 
-export function ReviewForm({ vendorId, existingReview, onDone }: {
+function ReviewForm({ vendorId, existingReview, onDone }: {
   vendorId: string
   existingReview?: Review
   onDone?: () => void
@@ -269,7 +269,7 @@ export function ReviewForm({ vendorId, existingReview, onDone }: {
   )
 }
 
-export function ReviewCard({ review, currentUserId, onEdit, onDeleted }: {
+function ReviewCard({ review, currentUserId, onEdit, onDeleted }: {
   review: Review
   currentUserId?: string
   onEdit?: () => void
@@ -303,7 +303,7 @@ export function ReviewCard({ review, currentUserId, onEdit, onDeleted }: {
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="text-[13px] font-semibold text-neutral-900 dark:text-white">{review.username}</span>
+            <span className="text-sm font-semibold text-neutral-900 dark:text-white">{review.username}</span>
             <time dateTime={review.createdAt} className="text-[11px] text-neutral-400 dark:text-neutral-500">{timeAgo}</time>
           </div>
           {isOwner && (
@@ -331,7 +331,7 @@ export function ReviewCard({ review, currentUserId, onEdit, onDeleted }: {
         <div className="mt-1">
           <ReviewStars rating={review.rating} />
         </div>
-        <p className="mt-2.5 text-[13px] text-neutral-600 dark:text-neutral-300 leading-relaxed">{review.comment}</p>
+        <p className="mt-2.5 text-sm text-neutral-600 dark:text-neutral-300 leading-relaxed">{review.comment}</p>
         {deleteError && <p className="text-xs text-red-500 mt-2">{deleteError}</p>}
       </div>
     </article>
@@ -392,7 +392,7 @@ export function ReviewsList({ reviews: initialReviews, vendorId }: { reviews: Re
       ) : (
         <div className="rounded-2xl bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/[0.06] py-12 text-center">
           <p className="text-sm font-medium text-neutral-500 dark:text-neutral-400">No reviews yet</p>
-          <p className="text-[13px] text-neutral-400 dark:text-neutral-500 mt-1">Be the first to share your experience</p>
+          <p className="text-sm text-neutral-400 dark:text-neutral-500 mt-1">Be the first to share your experience</p>
         </div>
       )}
     </div>

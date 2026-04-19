@@ -2,25 +2,22 @@ import type { Compound, VendorSummary } from '~/lib/types'
 import { COUNTRIES, FEATURE_FILTERS } from '~/lib/constants'
 import { PillNav } from '~/components/pill-nav'
 import { VendorGrid, VendorGridSkeleton } from '~/components/vendor-grid'
-import { SearchIcon, XIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from '~/components/icons'
-import { useNavigate, Link, useRouterState } from '@tanstack/react-router'
+import { SearchIcon, XIcon, ChevronDownIcon } from '~/components/icons'
+import { useNavigate, useRouterState } from '@tanstack/react-router'
 import { useMemo, useRef, useCallback, useEffect, useState } from 'react'
-
-export const PAGE_SIZE = 15
 
 interface DirectoryListingProps {
   heading: string
   description: string
   searchQuery: string
   countryFilter: string
-  currentPage: number
   vendors: VendorSummary[]
   compounds: Compound[]
   activeFeatures: string
   activeCompound: string
 }
 
-export function DirectoryListing({ heading, description, searchQuery, countryFilter, currentPage, vendors, compounds, activeFeatures, activeCompound }: DirectoryListingProps) {
+export function DirectoryListing({ heading, description, searchQuery, countryFilter, vendors, compounds, activeFeatures, activeCompound }: DirectoryListingProps) {
   const navigate = useNavigate()
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
   const searchRef = useRef<HTMLInputElement>(null)
@@ -56,29 +53,22 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
     }
   }, [])
 
-  const { paginatedVendors, totalPages } = useMemo(() => {
-    const total = Math.max(1, Math.ceil(vendors.length / PAGE_SIZE))
-    const start = (currentPage - 1) * PAGE_SIZE
-    const paginated = vendors.slice(start, start + PAGE_SIZE)
-    return { paginatedVendors: paginated, totalPages: total }
-  }, [vendors, currentPage])
-
   const currentSearch = useMemo(() => {
-    const s: Record<string, string | number | undefined> = {}
+    const s: Record<string, string | undefined> = {}
     if (searchQuery) s.q = searchQuery
     if (countryFilter) s.country = countryFilter
     if (activeFeatures) s.features = activeFeatures
     return s
   }, [searchQuery, countryFilter, activeFeatures])
 
-  const navTo = activeCompound ? ('/$compound' as const) : ('/' as const)
+  const navTo = activeCompound ? ('/peptides/$compound' as const) : '/vendors'
   const navParams = useMemo(() => activeCompound ? { compound: activeCompound } : undefined, [activeCompound])
 
   const handleSearch = useCallback(
     (value: string) => {
       if (debounceRef.current) clearTimeout(debounceRef.current)
       debounceRef.current = setTimeout(() => {
-        navigate({ to: navTo, params: navParams, search: { ...currentSearch, q: value || undefined, page: undefined } })
+        navigate({ to: navTo, params: navParams, search: { ...currentSearch, q: value || undefined } })
       }, 300)
     },
     [navigate, navTo, navParams, currentSearch],
@@ -87,7 +77,7 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
   const handleCountryChange = useCallback(
     (value: string) => {
       const country = value === 'All Countries' ? undefined : value
-      navigate({ to: navTo, params: navParams, search: { ...currentSearch, country, page: undefined } })
+      navigate({ to: navTo, params: navParams, search: { ...currentSearch, country } })
     },
     [navigate, navTo, navParams, currentSearch],
   )
@@ -97,7 +87,7 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
       const next = localFeatures.includes(featureId) ? localFeatures.filter((t) => t !== featureId) : [...localFeatures, featureId]
       setLocalFeatures(next)
       const featuresParam = next.length > 0 ? next.join(',') : undefined
-      navigate({ to: navTo, params: navParams, search: { ...currentSearch, features: featuresParam, page: undefined } })
+      navigate({ to: navTo, params: navParams, search: { ...currentSearch, features: featuresParam } })
     },
     [navigate, navTo, navParams, currentSearch, localFeatures],
   )
@@ -137,7 +127,7 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
               <button
                 type="button"
                 onClick={() => {
-                  const { q, page, ...rest } = currentSearch
+                  const { q, ...rest } = currentSearch
                   setLocalQuery('')
                   navigate({ to: navTo, params: navParams, search: rest })
                   searchRef.current?.focus()
@@ -157,9 +147,9 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
                 onChange={(e) => {
                   const val = e.target.value
                   if (val) {
-                    navigate({ to: '/$compound', params: { compound: val }, search: {} })
+                    navigate({ to: '/peptides/$compound', params: { compound: val }, search: {} })
                   } else {
-                    navigate({ to: '/', search: {} })
+                    navigate({ to: '/vendors', search: {} })
                   }
                 }}
                 className="w-full appearance-none rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer dark:[color-scheme:dark]"
@@ -191,75 +181,9 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
 
         <section aria-label="Vendor listings">
           <h2 className="sr-only">Vendors</h2>
-          {isGridLoading ? <VendorGridSkeleton /> : <VendorGrid data={paginatedVendors} />}
+          {isGridLoading ? <VendorGridSkeleton /> : <VendorGrid data={vendors} />}
         </section>
-
-        {totalPages > 1 && (
-          <nav aria-label="Pagination" className="flex items-center justify-center gap-2 pt-4">
-            {currentPage > 1 ? (
-              <Link
-                to={navTo}
-                params={navParams}
-                search={{ ...currentSearch, page: currentPage - 1 === 1 ? undefined : currentPage - 1 }}
-                className="inline-flex items-center gap-1 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] px-3.5 py-1.5 text-sm font-medium text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors"
-              >
-                <ChevronLeftIcon className="h-4 w-4" />
-                Previous
-              </Link>
-            ) : (
-              <span className="inline-flex items-center gap-1 rounded-xl border border-neutral-200/60 dark:border-white/[0.06] px-3.5 py-1.5 text-sm font-medium text-neutral-300 dark:text-neutral-600 cursor-not-allowed">
-                <ChevronLeftIcon className="h-4 w-4" />
-                Previous
-              </span>
-            )}
-
-            <span className="text-sm text-neutral-500 dark:text-neutral-400 tabular-nums px-2">
-              Page {currentPage} of {totalPages}
-            </span>
-
-            {currentPage < totalPages ? (
-              <Link
-                to={navTo}
-                params={navParams}
-                search={{ ...currentSearch, page: currentPage + 1 }}
-                className="inline-flex items-center gap-1 rounded-xl bg-neutral-900 dark:bg-white px-3.5 py-1.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
-              >
-                Next
-                <ChevronRightIcon className="h-4 w-4" />
-              </Link>
-            ) : (
-              <span className="inline-flex items-center gap-1 rounded-xl border border-neutral-200/60 dark:border-white/[0.06] px-3.5 py-1.5 text-sm font-medium text-neutral-300 dark:text-neutral-600 cursor-not-allowed">
-                Next
-                <ChevronRightIcon className="h-4 w-4" />
-              </span>
-            )}
-          </nav>
-        )}
       </div>
     </>
-  )
-}
-
-export function DirectoryListingSkeleton() {
-  return (
-    <div className="space-y-4">
-      <div className="mb-8">
-        <div className="h-7 w-72 rounded-lg bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
-        <div className="h-4 w-96 max-w-full rounded-lg bg-neutral-100 dark:bg-neutral-800 animate-pulse mt-1.5" />
-      </div>
-      <div className="flex flex-col sm:flex-row gap-5 sm:gap-3 items-stretch sm:items-center">
-        <div className="h-10 flex-1 rounded-xl bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
-        <div className="flex gap-3 w-full sm:w-auto">
-          <div className="h-10 flex-1 sm:w-40 rounded-xl bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
-          <div className="h-10 flex-1 sm:w-40 rounded-xl bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
-        </div>
-      </div>
-      <div className="flex gap-1.5 overflow-hidden mx-[34px]">
-        {Array.from({ length: 5 }, (_, i) => (
-          <div key={i} className="h-[33.5px] w-28 shrink-0 rounded-xl bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
-        ))}
-      </div>
-      <VendorGridSkeleton />
-    </div>
   )
 }

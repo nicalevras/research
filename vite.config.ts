@@ -6,6 +6,13 @@ import { nitro } from 'nitro/vite'
 
 const PRIVATE_ROUTES = new Set(['/account', '/favorites'])
 
+function shouldPrerenderPath(path: string) {
+  if (path.includes('?')) return false
+  const pathname = path.split('?')[0] ?? path
+  if (PRIVATE_ROUTES.has(pathname)) return false
+  return pathname === '/' || !pathname.endsWith('/')
+}
+
 export default defineConfig({
   server: {
     port: 3000,
@@ -20,7 +27,7 @@ export default defineConfig({
       prerender: {
         enabled: true,
         crawlLinks: true,
-        filter: ({ path }) => !PRIVATE_ROUTES.has(path.split('?')[0]),
+        filter: ({ path }) => shouldPrerenderPath(path),
       },
     }),
     viteReact(),

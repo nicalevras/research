@@ -10,20 +10,14 @@ import type { ReactNode } from 'react'
 import type { ErrorComponentProps } from '@tanstack/react-router'
 import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary'
 import { NotFound } from '~/components/NotFound'
-import { HamburgerMenu, UserMenu, NavSearch, PeptidesDropdown } from '~/components/nav-dropdowns'
+import { HamburgerMenu, UserMenu, NavSearch } from '~/components/nav-dropdowns'
 import { AuthModalProvider } from '~/lib/auth-context'
 import { FavoritesProvider } from '~/lib/favorites-context'
 import { AuthModals } from '~/components/auth-modals'
 import { SITE_URL } from '~/lib/constants'
-import { getCompounds } from '~/lib/data'
-import type { Compound } from '~/lib/types'
 import appCss from '~/styles/app.css?url'
 
 export const Route = createRootRoute({
-  loader: async () => {
-    const compounds = await getCompounds()
-    return { compounds }
-  },
   head: () => ({
     meta: [
       { charSet: 'utf-8' },
@@ -47,12 +41,12 @@ export const Route = createRootRoute({
     ],
   }),
   errorComponent: (props: ErrorComponentProps) => (
-    <RootDocument compounds={[]}>
+    <RootDocument>
       <DefaultCatchBoundary {...props} />
     </RootDocument>
   ),
   notFoundComponent: () => (
-    <RootDocument compounds={[]}>
+    <RootDocument>
       <NotFound />
     </RootDocument>
   ),
@@ -60,16 +54,14 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
-  const { compounds } = Route.useLoaderData()
-
   return (
-    <RootDocument compounds={compounds}>
+    <RootDocument>
       <Outlet />
     </RootDocument>
   )
 }
 
-function RootDocument({ children, compounds }: Readonly<{ children: ReactNode; compounds: Compound[] }>) {
+function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -90,7 +82,8 @@ function RootDocument({ children, compounds }: Readonly<{ children: ReactNode; c
                       <div className="h-4 w-px bg-neutral-200 dark:bg-white/10" />
                       <nav className="flex items-center gap-6">
                         <Link to="/" activeOptions={{ exact: true }} activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Home</Link>
-                        <PeptidesDropdown compounds={compounds} />
+                        <Link to="/vendors" activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Vendors</Link>
+                        <Link to="/peptides" activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Peptides</Link>
                         <Link to="/calculator" className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Tools</Link>
                         <a href="#" className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Store</a>
                         <a href="#" className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Community</a>
@@ -99,7 +92,7 @@ function RootDocument({ children, compounds }: Readonly<{ children: ReactNode; c
                   </div>
                   <div className="flex items-center gap-2.5">
                     <NavSearch />
-                    <div className="md:hidden"><HamburgerMenu compounds={compounds} /></div>
+                    <div className="md:hidden"><HamburgerMenu /></div>
                     <UserMenu />
                   </div>
                 </div>

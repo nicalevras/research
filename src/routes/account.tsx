@@ -455,7 +455,7 @@ function AccountPage() {
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
       <Link
-        to="/"
+        to="/peptides"
         className="inline-flex items-center gap-1.5 text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
       >
         <ChevronLeftIcon className="h-3.5 w-3.5" />

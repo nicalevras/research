@@ -82,6 +82,7 @@ export const Route = createFileRoute('/vendors/$id')({
           type: 'application/ld+json',
           children: JSON.stringify(breadcrumbSchema([
             { name: 'Home', url: '/' },
+            { name: 'Vendors', url: '/vendors' },
             { name: vendor.name, url: `/vendors/${vendor.id}` },
           ])),
         },
@@ -254,6 +255,13 @@ function VendorDetailPage() {
           Home
         </Link>
         <ChevronRightIcon className="h-3.5 w-3.5 text-neutral-300 dark:text-neutral-600" />
+        <Link
+          to="/vendors"
+          className="text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
+        >
+          Vendors
+        </Link>
+        <ChevronRightIcon className="h-3.5 w-3.5 text-neutral-300 dark:text-neutral-600" />
         <span className="text-neutral-900 dark:text-white font-medium truncate">
           {vendor.name}
         </span>
@@ -348,29 +356,34 @@ function VendorDetailPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-200/60 dark:divide-white/[0.06]">
-                {vendor.compoundNames.map((compoundName, index) => (
-                  <tr key={`${compoundName}-${index}`} className="hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition-colors">
-                    <td className="px-4 py-3 font-semibold text-neutral-700 dark:text-neutral-200">
-                      <Link
-                        to="/$compound"
-                        params={{ compound: vendor.compoundSlugs[index] }}
-                        className="hover:underline"
-                      >
-                        {compoundName}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <a
-                        href={vendor.website}
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
-                        className="inline-flex items-center justify-center rounded-xl bg-neutral-900 dark:bg-white px-3 py-1.5 text-xs font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
-                      >
-                        Buy
-                      </a>
-                    </td>
-                  </tr>
-                ))}
+                {vendor.compoundNames.map((compoundName, index) => {
+                  const compoundSlug = vendor.compoundSlugs[index]
+                  if (!compoundSlug) return null
+
+                  return (
+                    <tr key={compoundSlug} className="hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition-colors">
+                      <td className="px-4 py-3 font-semibold text-neutral-700 dark:text-neutral-200">
+                        <Link
+                          to="/peptides/$compound"
+                          params={{ compound: compoundSlug }}
+                          className="hover:underline"
+                        >
+                          {compoundName}
+                        </Link>
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <a
+                          href={vendor.website}
+                          target="_blank"
+                          rel="noopener noreferrer nofollow"
+                          className="inline-flex items-center justify-center rounded-xl bg-neutral-900 dark:bg-white px-3 py-1.5 text-xs font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
+                        >
+                          View Website
+                        </a>
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>

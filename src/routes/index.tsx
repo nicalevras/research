@@ -1,63 +1,36 @@
-import { createFileRoute, stripSearchParams } from '@tanstack/react-router'
-import { zodValidator } from '@tanstack/zod-adapter'
-import { DirectoryListing, PAGE_SIZE } from '~/components/directory-listing'
-import { siteSearchSchema, itemListSchema, breadcrumbSchema } from '~/lib/schema'
+import { createFileRoute, Link } from '@tanstack/react-router'
+import { VendorGrid } from '~/components/vendor-grid'
 import { SITE_URL } from '~/lib/constants'
-import { searchDefaults, searchSchema } from '~/lib/search'
-import { filterVendors, getCompounds } from '~/lib/data'
+import { breadcrumbSchema, itemListSchema, siteSearchSchema } from '~/lib/schema'
+import { getFeaturedVendors } from '~/lib/data'
 
 export const Route = createFileRoute('/')({
-  validateSearch: zodValidator(searchSchema),
-  search: {
-    middlewares: [stripSearchParams(searchDefaults)],
-  },
-  loaderDeps: ({ search }) => ({ page: search.page, q: search.q, country: search.country, features: search.features }),
-  loader: async ({ deps }) => {
-    const [vendors, compounds] = await Promise.all([
-      filterVendors({ data: { q: deps.q, country: deps.country, features: deps.features } }),
-      getCompounds(),
-    ])
-    return { ...deps, vendors, compounds }
+  loader: async () => {
+    const vendors = await getFeaturedVendors()
+    return { vendors }
   },
   head: ({ loaderData }) => {
-    const { page, q, country } = loaderData ?? {}
-    const isFiltered = !!q
-    const pageSuffix = page && page > 1 ? ` — Page ${page}` : ''
-    const pageTitle = `Peptide Vendor Directory — Find & Compare Peptide Suppliers${pageSuffix}`
-    const canonicalParams = new URLSearchParams()
-    if (country) canonicalParams.set('country', country)
-    if (page && page > 1) canonicalParams.set('page', String(page))
-    const canonicalUrl = canonicalParams.size > 0
-      ? `${SITE_URL}?${canonicalParams.toString()}`
-      : SITE_URL || '/'
+    const pageTitle = 'Peptide Vendor Directory - Featured Peptide Vendors'
+    const pageDescription = 'Compare featured peptide vendors with ratings, promo codes, and vendor details from the Peptide Vendor Directory.'
+    const canonicalUrl = `${SITE_URL}/`
+
     return {
       meta: [
         { title: pageTitle },
-        {
-          name: 'description',
-          content:
-            'Compare the best peptide vendors across research, therapeutic, cosmetic, and API supply. Verified ratings, certifications, and detailed reviews for every supplier.',
-        },
-        ...(isFiltered ? [{ name: 'robots', content: 'noindex, follow' as const }] : []),
+        { name: 'description', content: pageDescription },
         { property: 'og:title', content: pageTitle },
-        { property: 'og:description', content: 'Compare the best peptide vendors across research, therapeutic, cosmetic, and API supply.' },
+        { property: 'og:description', content: pageDescription },
         { property: 'og:url', content: canonicalUrl },
         { name: 'twitter:title', content: pageTitle },
-        { name: 'twitter:description', content: 'Compare the best peptide vendors across research, therapeutic, cosmetic, and API supply.' },
+        { name: 'twitter:description', content: pageDescription },
       ],
       links: [{ rel: 'canonical', href: canonicalUrl }],
       scripts: [
         { type: 'application/ld+json', children: JSON.stringify(siteSearchSchema()) },
-        ...(() => {
-          if (!loaderData?.vendors) return []
-          const { vendors, page: p } = loaderData
-          const start = ((p ?? 1) - 1) * PAGE_SIZE
-          const paginatedVendors = vendors.slice(start, start + PAGE_SIZE)
-          return [
-            { type: 'application/ld+json' as const, children: JSON.stringify(itemListSchema(paginatedVendors, 'Peptide Vendor Directory', '/')) },
-            { type: 'application/ld+json' as const, children: JSON.stringify(breadcrumbSchema([{ name: 'Home', url: '/' }])) },
-          ]
-        })(),
+        ...(loaderData?.vendors
+          ? [{ type: 'application/ld+json' as const, children: JSON.stringify(itemListSchema(loaderData.vendors, 'Featured Peptide Vendors', '/')) }]
+          : []),
+        { type: 'application/ld+json', children: JSON.stringify(breadcrumbSchema([{ name: 'Home', url: '/' }])) },
       ],
     }
   },
@@ -69,19 +42,37 @@ export const Route = createFileRoute('/')({
 })
 
 function HomePage() {
-  const { q, country, page, features } = Route.useSearch()
-  const { vendors, compounds } = Route.useLoaderData()
+  const { vendors } = Route.useLoaderData()
+
   return (
-    <DirectoryListing
-      heading="Peptide Vendor Directory"
-      description="Compare peptide vendors. Verified ratings, certifications, and detailed reviews for every supplier."
-      searchQuery={q ?? ''}
-      countryFilter={country ?? ''}
-      currentPage={page}
-      vendors={vendors}
-      compounds={compounds}
-      activeFeatures={features ?? ''}
-      activeCompound=""
-    />
+    <div className="space-y-6">
+      <section className="rounded-lg border border-neutral-200/80 bg-white px-5 py-20 dark:border-white/[0.08] dark:bg-neutral-900">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">
+              Peptide Vendor Directory
+            </h1>
+            <p className="mt-1.5 max-w-xl text-pretty text-sm text-neutral-500 dark:text-neutral-400">
+              Compare featured peptide vendors with ratings, promo codes, and vendor details.
+            </p>
+          </div>
+          <Link
+            to="/vendors"
+            className="inline-flex w-full items-center justify-center rounded-lg border border-neutral-200/80 bg-white px-4 py-2 text-sm font-semibold text-neutral-900 transition-colors hover:bg-neutral-50 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white dark:hover:bg-white/[0.08] sm:w-auto"
+          >
+            View All Vendors
+          </Link>
+        </div>
+      </section>
+
+      <section className="space-y-3" aria-label="Featured vendors">
+        <h2 className="text-sm font-semibold text-neutral-950 dark:text-white">Featured Vendors</h2>
+        <VendorGrid
+          data={vendors}
+          emptyTitle="No featured vendors yet"
+          emptyDescription="Browse the full vendor directory while featured vendors are being selected."
+        />
+      </section>
+    </div>
   )
 }

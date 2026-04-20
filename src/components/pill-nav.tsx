@@ -9,7 +9,7 @@ interface PillNavProps {
 }
 
 function arrowStyle(active: boolean) {
-  return `absolute z-10 flex h-[33.5px] w-8 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] transition-colors text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white ${
+  return `absolute z-10 flex h-[33.5px] w-8 shrink-0 items-center justify-center rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] transition-colors text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white ${
     active ? 'cursor-pointer' : 'pointer-events-none'
   }`
 }
@@ -72,7 +72,7 @@ export function PillNav({ items, activeItems, onToggleItem }: PillNavProps) {
               type="button"
               onClick={() => onToggleItem(item.id)}
               className={
-                `inline-flex items-center shrink-0 rounded-xl px-3.5 py-1.5 text-sm font-medium transition-all duration-200 cursor-pointer ` +
+                `inline-flex items-center shrink-0 rounded-lg px-3.5 py-1.5 text-sm font-medium transition-all duration-200 cursor-pointer ` +
                 (isActive
                   ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 border border-neutral-900 dark:border-white'
                   : 'bg-white/70 dark:bg-white/[0.04] text-neutral-900 dark:text-white hover:bg-white dark:hover:bg-white/[0.08] border border-neutral-200/60 dark:border-white/[0.06] hover:text-neutral-500 dark:hover:text-neutral-400')

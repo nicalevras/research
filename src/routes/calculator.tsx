@@ -87,7 +87,7 @@ function Pill({ active, onClick, children }: { active: boolean; onClick: () => v
       type="button"
       onClick={onClick}
       className={
-        'inline-flex items-center justify-center shrink-0 rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200 cursor-pointer ' +
+        'inline-flex items-center justify-center shrink-0 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200 cursor-pointer ' +
         (active
           ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 border border-neutral-900 dark:border-white'
           : 'bg-white/70 dark:bg-white/[0.04] text-neutral-500 dark:text-neutral-400 hover:bg-white dark:hover:bg-white/[0.08] border border-neutral-200/60 dark:border-white/[0.06] hover:text-neutral-900 dark:hover:text-white')
@@ -239,7 +239,7 @@ function CalculatorPage() {
       <div className="glass-card-solid shadow-none p-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Syringe Size */}
-        <div className="rounded-2xl border border-neutral-200/60 dark:border-white/[0.06] p-5 space-y-2.5">
+        <div className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] p-5 space-y-2.5">
           <Label>Syringe Size</Label>
           <div className="flex flex-wrap gap-2">
             {SYRINGES.map((s) => (
@@ -254,7 +254,7 @@ function CalculatorPage() {
         </div>
 
         {/* Peptide Vial Amount */}
-        <div className="rounded-2xl border border-neutral-200/60 dark:border-white/[0.06] p-5 space-y-2.5">
+        <div className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] p-5 space-y-2.5">
           <Label>Peptide Vial Amount (mg)</Label>
           <div className="flex flex-wrap gap-2">
             {VIAL_OPTIONS.map((mg) => (
@@ -274,13 +274,13 @@ function CalculatorPage() {
               onChange={(e) => setCustomVial(e.target.value)}
               placeholder="Enter mg"
               autoFocus
-              className="w-32 rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+              className="w-32 rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
             />
           )}
         </div>
 
         {/* Bacteriostatic Water */}
-        <div className="rounded-2xl border border-neutral-200/60 dark:border-white/[0.06] p-5 space-y-2.5">
+        <div className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] p-5 space-y-2.5">
           <Label>Bacteriostatic Water (mL)</Label>
           <div className="flex flex-wrap gap-2">
             {WATER_OPTIONS.map((ml) => (
@@ -300,13 +300,13 @@ function CalculatorPage() {
               onChange={(e) => setCustomWater(e.target.value)}
               placeholder="Enter mL"
               autoFocus
-              className="w-32 rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+              className="w-32 rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
             />
           )}
         </div>
 
         {/* Desired Dose */}
-        <div className="rounded-2xl border border-neutral-200/60 dark:border-white/[0.06] p-5 space-y-2.5">
+        <div className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] p-5 space-y-2.5">
           <Label>Desired Dose (mg)</Label>
           <div className="flex flex-wrap gap-2">
             {DOSE_OPTIONS.map((mg) => (
@@ -327,7 +327,7 @@ function CalculatorPage() {
                 onChange={(e) => setCustomDose(e.target.value)}
                 placeholder="Enter mg"
                 autoFocus
-                className="w-32 rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+                className="w-32 rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
               />
               <span className="text-xs text-neutral-400 dark:text-neutral-500">mg</span>
             </div>
@@ -345,14 +345,14 @@ function CalculatorPage() {
             <SyringeScale fillUnits={syringeUnits} totalUnits={syringe.units} />
 
             {exceedsSyringe ? (
-              <div className="flex items-start gap-2.5 rounded-xl bg-red-50 dark:bg-red-500/5 border border-red-200/60 dark:border-red-500/20 p-3.5">
+              <div className="flex items-start gap-2.5 rounded-lg bg-red-50 dark:bg-red-500/5 border border-red-200/60 dark:border-red-500/20 p-3.5">
                 <CircleAlertIcon className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
                 <p className="text-sm text-red-600 dark:text-red-400">
                   This dose requires {syringeUnits.toFixed(1)} units, which exceeds your {syringe.label} ({syringe.units}u) syringe capacity. Use a larger syringe or reduce the dose.
                 </p>
               </div>
             ) : (
-              <div className="rounded-xl bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/[0.06] p-4 text-center">
+              <div className="rounded-lg bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/[0.06] p-4 text-center">
                 <p className="text-sm text-neutral-500 dark:text-neutral-400">
                   For a dose of{' '}
                   <span className="text-xl font-bold text-neutral-900 dark:text-white tabular-nums">{actualDoseMg} mg</span>
@@ -364,14 +364,14 @@ function CalculatorPage() {
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="rounded-xl bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/[0.06] p-4">
+              <div className="rounded-lg bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/[0.06] p-4">
                 <p className="text-xs text-neutral-400 dark:text-neutral-500 mb-1">Concentration</p>
                 <p className="text-2xl font-bold tabular-nums text-neutral-900 dark:text-white">
                   {concentrationMgPerMl.toLocaleString('en-US', { maximumFractionDigits: 2 })}
                 </p>
                 <p className="text-xs text-neutral-400 dark:text-neutral-500">mg/mL</p>
               </div>
-              <div className="rounded-xl bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/[0.06] p-4">
+              <div className="rounded-lg bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/[0.06] p-4">
                 <p className="text-xs text-neutral-400 dark:text-neutral-500 mb-1">Dose Volume</p>
                 <p className="text-2xl font-bold tabular-nums text-neutral-900 dark:text-white">
                   {doseVolume.toFixed(3)}

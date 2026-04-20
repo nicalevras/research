@@ -14,7 +14,7 @@ import type { Vendor } from '~/lib/types'
 function VendorNotFound() {
   return (
     <div className="glass-card-solid py-20 text-center">
-      <div className="mx-auto mb-3 h-10 w-10 rounded-xl bg-neutral-100 dark:bg-white/[0.06] flex items-center justify-center">
+      <div className="mx-auto mb-3 h-10 w-10 rounded-lg bg-neutral-100 dark:bg-white/[0.06] flex items-center justify-center">
         <CircleAlertIcon className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
       </div>
       <h2 className="text-sm font-semibold text-neutral-900 dark:text-white">Vendor not found</h2>
@@ -133,7 +133,7 @@ function VendorSkeleton() {
 
         <div className="glass-card-solid overflow-hidden shadow-none p-5">
           <div className="space-y-5">
-            <div className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
+            <div className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
               <div className="border-b border-neutral-200/60 dark:border-white/[0.06] bg-neutral-50 dark:bg-white/[0.02] px-4 py-2.5">
                 <Shimmer className="h-3.5 w-28" />
               </div>
@@ -151,14 +151,14 @@ function VendorSkeleton() {
       {/* Compounds table */}
       <div className="mt-6 glass-card-solid overflow-hidden shadow-none p-5">
         <Shimmer className="h-3 w-28 mb-4" />
-        <div className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
+        <div className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
           <div className="border-b border-neutral-200/60 dark:border-white/[0.06] bg-neutral-50 dark:bg-white/[0.02] px-4 py-2.5 flex">
             <Shimmer className="h-3.5 w-16" />
           </div>
           {[1, 2, 3].map((i) => (
             <div key={i} className="flex items-center justify-between px-4 py-3 border-b last:border-b-0 border-neutral-200/60 dark:border-white/[0.06]">
               <Shimmer className="h-4 w-24" />
-              <Shimmer className="h-7 w-14 rounded-xl" />
+              <Shimmer className="h-7 w-14 rounded-lg" />
             </div>
           ))}
         </div>
@@ -180,8 +180,8 @@ function VendorSkeleton() {
                 <Shimmer key={i} className="h-7 w-7" />
               ))}
             </div>
-            <Shimmer className="h-24 w-full rounded-xl" />
-            <Shimmer className="h-10 w-32 rounded-xl" />
+            <Shimmer className="h-24 w-full rounded-lg" />
+            <Shimmer className="h-10 w-32 rounded-lg" />
           </div>
         </div>
       </div>
@@ -313,7 +313,7 @@ function VendorDetailPage() {
 
         <aside className="glass-card-solid overflow-hidden shadow-none p-5">
           <div className="space-y-5">
-            <div className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
+            <div className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
               <table className="w-full text-sm border-collapse">
                 <thead>
                   <tr className="border-b border-neutral-200/60 dark:border-white/[0.06] bg-neutral-50 dark:bg-white/[0.02]">
@@ -343,7 +343,7 @@ function VendorDetailPage() {
       {/* Compounds table */}
       {vendor.compoundNames.length > 0 && (
         <section className="mt-6 glass-card-solid overflow-hidden shadow-none p-5">
-          <div className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
+          <div className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
             <table className="w-full text-sm border-collapse">
               <colgroup>
                 <col />
@@ -376,7 +376,7 @@ function VendorDetailPage() {
                           href={vendor.website}
                           target="_blank"
                           rel="noopener noreferrer nofollow"
-                          className="inline-flex items-center justify-center rounded-xl bg-neutral-900 dark:bg-white px-3 py-1.5 text-xs font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
+                          className="inline-flex items-center justify-center rounded-lg bg-neutral-900 dark:bg-white px-3 py-1.5 text-xs font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
                         >
                           View Website
                         </a>

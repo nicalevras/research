@@ -131,6 +131,8 @@ export const vendorsRelations = relations(vendors, ({ many }) => ({
 export const compounds = pgTable('compounds', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
+  categories: text('categories').array().notNull().default(sql`'{}'::text[]`),
+  featured: boolean('featured').notNull().default(false),
   sortOrder: integer('sort_order').notNull().default(0),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),

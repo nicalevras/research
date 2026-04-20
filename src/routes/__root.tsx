@@ -71,10 +71,10 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <AuthModalProvider>
           <FavoritesProvider>
             <div className="mx-auto w-full max-w-6xl flex min-h-screen flex-col">
-              <header className="relative sticky top-4 z-50 mt-4 bg-white/80 dark:bg-neutral-900/80 rounded-2xl border border-neutral-200/60 dark:border-white/[0.06] mx-4 sm:mx-6 lg:mx-8 p-2.5 backdrop-blur-xl">
+              <header className="relative sticky top-4 z-50 mt-4 bg-white/80 dark:bg-neutral-900/80 rounded-lg border border-neutral-200/60 dark:border-white/[0.06] mx-4 sm:mx-6 lg:mx-8 p-2.5 backdrop-blur-xl">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-900 dark:bg-white text-base" aria-hidden="true">🧪</div>
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-900 dark:bg-white text-base" aria-hidden="true">🧪</div>
                     <Link to="/" className="text-[15px] font-semibold tracking-tight text-neutral-900 dark:text-white">
                       Peptide Directory
                     </Link>
@@ -85,7 +85,6 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
                         <Link to="/vendors" activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Vendors</Link>
                         <Link to="/peptides" activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Peptides</Link>
                         <Link to="/calculator" className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Tools</Link>
-                        <a href="#" className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Store</a>
                         <a href="#" className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Community</a>
                       </nav>
                     </div>

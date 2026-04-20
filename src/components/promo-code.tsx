@@ -22,7 +22,7 @@ export function PromoCodeBadge({ code, discountPercent, className = '', size = '
         {discountPercent ? `${discountPercent}% off` : 'Promo code'}
       </span>
       <span className="h-5 w-px shrink-0 bg-neutral-200 dark:bg-white/[0.08]" aria-hidden="true" />
-      <div className="group/code min-w-0 flex-1 rounded-md border border-neutral-200/80 bg-white/80 transition-colors hover:border-emerald-200 hover:bg-emerald-50/60 dark:border-white/[0.08] dark:bg-white/[0.06] dark:hover:border-emerald-400/20 dark:hover:bg-emerald-400/10">
+      <div className="group/code min-w-0 flex-1 rounded-lg border border-neutral-200/80 bg-white/80 transition-colors hover:border-emerald-200 hover:bg-emerald-50/60 dark:border-white/[0.08] dark:bg-white/[0.06] dark:hover:border-emerald-400/20 dark:hover:bg-emerald-400/10">
         <div className="flex min-w-0 items-center gap-2 px-2 py-1">
           <code className="min-w-0 flex-1 break-all font-semibold tracking-normal text-neutral-950 dark:text-white">
             {code}
@@ -31,7 +31,7 @@ export function PromoCodeBadge({ code, discountPercent, className = '', size = '
             value={code}
             label="Copy promo code"
             unstyled
-            className={`${copyButtonClass} rounded-md text-neutral-500 hover:text-emerald-700 dark:text-neutral-300 dark:hover:text-emerald-200`}
+            className={`${copyButtonClass} rounded-lg text-neutral-500 hover:text-emerald-700 dark:text-neutral-300 dark:hover:text-emerald-200`}
           />
         </div>
       </div>

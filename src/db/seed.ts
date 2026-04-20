@@ -3,6 +3,7 @@ import { resolve } from 'node:path'
 import postgres from 'postgres'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import * as schema from './schema'
+import { PEPTIDE_CATEGORIES } from '../lib/constants'
 
 const connectionString = process.env.DATABASE_URL
 if (!connectionString) {
@@ -23,8 +24,16 @@ const VENDOR_LOGO_FILE_OVERRIDES: Record<string, string> = {
   'nura-peptide': 'nura_peptides.webp',
   s1research: 's1_research_peptides.webp',
 }
+const FEATURED_COMPOUND_IDS = new Set([
+  'bpc-157',
+  'tb-500',
+  'semaglutide',
+  'tirzepatide',
+  'retatrutide',
+  'cjc-1295-ipamorelin',
+])
 
-function parseCsv(text: string): CsvRow[] {
+function parseCsvRows(text: string): string[][] {
   const rows: string[][] = []
   let row: string[] = []
   let field = ''
@@ -64,6 +73,12 @@ function parseCsv(text: string): CsvRow[] {
 
   row.push(field)
   if (row.some((value) => value.length > 0)) rows.push(row)
+
+  return rows
+}
+
+function parseCsv(text: string): CsvRow[] {
+  const rows = parseCsvRows(text)
 
   const [headers, ...dataRows] = rows
   if (!headers) return []
@@ -175,10 +190,52 @@ function readVendorCsv() {
   return parseCsv(text)
 }
 
+function categoryIdFromHeader(header: string): string | undefined {
+  const normalized = header.toLowerCase()
+  return PEPTIDE_CATEGORIES.find((category) => normalized.includes(category.name.toLowerCase()))?.id
+}
+
+function readPeptideCategoryMap() {
+  const csvPath = resolve(process.cwd(), process.env.PEPTIDE_CATEGORIES_CSV_PATH ?? '../peptide categories - Sheet1.csv')
+  if (!existsSync(csvPath)) return new Map<string, string[]>()
+
+  const [headers, ...rows] = parseCsvRows(readFileSync(csvPath, 'utf-8'))
+  if (!headers) return new Map<string, string[]>()
+
+  const categoryIds = headers.map(categoryIdFromHeader)
+  const categoryMap = new Map<string, string[]>()
+
+  rows.forEach((row) => {
+    row.forEach((value, index) => {
+      const compoundName = value.trim()
+      const categoryId = categoryIds[index]
+      if (!compoundName || !categoryId) return
+
+      const compoundId = slugify(compoundName)
+      const categories = categoryMap.get(compoundId) ?? []
+      if (!categories.includes(categoryId)) categories.push(categoryId)
+      categoryMap.set(compoundId, categories)
+    })
+  })
+
+  return categoryMap
+}
+
+function readCompoundCategories(compoundId: string, categoryMap: Map<string, string[]>): string[] {
+  if (categoryMap.size === 0) return []
+
+  const categories = categoryMap.get(compoundId)
+  if (categories) return categories
+
+  console.warn(`  Missing peptide category for ${compoundId}; defaulting to research.`)
+  return ['research']
+}
+
 function buildSeedData(rows: CsvRow[]) {
   const compoundMap = new Map<string, string>()
   const vendorIds = new Set<string>()
   const vendorLogoFiles = readVendorLogoFiles()
+  const peptideCategoryMap = readPeptideCategoryMap()
 
   const vendors = rows.map((row) => {
     const name = requiredField(row, 'Vendor')
@@ -228,6 +285,8 @@ function buildSeedData(rows: CsvRow[]) {
     .map(([id, name], index) => ({
       id,
       name,
+      categories: readCompoundCategories(id, peptideCategoryMap),
+      featured: FEATURED_COMPOUND_IDS.has(id),
       sortOrder: index,
     } satisfies typeof schema.compounds.$inferInsert))
 

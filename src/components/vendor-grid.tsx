@@ -26,7 +26,7 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummar
                 <Link
                   to="/vendors/$id"
                   params={{ id: vendor.id }}
-                  className="block min-w-0 flex-1 truncate text-xl font-semibold leading-none text-neutral-950 transition-colors hover:text-neutral-700 dark:text-white dark:hover:text-neutral-300"
+                  className="block min-w-0 flex-1 truncate text-lg font-semibold leading-none text-neutral-950 transition-colors hover:text-neutral-700 dark:text-white dark:hover:text-neutral-300"
                 >
                   {vendor.name}
                 </Link>
@@ -96,16 +96,16 @@ function SkeletonCard() {
           <div className="flex items-start gap-4">
             <div className="h-14 w-14 rounded-lg bg-neutral-100 dark:bg-neutral-800" />
             <div className="space-y-3">
-              <div className="h-7 w-36 rounded bg-neutral-200 dark:bg-neutral-700" />
-              <div className="h-5 w-24 rounded bg-neutral-100 dark:bg-neutral-800" />
+              <div className="h-7 w-36 rounded-lg bg-neutral-200 dark:bg-neutral-700" />
+              <div className="h-5 w-24 rounded-lg bg-neutral-100 dark:bg-neutral-800" />
             </div>
           </div>
           <div className="h-10 w-10 rounded-lg bg-neutral-100 dark:bg-neutral-800" />
         </div>
-        <div className="h-6 w-52 rounded bg-neutral-100 dark:bg-neutral-800" />
+        <div className="h-6 w-52 rounded-lg bg-neutral-100 dark:bg-neutral-800" />
         <div className="space-y-3">
-          <div className="h-4 w-full rounded bg-neutral-100 dark:bg-neutral-800" />
-          <div className="h-4 w-4/5 rounded bg-neutral-100 dark:bg-neutral-800" />
+          <div className="h-4 w-full rounded-lg bg-neutral-100 dark:bg-neutral-800" />
+          <div className="h-4 w-4/5 rounded-lg bg-neutral-100 dark:bg-neutral-800" />
         </div>
         <div className="h-10 w-full rounded-lg bg-emerald-50 dark:bg-emerald-400/10" />
         <div className="h-12 w-full rounded-lg bg-neutral-200 dark:bg-neutral-700" />
@@ -134,8 +134,8 @@ interface VendorGridProps {
 export function VendorGrid({ data, initialFavorites = false, emptyTitle = 'No vendors found', emptyDescription = 'Try adjusting your filters' }: VendorGridProps) {
   if (data.length === 0) {
     return (
-      <div className="rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] py-20 text-center">
-        <div className="mx-auto mb-3 h-10 w-10 rounded-xl bg-neutral-100 dark:bg-white/[0.06] flex items-center justify-center">
+      <div className="rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] py-20 text-center">
+        <div className="mx-auto mb-3 h-10 w-10 rounded-lg bg-neutral-100 dark:bg-white/[0.06] flex items-center justify-center">
           <SearchIcon className="h-5 w-5 text-neutral-400 dark:text-neutral-500" />
         </div>
         <p className="text-sm font-medium text-neutral-600 dark:text-neutral-300">{emptyTitle}</p>

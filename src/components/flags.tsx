@@ -95,7 +95,7 @@ export function CountryFlag({ country, className }: { country: string; className
   if (!Flag) return null
   const size = className ?? 'h-4 w-4'
   return (
-    <span className={`inline-flex items-center justify-center rounded-full overflow-hidden shrink-0 ${size}`}>
+    <span className={`inline-flex items-center justify-center rounded-lg overflow-hidden shrink-0 ${size}`}>
       <Flag className="h-full w-auto min-w-[133%]" />
     </span>
   )

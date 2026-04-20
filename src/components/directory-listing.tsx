@@ -121,7 +121,7 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
                 setLocalQuery(e.target.value)
                 handleSearch(e.target.value)
               }}
-              className="w-full rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-9 pr-9 py-2 text-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 focus:border-neutral-300 dark:focus:border-white/20 transition-all backdrop-blur-sm"
+              className="w-full rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-9 pr-9 py-2 text-sm placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 focus:border-neutral-300 dark:focus:border-white/20 transition-all backdrop-blur-sm"
             />
             {searchQuery && (
               <button
@@ -152,7 +152,7 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
                     navigate({ to: '/vendors', search: {} })
                   }
                 }}
-                className="w-full appearance-none rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer dark:[color-scheme:dark]"
+                className="w-full appearance-none rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer dark:[color-scheme:dark]"
               >
                 <option value="">All Peptides</option>
                 {compounds.map((c) => (
@@ -166,7 +166,7 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
               <select
                 value={countryFilter || 'All Countries'}
                 onChange={(e) => handleCountryChange(e.target.value)}
-                className="w-full appearance-none rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer dark:[color-scheme:dark]"
+                className="w-full appearance-none rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer dark:[color-scheme:dark]"
               >
                 {COUNTRIES.map((country) => (
                   <option key={country} value={country}>{country}</option>

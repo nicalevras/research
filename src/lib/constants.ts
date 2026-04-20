@@ -20,6 +20,18 @@ export const FEATURE_FILTERS: { id: string; name: string; emoji: string }[] = [
   { id: 'fast-shipping', name: FEATURE_LABELS['fast-shipping'], emoji: '⚡' },
 ]
 
+export const PEPTIDE_CATEGORIES: { id: string; name: string; emoji: string }[] = [
+  { id: 'weight-loss', name: 'Weight Loss', emoji: '🏋️' },
+  { id: 'energy', name: 'Energy', emoji: '⚡' },
+  { id: 'focus', name: 'Focus', emoji: '🧠' },
+  { id: 'sexual-health', name: 'Sexual Health', emoji: '☯️' },
+  { id: 'cosmetic', name: 'Cosmetic', emoji: '✨' },
+  { id: 'recovery', name: 'Recovery', emoji: '🩹' },
+  { id: 'muscle', name: 'Muscle', emoji: '💪' },
+  { id: 'longevity', name: 'Longevity', emoji: '⏳' },
+  { id: 'research', name: 'Research', emoji: '🧪' },
+]
+
 export const COUNTRIES = [
   'All Countries',
   'USA',

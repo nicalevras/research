@@ -85,6 +85,20 @@
       "when": 1776621669855,
       "tag": "0011_mighty_maddog",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1776641282384,
+      "tag": "0012_sloppy_leper_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1776688273568,
+      "tag": "0013_same_white_queen",
+      "breakpoints": true
     }
   ]
 }

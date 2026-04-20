@@ -147,9 +147,9 @@ function RatingSummary({ reviews }: { reviews: Review[] }) {
           return (
             <div key={star} className="flex items-center gap-2.5">
               <span className="w-4 text-right text-sm tabular-nums font-bold text-neutral-600 dark:text-neutral-300">{star}</span>
-              <div className="flex-1 h-2.5 rounded-full bg-neutral-200/70 dark:bg-white/[0.06] overflow-hidden">
+              <div className="flex-1 h-2.5 rounded-lg bg-neutral-200/70 dark:bg-white/[0.06] overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-neutral-900 dark:bg-white transition-all duration-500"
+                  className="h-full rounded-lg bg-neutral-900 dark:bg-white transition-all duration-500"
                   style={{ width: `${pct}%` }}
                 />
               </div>
@@ -167,7 +167,7 @@ function Avatar({ name }: { name: string }) {
   const gradient = hashGradient(name)
   return (
     <div
-      className="h-9 w-9 rounded-full flex items-center justify-center shrink-0 shadow-sm"
+      className="h-9 w-9 rounded-lg flex items-center justify-center shrink-0 shadow-sm"
       style={{ background: gradient }}
     >
       <span className="text-sm font-bold text-white leading-none drop-shadow-sm">{initial}</span>
@@ -229,7 +229,7 @@ function ReviewForm({ vendorId, existingReview, onDone }: {
         rows={4}
         maxLength={2000}
         disabled={!isAuthed}
-        className="w-full rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white dark:bg-white/[0.04] px-4 py-3 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white dark:bg-white/[0.04] px-4 py-3 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all resize-none disabled:opacity-50 disabled:cursor-not-allowed"
       />
       <div className="flex items-start justify-between -mt-2">
         <div>
@@ -241,7 +241,7 @@ function ReviewForm({ vendorId, existingReview, onDone }: {
           <button
             type="submit"
             disabled={loading}
-            className="rounded-xl bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
+            className="rounded-lg bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? 'Saving...' : existingReview ? 'Update Review' : 'Submit Review'}
           </button>
@@ -249,7 +249,7 @@ function ReviewForm({ vendorId, existingReview, onDone }: {
           <button
             type="button"
             onClick={() => openSignIn()}
-            className="rounded-xl bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors cursor-pointer"
+            className="rounded-lg bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors cursor-pointer"
           >
             Sign in to review
           </button>
@@ -258,7 +258,7 @@ function ReviewForm({ vendorId, existingReview, onDone }: {
           <button
             type="button"
             onClick={onDone}
-            className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] px-5 py-2.5 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-white/[0.04] transition-colors cursor-pointer"
+            className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] px-5 py-2.5 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-white/[0.04] transition-colors cursor-pointer"
           >
             Cancel
           </button>
@@ -298,7 +298,7 @@ function ReviewCard({ review, currentUserId, onEdit, onDeleted }: {
   const timeAgo = relativeTime(review.createdAt)
 
   return (
-    <article className="rounded-2xl bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/[0.06] p-5 flex gap-4">
+    <article className="rounded-lg bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/[0.06] p-5 flex gap-4">
       <Avatar name={review.username} />
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between gap-3">
@@ -341,16 +341,16 @@ function ReviewCard({ review, currentUserId, onEdit, onDeleted }: {
 function ReviewFormSkeleton() {
   return (
     <div className="space-y-3 animate-pulse">
-      <div className="h-4 w-28 rounded bg-neutral-100 dark:bg-white/[0.06]" />
+      <div className="h-4 w-28 rounded-lg bg-neutral-100 dark:bg-white/[0.06]" />
       <div className="flex gap-1">
         {[1, 2, 3, 4, 5].map((i) => (
-          <div key={i} className="h-7 w-7 rounded bg-neutral-100 dark:bg-white/[0.06]" />
+          <div key={i} className="h-7 w-7 rounded-lg bg-neutral-100 dark:bg-white/[0.06]" />
         ))}
       </div>
-      <div className="h-[106px] rounded-xl bg-neutral-100 dark:bg-white/[0.06]" />
+      <div className="h-[106px] rounded-lg bg-neutral-100 dark:bg-white/[0.06]" />
       <div className="flex items-center justify-between">
-        <div className="h-3 w-12 rounded bg-neutral-100 dark:bg-white/[0.06]" />
-        <div className="h-10 w-32 rounded-xl bg-neutral-100 dark:bg-white/[0.06]" />
+        <div className="h-3 w-12 rounded-lg bg-neutral-100 dark:bg-white/[0.06]" />
+        <div className="h-10 w-32 rounded-lg bg-neutral-100 dark:bg-white/[0.06]" />
       </div>
     </div>
   )
@@ -390,7 +390,7 @@ export function ReviewsList({ reviews: initialReviews, vendorId }: { reviews: Re
           ))}
         </div>
       ) : (
-        <div className="rounded-2xl bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/[0.06] py-12 text-center">
+        <div className="rounded-lg bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/[0.06] py-12 text-center">
           <p className="text-sm font-medium text-neutral-500 dark:text-neutral-400">No reviews yet</p>
           <p className="text-sm text-neutral-400 dark:text-neutral-500 mt-1">Be the first to share your experience</p>
         </div>

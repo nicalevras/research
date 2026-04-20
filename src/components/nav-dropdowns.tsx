@@ -32,12 +32,12 @@ function DropdownMenu({ trigger, children, align = 'right' }: { trigger: ReactNo
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="inline-flex items-center justify-center rounded-xl h-8 w-8 cursor-pointer bg-white/70 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/[0.06] text-neutral-500 dark:text-neutral-400 hover:bg-white dark:hover:bg-white/[0.08] hover:text-neutral-900 dark:hover:text-white transition-all duration-200"
+        className="inline-flex items-center justify-center rounded-lg h-8 w-8 cursor-pointer bg-white/70 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/[0.06] text-neutral-500 dark:text-neutral-400 hover:bg-white dark:hover:bg-white/[0.08] hover:text-neutral-900 dark:hover:text-white transition-all duration-200"
       >
         {trigger}
       </button>
       {open && (
-        <div className={`absolute ${align === 'right' ? 'right-0' : 'left-0'} top-full mt-2 z-50 min-w-[180px] rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] py-1 shadow-lg`}>
+        <div className={`absolute ${align === 'right' ? 'right-0' : 'left-0'} top-full mt-2 z-50 min-w-[180px] rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] py-1 shadow-lg`}>
           {children}
         </div>
       )}
@@ -191,7 +191,7 @@ export function NavSearch() {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex items-center justify-end rounded-xl h-8 w-8 cursor-pointer text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-all duration-200 md:justify-center md:bg-white/70 md:dark:bg-white/[0.04] md:border md:border-neutral-200/60 md:dark:border-white/[0.06] md:hover:bg-white md:dark:hover:bg-white/[0.08]"
+        className="inline-flex items-center justify-end rounded-lg h-8 w-8 cursor-pointer text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-all duration-200 md:justify-center md:bg-white/70 md:dark:bg-white/[0.04] md:border md:border-neutral-200/60 md:dark:border-white/[0.06] md:hover:bg-white md:dark:hover:bg-white/[0.08]"
         aria-label="Search"
       >
         <SearchIcon className="h-4 w-4" strokeWidth={1.5} />
@@ -202,7 +202,7 @@ export function NavSearch() {
   return (
     <div ref={containerRef}>
       {/* Mobile: full-width takeover */}
-      <div className="md:hidden absolute inset-0 z-10 flex items-center p-2.5 bg-white dark:bg-neutral-900 rounded-2xl">
+      <div className="md:hidden absolute inset-0 z-10 flex items-center p-2.5 bg-white dark:bg-neutral-900 rounded-lg">
         <div className="relative flex-1">
           <SearchIcon className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
           <input
@@ -214,7 +214,7 @@ export function NavSearch() {
             onKeyDown={(e) => {
               if (e.key === 'Escape') close()
             }}
-            className="w-full h-8 rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-8 pr-8 text-sm placeholder-neutral-400 dark:placeholder-neutral-500 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+            className="w-full h-8 rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-8 pr-8 text-sm placeholder-neutral-400 dark:placeholder-neutral-500 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
           />
           <button
             type="button"
@@ -246,7 +246,7 @@ export function NavSearch() {
             if (e.key === 'Escape') close()
           }}
           ref={desktopInputRef}
-          className="w-36 sm:w-48 h-8 rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-8 pr-8 text-sm placeholder-neutral-400 dark:placeholder-neutral-500 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+          className="w-36 sm:w-48 h-8 rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-8 pr-8 text-sm placeholder-neutral-400 dark:placeholder-neutral-500 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
         />
         {query && (
           <button

@@ -79,7 +79,7 @@ function ChangeUsernameSection({ currentUsername }: { currentUsername: string })
           placeholder="your-username"
           maxLength={30}
           autoComplete="username"
-          className="w-full rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+          className="w-full rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
         />
 
         {error && <p className="text-sm text-red-500">{error}</p>}
@@ -88,7 +88,7 @@ function ChangeUsernameSection({ currentUsername }: { currentUsername: string })
         <button
           type="submit"
           disabled={loading}
-          className="rounded-xl bg-neutral-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
+          className="rounded-lg bg-neutral-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
         >
           {loading ? 'Updating...' : 'Update Username'}
         </button>
@@ -173,7 +173,7 @@ function ChangePasswordSection({ isOAuthOnly }: { isOAuthOnly: boolean }) {
           onChange={(e) => setCurrentPassword(e.target.value)}
           placeholder="Current password"
           autoComplete="current-password"
-          className="w-full rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+          className="w-full rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
         />
         <input
           type="password"
@@ -181,7 +181,7 @@ function ChangePasswordSection({ isOAuthOnly }: { isOAuthOnly: boolean }) {
           onChange={(e) => setNewPassword(e.target.value)}
           placeholder="New password"
           autoComplete="new-password"
-          className="w-full rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+          className="w-full rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
         />
         <input
           type="password"
@@ -189,7 +189,7 @@ function ChangePasswordSection({ isOAuthOnly }: { isOAuthOnly: boolean }) {
           onChange={(e) => setConfirmPassword(e.target.value)}
           placeholder="Confirm new password"
           autoComplete="new-password"
-          className="w-full rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+          className="w-full rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
         />
 
         {error && <p className="text-sm text-red-500">{error}</p>}
@@ -198,7 +198,7 @@ function ChangePasswordSection({ isOAuthOnly }: { isOAuthOnly: boolean }) {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-xl bg-neutral-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
+          className="rounded-lg bg-neutral-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
         >
           {loading ? 'Updating...' : 'Update Password'}
         </button>
@@ -247,7 +247,7 @@ function DeleteAccountSection({ isOAuthOnly }: { isOAuthOnly: boolean }) {
           <button
             type="button"
             onClick={() => setConfirming(true)}
-            className="rounded-xl border border-red-200 dark:border-red-500/20 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors cursor-pointer"
+            className="rounded-lg border border-red-200 dark:border-red-500/20 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors cursor-pointer"
           >
             Delete Account
           </button>
@@ -263,7 +263,7 @@ function DeleteAccountSection({ isOAuthOnly }: { isOAuthOnly: boolean }) {
                 onChange={(e) => setConfirmText(e.target.value)}
                 placeholder="Type DELETE"
                 autoComplete="off"
-                className="w-full rounded-xl border border-red-200/80 dark:border-red-500/20 bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all"
+                className="w-full rounded-lg border border-red-200/80 dark:border-red-500/20 bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all"
               />
             </>
           ) : (
@@ -275,7 +275,7 @@ function DeleteAccountSection({ isOAuthOnly }: { isOAuthOnly: boolean }) {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Your password"
                 autoComplete="current-password"
-                className="w-full rounded-xl border border-red-200/80 dark:border-red-500/20 bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all"
+                className="w-full rounded-lg border border-red-200/80 dark:border-red-500/20 bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-red-500/20 transition-all"
               />
             </>
           )}
@@ -286,14 +286,14 @@ function DeleteAccountSection({ isOAuthOnly }: { isOAuthOnly: boolean }) {
             <button
               type="submit"
               disabled={loading || !canSubmit}
-              className="rounded-xl bg-red-600 dark:bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 dark:hover:bg-red-600 transition-colors disabled:opacity-50 cursor-pointer"
+              className="rounded-lg bg-red-600 dark:bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 dark:hover:bg-red-600 transition-colors disabled:opacity-50 cursor-pointer"
             >
               {loading ? 'Deleting...' : 'Confirm Delete'}
             </button>
             <button
               type="button"
               onClick={() => { setConfirming(false); setPassword(''); setConfirmText(''); setError('') }}
-              className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors cursor-pointer"
+              className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors cursor-pointer"
             >
               Cancel
             </button>
@@ -379,21 +379,21 @@ function UserReviewCard({ review, onUpdated }: { review: UserReview; onUpdated: 
             onChange={(e) => setComment(e.target.value)}
             rows={3}
             maxLength={2000}
-            className="w-full rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all resize-none"
+            className="w-full rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all resize-none"
           />
           {error && <p className="text-sm text-red-500">{error}</p>}
           <div className="flex gap-3">
             <button
               type="submit"
               disabled={loading}
-              className="rounded-xl bg-neutral-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
+              className="rounded-lg bg-neutral-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
             >
               {loading ? 'Saving...' : 'Save'}
             </button>
             <button
               type="button"
               onClick={() => { setEditing(false); setRating(review.rating); setComment(review.comment); setError('') }}
-              className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors cursor-pointer"
+              className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.04] transition-colors cursor-pointer"
             >
               Cancel
             </button>
@@ -482,7 +482,7 @@ function AccountPage() {
         </h2>
 
         {reviews.length > 0 ? (
-          <div className="rounded-xl border border-neutral-200/60 dark:border-white/[0.06] divide-y divide-neutral-200/60 dark:divide-white/[0.06]">
+          <div className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] divide-y divide-neutral-200/60 dark:divide-white/[0.06]">
             {reviews.map((review: UserReview) => (
               <UserReviewCard
                 key={review.id}

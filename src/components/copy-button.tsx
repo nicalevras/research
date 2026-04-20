@@ -57,7 +57,7 @@ export function CopyButton({ value, className = '', label = 'Copy', unstyled = f
       <CopyIcon className="h-4 w-4" aria-hidden="true" />
       <span
         role="tooltip"
-        className={`pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 -translate-x-1/2 whitespace-nowrap rounded bg-neutral-950 px-2 py-1 text-xs font-medium text-white shadow-sm transition-opacity dark:bg-white dark:text-neutral-950 ${tooltipVisibility}`}
+        className={`pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-neutral-950 px-2 py-1 text-xs font-medium text-white shadow-sm transition-opacity dark:bg-white dark:text-neutral-950 ${tooltipVisibility}`}
       >
         {tooltipText}
       </span>

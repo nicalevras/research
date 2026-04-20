@@ -8,7 +8,7 @@ function Overlay({ children, onClose }: { children: React.ReactNode; onClose: ()
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center">
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-sm mx-4 rounded-2xl bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] p-6 shadow-xl">
+      <div className="relative w-full max-w-sm mx-4 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] p-6 shadow-xl">
         <button
           type="button"
           onClick={onClose}
@@ -42,7 +42,7 @@ function InputField({ label, type, value, onChange, placeholder, autoComplete, m
         placeholder={placeholder}
         autoComplete={autoComplete}
         maxLength={maxLength}
-        className="w-full rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+        className="w-full rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
       />
     </div>
   )
@@ -53,7 +53,7 @@ function GoogleButton({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="w-full flex items-center justify-center gap-2 rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white dark:bg-white/[0.04] px-3.5 py-2.5 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
+      className="w-full flex items-center justify-center gap-2 rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white dark:bg-white/[0.04] px-3.5 py-2.5 text-sm font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-white/[0.08] transition-colors cursor-pointer"
     >
       <svg className="h-4 w-4" viewBox="0 0 24 24">
         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/>
@@ -136,7 +136,7 @@ function ForgotPasswordForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-xl bg-neutral-900 dark:bg-white px-3.5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
+        className="w-full rounded-lg bg-neutral-900 dark:bg-white px-3.5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
       >
         {loading ? 'Sending...' : 'Send Reset Link'}
       </button>
@@ -215,7 +215,7 @@ function SignInForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-xl bg-neutral-900 dark:bg-white px-3.5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
+        className="w-full rounded-lg bg-neutral-900 dark:bg-white px-3.5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
       >
         {loading ? 'Signing in...' : 'Sign In'}
       </button>
@@ -300,7 +300,7 @@ function SignUpForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-xl bg-neutral-900 dark:bg-white px-3.5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
+        className="w-full rounded-lg bg-neutral-900 dark:bg-white px-3.5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
       >
         {loading ? 'Creating account...' : 'Sign Up'}
       </button>

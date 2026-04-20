@@ -24,6 +24,12 @@ export interface Vendor extends VendorSummary {
   compoundSlugs: string[]
 }
 
+export interface VendorCompoundOption {
+  id: string
+  name: string
+  compoundSlugs: string[]
+}
+
 export interface FeatureFilter {
   id: string
   name: string
@@ -32,6 +38,9 @@ export interface FeatureFilter {
 export interface Compound {
   id: string
   name: string
+  categories: string[]
+  featured: boolean
+  vendorCount?: number
 }
 
 export interface Review {

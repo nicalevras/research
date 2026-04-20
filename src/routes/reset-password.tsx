@@ -111,7 +111,7 @@ function ResetPasswordPage() {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="New password"
             autoComplete="new-password"
-            className="w-full rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+            className="w-full rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
           />
           <input
             type="password"
@@ -119,7 +119,7 @@ function ResetPasswordPage() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Confirm new password"
             autoComplete="new-password"
-            className="w-full rounded-xl border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
+            className="w-full rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2.5 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
           />
 
           {error && <p className="text-sm text-red-500">{error}</p>}
@@ -127,7 +127,7 @@ function ResetPasswordPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-neutral-900 dark:bg-white px-3.5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
+            className="w-full rounded-lg bg-neutral-900 dark:bg-white px-3.5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:opacity-50 cursor-pointer"
           >
             {loading ? 'Resetting...' : 'Reset Password'}
           </button>

@@ -34,7 +34,7 @@ function FavoritesAuthGate() {
 
   return (
     <div className="mx-auto max-w-xl glass-card-solid py-16 px-6 text-center">
-      <div className="mx-auto mb-4 h-11 w-11 rounded-xl bg-neutral-100 dark:bg-white/[0.06] flex items-center justify-center">
+      <div className="mx-auto mb-4 h-11 w-11 rounded-lg bg-neutral-100 dark:bg-white/[0.06] flex items-center justify-center">
         <HeartIcon className="h-5 w-5 text-neutral-400 dark:text-neutral-500" strokeWidth={1.6} />
       </div>
       <h1 className="text-xl font-semibold tracking-tight text-neutral-900 dark:text-white">Sign in to view favorites</h1>
@@ -44,7 +44,7 @@ function FavoritesAuthGate() {
       <button
         type="button"
         onClick={() => openSignIn({ message: 'Sign in to view your favorite vendors.' })}
-        className="mt-6 inline-flex items-center justify-center rounded-xl bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors cursor-pointer"
+        className="mt-6 inline-flex items-center justify-center rounded-lg bg-neutral-900 dark:bg-white px-5 py-2.5 text-sm font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors cursor-pointer"
       >
         Sign In
       </button>

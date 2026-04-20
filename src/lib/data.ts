@@ -6,12 +6,18 @@ import { sql } from 'drizzle-orm'
 import { db } from '~/db'
 import { vendors, reviews, user, account, compounds, vendorFavorites } from '~/db/schema'
 import { auth } from '~/lib/auth'
-import type { Vendor, VendorSummary, Review, Compound } from './types'
+import type { Vendor, VendorSummary, Review, Compound, VendorCompoundOption } from './types'
 
 const COMPOUND_REGISTRY_CACHE_TTL_MS = 5 * 60_000
+const VENDOR_COMPOUND_OPTIONS_CACHE_TTL_MS = 5 * 60_000
+const FEATURED_VENDORS_CACHE_TTL_MS = 5 * 60_000
 
 let compoundsCache: { data: Compound[]; expiresAt: number } | undefined
 let compoundsRequest: Promise<Compound[]> | undefined
+let vendorCompoundOptionsCache: { data: VendorCompoundOption[]; expiresAt: number } | undefined
+let vendorCompoundOptionsRequest: Promise<VendorCompoundOption[]> | undefined
+let featuredVendorsCache: { data: VendorSummary[]; expiresAt: number } | undefined
+let featuredVendorsRequest: Promise<VendorSummary[]> | undefined
 
 const vendorSummaryColumns = {
   id: vendors.id,
@@ -75,6 +81,8 @@ async function loadCompounds(): Promise<Compound[]> {
       .select({
         id: compounds.id,
         name: compounds.name,
+        categories: compounds.categories,
+        featured: compounds.featured,
       })
       .from(compounds)
       .orderBy(asc(compounds.sortOrder), asc(compounds.name))
@@ -91,6 +99,64 @@ async function loadCompounds(): Promise<Compound[]> {
   }
 
   return compoundsRequest
+}
+
+async function loadVendorCompoundOptions(): Promise<VendorCompoundOption[]> {
+  const now = Date.now()
+  if (vendorCompoundOptionsCache && vendorCompoundOptionsCache.expiresAt > now) {
+    return vendorCompoundOptionsCache.data
+  }
+
+  if (!vendorCompoundOptionsRequest) {
+    vendorCompoundOptionsRequest = db
+      .select({
+        id: vendors.id,
+        name: vendors.name,
+        compoundSlugs: vendors.compoundSlugs,
+      })
+      .from(vendors)
+      .orderBy(asc(vendors.name))
+      .then((rows) => {
+        vendorCompoundOptionsCache = {
+          data: rows,
+          expiresAt: Date.now() + VENDOR_COMPOUND_OPTIONS_CACHE_TTL_MS,
+        }
+        return rows
+      })
+      .finally(() => {
+        vendorCompoundOptionsRequest = undefined
+      })
+  }
+
+  return vendorCompoundOptionsRequest
+}
+
+async function loadFeaturedVendors(): Promise<VendorSummary[]> {
+  const now = Date.now()
+  if (featuredVendorsCache && featuredVendorsCache.expiresAt > now) {
+    return featuredVendorsCache.data
+  }
+
+  if (!featuredVendorsRequest) {
+    featuredVendorsRequest = db
+      .select(vendorSummaryColumns)
+      .from(vendors)
+      .where(eq(vendors.featured, true))
+      .orderBy(desc(vendors.rating), asc(vendors.name))
+      .then((rows) => {
+        const data = rows.map(rowToVendorSummary)
+        featuredVendorsCache = {
+          data,
+          expiresAt: Date.now() + FEATURED_VENDORS_CACHE_TTL_MS,
+        }
+        return data
+      })
+      .finally(() => {
+        featuredVendorsRequest = undefined
+      })
+  }
+
+  return featuredVendorsRequest
 }
 
 function escapeLike(str: string): string {
@@ -116,16 +182,11 @@ export const getVendorById = createServerFn({ method: 'GET' })
 export const getCompounds = createServerFn({ method: 'GET' })
   .handler(loadCompounds)
 
-export const getFeaturedVendors = createServerFn({ method: 'GET' })
-  .handler(async () => {
-    const rows = await db
-      .select(vendorSummaryColumns)
-      .from(vendors)
-      .where(eq(vendors.featured, true))
-      .orderBy(desc(vendors.rating), asc(vendors.name))
+export const getVendorCompoundOptions = createServerFn({ method: 'GET' })
+  .handler(loadVendorCompoundOptions)
 
-    return rows.map(rowToVendorSummary)
-  })
+export const getFeaturedVendors = createServerFn({ method: 'GET' })
+  .handler(loadFeaturedVendors)
 
 export const filterVendors = createServerFn({ method: 'GET' })
   .inputValidator((d: { country?: string; q?: string; features?: string; compound?: string }) => d)

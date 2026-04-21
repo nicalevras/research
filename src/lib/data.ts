@@ -81,6 +81,7 @@ async function loadCompounds(): Promise<Compound[]> {
       .select({
         id: compounds.id,
         name: compounds.name,
+        description: compounds.description,
         categories: compounds.categories,
         featured: compounds.featured,
       })

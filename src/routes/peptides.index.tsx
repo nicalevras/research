@@ -189,7 +189,7 @@ function PeptidesPage() {
             <input
               ref={searchRef}
               type="text"
-              placeholder="Search peptides"
+              placeholder="Search peptides..."
               value={localQuery}
               onChange={(event) => {
                 setLocalQuery(event.target.value)

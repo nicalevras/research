@@ -190,6 +190,36 @@ function readVendorCsv() {
   return parseCsv(text)
 }
 
+function readPeptideDescriptionMap() {
+  const csvPath = resolve(process.cwd(), process.env.PEPTIDE_DESCRIPTIONS_CSV_PATH ?? '../peptide_descriptions.csv')
+  if (!existsSync(csvPath)) {
+    throw new Error(`Peptide descriptions CSV not found: ${csvPath}`)
+  }
+
+  const rows = parseCsv(readFileSync(csvPath, 'utf-8'))
+  const descriptionMap = new Map<string, string>()
+
+  rows.forEach((row) => {
+    const compoundKey = ['compound', 'Compound', 'COMPOUND'].find((key) => key in row)
+    const descriptionKey = ['description', 'Description', 'DESCRIPTION'].find((key) => key in row)
+    if (!compoundKey || !descriptionKey) {
+      throw new Error('Peptide descriptions CSV must include compound and description columns')
+    }
+
+    const name = requiredField(row, compoundKey, 'compound')
+    const description = requiredField(row, descriptionKey, `${name} description`)
+    const id = slugify(name)
+
+    if (descriptionMap.has(id)) {
+      throw new Error(`Duplicate peptide description for ${name}`)
+    }
+
+    descriptionMap.set(id, description)
+  })
+
+  return descriptionMap
+}
+
 function categoryIdFromHeader(header: string): string | undefined {
   const normalized = header.toLowerCase()
   return PEPTIDE_CATEGORIES.find((category) => normalized.includes(category.name.toLowerCase()))?.id
@@ -236,6 +266,7 @@ function buildSeedData(rows: CsvRow[]) {
   const vendorIds = new Set<string>()
   const vendorLogoFiles = readVendorLogoFiles()
   const peptideCategoryMap = readPeptideCategoryMap()
+  const peptideDescriptionMap = readPeptideDescriptionMap()
 
   const vendors = rows.map((row) => {
     const name = requiredField(row, 'Vendor')
@@ -282,13 +313,26 @@ function buildSeedData(rows: CsvRow[]) {
 
   const compounds = Array.from(compoundMap.entries())
     .sort((a, b) => a[1].localeCompare(b[1]))
-    .map(([id, name], index) => ({
-      id,
-      name,
-      categories: readCompoundCategories(id, peptideCategoryMap),
-      featured: FEATURED_COMPOUND_IDS.has(id),
-      sortOrder: index,
-    } satisfies typeof schema.compounds.$inferInsert))
+    .map(([id, name], index) => {
+      const description = peptideDescriptionMap.get(id)
+      if (!description) {
+        throw new Error(`Missing peptide description for ${name}`)
+      }
+
+      return {
+        id,
+        name,
+        description,
+        categories: readCompoundCategories(id, peptideCategoryMap),
+        featured: FEATURED_COMPOUND_IDS.has(id),
+        sortOrder: index,
+      } satisfies typeof schema.compounds.$inferInsert
+    })
+
+  const unusedDescriptionIds = [...peptideDescriptionMap.keys()].filter((id) => !compoundMap.has(id))
+  if (unusedDescriptionIds.length > 0) {
+    throw new Error(`Found peptide descriptions with no matching compound: ${unusedDescriptionIds.join(', ')}`)
+  }
 
   return { vendors, compounds }
 }

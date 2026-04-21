@@ -25,7 +25,7 @@ function peptideGradient(id: string) {
   return `linear-gradient(135deg, hsl(${hue} 78% 42%), hsl(${secondHue} 72% 48%), hsl(${thirdHue} 80% 40%))`
 }
 
-function PeptideCard({ id, name, categories, vendorCount }: Compound) {
+function PeptideCard({ id, name, description, categories, vendorCount }: Compound) {
   const categoryLabels = categories.flatMap((categoryId) => {
     const category = PEPTIDE_CATEGORY_BY_ID.get(categoryId)
     return category ? [category] : []
@@ -80,7 +80,7 @@ function PeptideCard({ id, name, categories, vendorCount }: Compound) {
         )}
 
         <p className="-mt-1.5 min-h-14 line-clamp-3 text-base leading-7 text-neutral-500 dark:text-neutral-300">
-          Compare peptide vendors carrying {name}. Review vendor profiles, ratings, and category matches in one place.
+          {description}
         </p>
 
         <div className="mt-auto flex items-center gap-3">

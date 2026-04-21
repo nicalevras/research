@@ -25,16 +25,23 @@ export const Route = createFileRoute('/peptides/$compound')({
       },
     })
 
-    return { compound: params.compound, compoundName: compoundRecord.name, compounds, ...deps, vendors }
+    return {
+      compound: params.compound,
+      compoundName: compoundRecord.name,
+      compoundDescription: compoundRecord.description,
+      compounds,
+      ...deps,
+      vendors,
+    }
   },
   head: ({ loaderData }) => {
-    const { q, country, features, compound, compoundName, vendors } = loaderData ?? {}
+    const { q, country, features, compound, compoundName, compoundDescription, vendors } = loaderData ?? {}
     if (!compound) return { meta: [], links: [] }
 
     const name = compoundName ?? compound
     const isFiltered = !!q || !!country || !!features
     const pageTitle = `${name} Vendors - Peptide Vendor Directory`
-    const pageDescription = `Find and compare vendors carrying ${name}. Verified ratings and reviews for every supplier.`
+    const pageDescription = compoundDescription || `${name} vendor listings and reviews on Peptide Vendor Directory.`
     const canonicalPath = `/peptides/${compound}`
     const canonicalUrl = `${SITE_URL}${canonicalPath}`
 
@@ -75,12 +82,12 @@ export const Route = createFileRoute('/peptides/$compound')({
 function PeptideVendorsPage() {
   const { compound } = Route.useParams()
   const { q, country, features } = Route.useSearch()
-  const { vendors, compounds, compoundName } = Route.useLoaderData()
+  const { vendors, compounds, compoundName, compoundDescription } = Route.useLoaderData()
 
   return (
     <DirectoryListing
       heading={`${compoundName} Vendors`}
-      description={`Compare vendors carrying ${compoundName}. Verified ratings and reviews for every supplier.`}
+      description={compoundDescription}
       searchQuery={q ?? ''}
       countryFilter={country ?? ''}
       vendors={vendors}

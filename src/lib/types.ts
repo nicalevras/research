@@ -38,6 +38,7 @@ export interface FeatureFilter {
 export interface Compound {
   id: string
   name: string
+  description: string
   categories: string[]
   featured: boolean
   vendorCount?: number

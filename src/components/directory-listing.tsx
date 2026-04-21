@@ -115,7 +115,7 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
             <input
               ref={searchRef}
               type="text"
-              placeholder="Search"
+              placeholder="Search vendors..."
               value={localQuery}
               onChange={(e) => {
                 setLocalQuery(e.target.value)

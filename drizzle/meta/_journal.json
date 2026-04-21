@@ -99,6 +99,13 @@
       "when": 1776688273568,
       "tag": "0013_same_white_queen",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1776729935570,
+      "tag": "0014_add_compound_descriptions",
+      "breakpoints": true
     }
   ]
 }

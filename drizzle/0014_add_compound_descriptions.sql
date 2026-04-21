@@ -1,0 +1,1 @@
+ALTER TABLE "compounds" ADD COLUMN "description" text DEFAULT '' NOT NULL;

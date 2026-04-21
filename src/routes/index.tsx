@@ -128,95 +128,87 @@ function HomePage() {
   return (
     <div className="space-y-6">
       <section className="py-8">
-        <div className="max-w-3xl">
-          <h1 className="max-w-2xl text-3xl font-semibold leading-tight text-neutral-950 dark:text-white sm:text-4xl">
-            Find trusted peptide vendors faster
-          </h1>
-          <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-neutral-600 dark:text-neutral-300">
-            Compare vendor ratings, promo codes, COAs, payment methods, and peptide availability in one focused research directory.
-          </p>
+        <div className="mx-auto max-w-3xl space-y-6">
+          <div className="text-center">
+            <h1 className="mx-auto max-w-2xl text-3xl font-semibold leading-tight text-neutral-950 dark:text-white sm:text-4xl">
+              Find trusted peptide vendors faster
+            </h1>
+            <p className="mx-auto mt-4 max-w-2xl text-pretty text-base leading-7 text-neutral-600 dark:text-neutral-300">
+              Compare vendor ratings, promo codes, COAs, payment methods, and peptide availability in one focused research directory.
+            </p>
+          </div>
 
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <Link
-              to="/vendors"
-              className="inline-flex min-h-11 w-full items-center justify-center rounded-lg bg-neutral-950 px-5 text-sm font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200 sm:w-auto"
-            >
-              Browse Vendors
-            </Link>
-            <a
-              href="#"
-              className="inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-neutral-200/80 bg-white/70 px-5 text-sm font-semibold text-neutral-900 backdrop-blur-sm transition-colors hover:bg-white dark:border-white/[0.08] dark:bg-white/[0.06] dark:text-white dark:hover:bg-white/[0.10] sm:w-auto"
-            >
-              Join Community
-            </a>
+          <div className="mx-auto w-full max-w-2xl space-y-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div role="search" className="relative flex-1">
+                <SearchIcon className="pointer-events-none absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
+                <input
+                  type="text"
+                  placeholder="Search vendors, peptides..."
+                  value={query}
+                  onChange={(event) => handleSearch(event.target.value)}
+                  className="w-full rounded-lg border border-neutral-200/60 bg-white/70 py-2 pl-9 pr-9 text-sm text-neutral-900 placeholder-neutral-400 backdrop-blur-sm transition-all focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-white dark:placeholder-neutral-500 dark:focus:border-white/20 dark:focus:ring-white/10"
+                />
+                {query && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (debounceRef.current) clearTimeout(debounceRef.current)
+                      setQuery('')
+                    }}
+                    className="absolute right-3 top-1/2 z-10 -translate-y-1/2 text-neutral-400 transition-colors hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300"
+                    aria-label="Clear search"
+                  >
+                    <XIcon className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+
+              <div className="flex w-full shrink-0 gap-3 sm:w-auto">
+                <div className="relative flex-1 sm:w-44 sm:flex-none">
+                  <select
+                    defaultValue=""
+                    onChange={(event) => handlePeptideChange(event.target.value)}
+                    className="w-full cursor-pointer appearance-none rounded-lg border border-neutral-200/60 bg-white/70 py-2 pl-4 pr-9 text-sm text-neutral-700 backdrop-blur-sm transition-all focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-neutral-300 dark:[color-scheme:dark] dark:focus:ring-white/10"
+                  >
+                    <option value="">All Peptides</option>
+                    {compoundOptions.map((compound) => (
+                      <option key={compound.id} value={compound.id}>{compound.name}</option>
+                    ))}
+                  </select>
+                  <ChevronDownIcon className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
+                </div>
+
+                <div className="relative flex-1 sm:w-44 sm:flex-none">
+                  <select
+                    defaultValue=""
+                    onChange={(event) => handleVendorChange(event.target.value)}
+                    className="w-full cursor-pointer appearance-none rounded-lg border border-neutral-200/60 bg-white/70 py-2 pl-4 pr-9 text-sm text-neutral-700 backdrop-blur-sm transition-all focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-neutral-300 dark:[color-scheme:dark] dark:focus:ring-white/10"
+                  >
+                    <option value="">All Vendors</option>
+                    {vendorOptions.map((vendorOption) => (
+                      <option key={vendorOption.id} value={vendorOption.id}>{vendorOption.name}</option>
+                    ))}
+                  </select>
+                  <ChevronDownIcon className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
+                </div>
+              </div>
+            </div>
+
+            <QuickFilterNav />
           </div>
         </div>
       </section>
 
       <section className="space-y-3" aria-label="Featured vendors">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-          <div role="search" className="relative flex-1">
-            <SearchIcon className="pointer-events-none absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
-            <input
-              type="text"
-              placeholder="Search"
-              value={query}
-              onChange={(event) => handleSearch(event.target.value)}
-              className="w-full rounded-lg border border-neutral-200/60 bg-white/70 py-2 pl-9 pr-9 text-sm text-neutral-900 placeholder-neutral-400 backdrop-blur-sm transition-all focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-white dark:placeholder-neutral-500 dark:focus:border-white/20 dark:focus:ring-white/10"
-            />
-            {query && (
-              <button
-                type="button"
-                onClick={() => {
-                  if (debounceRef.current) clearTimeout(debounceRef.current)
-                  setQuery('')
-                }}
-                className="absolute right-3 top-1/2 z-10 -translate-y-1/2 text-neutral-400 transition-colors hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300"
-                aria-label="Clear search"
-              >
-                <XIcon className="h-4 w-4" />
-              </button>
-            )}
-          </div>
-
-          <div className="relative w-full sm:w-44">
-            <select
-              defaultValue=""
-              onChange={(event) => handlePeptideChange(event.target.value)}
-              className="w-full cursor-pointer appearance-none rounded-lg border border-neutral-200/60 bg-white/70 py-2 pl-4 pr-9 text-sm text-neutral-700 backdrop-blur-sm transition-all focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-neutral-300 dark:[color-scheme:dark] dark:focus:ring-white/10"
-            >
-              <option value="">All Peptides</option>
-              {compoundOptions.map((compound) => (
-                <option key={compound.id} value={compound.id}>{compound.name}</option>
-              ))}
-            </select>
-            <ChevronDownIcon className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
-          </div>
-
-          <div className="relative w-full sm:w-44">
-            <select
-              defaultValue=""
-              onChange={(event) => handleVendorChange(event.target.value)}
-              className="w-full cursor-pointer appearance-none rounded-lg border border-neutral-200/60 bg-white/70 py-2 pl-4 pr-9 text-sm text-neutral-700 backdrop-blur-sm transition-all focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-neutral-300 dark:[color-scheme:dark] dark:focus:ring-white/10"
-            >
-              <option value="">All Vendors</option>
-              {vendorOptions.map((vendorOption) => (
-                <option key={vendorOption.id} value={vendorOption.id}>{vendorOption.name}</option>
-              ))}
-            </select>
-            <ChevronDownIcon className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
-          </div>
-        </div>
-
-        <QuickFilterNav />
-
-        <div className="flex items-end justify-between gap-3 border-b border-neutral-200/80 pb-3 dark:border-white/[0.08]">
-          <h2 className="text-xl font-semibold leading-none tracking-tight text-neutral-950 dark:text-white">Featured Vendors</h2>
+        <div className="flex items-end justify-between gap-3 pb-3">
+          <h2 className="text-xl font-semibold leading-[0.5] tracking-tight text-neutral-950 dark:text-white">Featured Vendors</h2>
           <Link
             to="/vendors"
-            className="text-sm font-normal text-neutral-900 transition-colors hover:text-neutral-500 dark:text-white dark:hover:text-neutral-400"
+            className="inline-flex min-h-9 items-center justify-center rounded-lg border border-neutral-200/80 bg-white/70 px-3.5 text-sm text-neutral-900 backdrop-blur-sm transition-colors hover:bg-white dark:border-white/[0.08] dark:bg-white/[0.06] dark:text-white dark:hover:bg-white/[0.10]"
           >
-            View All
+            All Vendors
+            <ChevronRightIcon className="ml-1.5 h-3.5 w-3.5" />
           </Link>
         </div>
         <VendorGrid
@@ -227,13 +219,14 @@ function HomePage() {
       </section>
 
       <section className="space-y-3" aria-label="Featured peptides">
-        <div className="flex items-center justify-between gap-3 border-b border-neutral-200/80 pb-3 dark:border-white/[0.08]">
-          <h2 className="text-xl font-semibold leading-none tracking-tight text-neutral-950 dark:text-white">Featured Peptides</h2>
+        <div className="flex items-end justify-between gap-3 pb-3">
+          <h2 className="text-xl font-semibold leading-[0.65] tracking-tight text-neutral-950 dark:text-white">Featured Peptides</h2>
           <Link
             to="/peptides"
-            className="text-sm font-normal text-neutral-900 transition-colors hover:text-neutral-500 dark:text-white dark:hover:text-neutral-400"
+            className="inline-flex min-h-9 items-center justify-center rounded-lg border border-neutral-200/80 bg-white/70 px-3.5 text-sm text-neutral-900 backdrop-blur-sm transition-colors hover:bg-white dark:border-white/[0.08] dark:bg-white/[0.06] dark:text-white dark:hover:bg-white/[0.10]"
           >
-            View All
+            All Peptides
+            <ChevronRightIcon className="ml-1.5 h-3.5 w-3.5" />
           </Link>
         </div>
         <PeptideGrid

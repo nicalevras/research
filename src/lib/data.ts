@@ -4,9 +4,9 @@ import { eq, and, ilike, or, desc, asc, avg, count, isNotNull } from 'drizzle-or
 import type { SQL } from 'drizzle-orm'
 import { sql } from 'drizzle-orm'
 import { db } from '~/db'
-import { vendors, reviews, user, account, compounds, vendorFavorites } from '~/db/schema'
+import { vendors, reviews, user, account, compounds, compoundStudies, vendorFavorites } from '~/db/schema'
 import { auth } from '~/lib/auth'
-import type { Vendor, VendorSummary, Review, Compound, VendorCompoundOption } from './types'
+import type { Vendor, VendorSummary, Review, Compound, CompoundProfileData, CompoundProfileVendor, CompoundStudy, VendorCompoundOption } from './types'
 
 const COMPOUND_REGISTRY_CACHE_TTL_MS = 5 * 60_000
 const VENDOR_COMPOUND_OPTIONS_CACHE_TTL_MS = 5 * 60_000
@@ -189,16 +189,58 @@ export const getVendorCompoundOptions = createServerFn({ method: 'GET' })
 export const getFeaturedVendors = createServerFn({ method: 'GET' })
   .handler(loadFeaturedVendors)
 
+export const getCompoundProfile = createServerFn({ method: 'GET' })
+  .inputValidator((d: string) => d)
+  .handler(async ({ data: compoundId }) => {
+    const [compound] = await db
+      .select({
+        id: compounds.id,
+        name: compounds.name,
+        description: compounds.description,
+        categories: compounds.categories,
+      })
+      .from(compounds)
+      .where(eq(compounds.id, compoundId))
+      .limit(1)
+
+    if (!compound) return undefined
+
+    const [vendorRows, studyRows] = await Promise.all([
+      db
+        .select({
+          id: vendors.id,
+          name: vendors.name,
+          logoUrl: vendors.logoUrl,
+          rating: vendors.rating,
+        })
+        .from(vendors)
+        .where(sql`${vendors.compoundSlugs} @> ARRAY[${compoundId}]::text[]`)
+        .orderBy(desc(vendors.rating), asc(vendors.name)),
+      db
+        .select({
+          id: compoundStudies.id,
+          title: compoundStudies.title,
+          source: compoundStudies.source,
+          url: compoundStudies.url,
+        })
+        .from(compoundStudies)
+        .where(eq(compoundStudies.compoundId, compoundId))
+        .orderBy(asc(compoundStudies.sortOrder), asc(compoundStudies.title)),
+    ])
+
+    return {
+      compound: compound satisfies CompoundProfileData,
+      vendors: vendorRows satisfies CompoundProfileVendor[],
+      studies: studyRows satisfies CompoundStudy[],
+    }
+  })
+
 export const filterVendors = createServerFn({ method: 'GET' })
-  .inputValidator((d: { country?: string; q?: string; features?: string; compound?: string }) => d)
+  .inputValidator((d: { q?: string; features?: string; compound?: string }) => d)
   .handler(async ({ data: filters }) => {
-    const { country, q, features: featureString, compound } = filters
+    const { q, features: featureString, compound } = filters
     const featureIds = featureString ? featureString.split(',').filter(Boolean) : []
     const conditions: SQL[] = []
-
-    if (country) {
-      conditions.push(eq(vendors.country, country))
-    }
 
     if (compound) {
       conditions.push(sql`${vendors.compoundSlugs} @> ARRAY[${compound}]::text[]`)

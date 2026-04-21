@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { BitcoinIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, FileIcon, SearchIcon, XIcon } from '~/components/icons'
+import { BitcoinIcon, ChevronDownIcon, ChevronRightIcon, FileIcon, SearchIcon, TrendingUpIcon, XIcon } from '~/components/icons'
+import { FeaturedResources } from '~/components/featured-resources'
 import { PeptideGrid } from '~/components/peptide-grid'
 import { VendorGrid } from '~/components/vendor-grid'
 import { withVendorCounts } from '~/lib/compound-counts'
@@ -9,12 +10,6 @@ import { breadcrumbSchema, itemListSchema, siteSearchSchema } from '~/lib/schema
 import { getCompounds, getFeaturedVendors, getVendorCompoundOptions } from '~/lib/data'
 
 const quickFilterLinkClass = 'inline-flex shrink-0 items-center rounded-lg border border-neutral-200/60 bg-white/70 px-3.5 py-1.5 text-sm font-medium text-neutral-900 backdrop-blur-sm transition-all hover:bg-white hover:text-neutral-500 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-white dark:hover:bg-white/[0.08] dark:hover:text-neutral-400'
-
-function quickFilterArrowClass(active: boolean) {
-  return `absolute z-10 flex h-[33.5px] w-8 shrink-0 items-center justify-center rounded-lg border border-neutral-200/60 bg-white text-neutral-500 transition-colors hover:text-neutral-900 dark:border-white/[0.06] dark:bg-neutral-900 dark:text-neutral-400 dark:hover:text-white ${
-    active ? 'cursor-pointer' : 'pointer-events-none'
-  }`
-}
 
 export const Route = createFileRoute('/')({
   loader: async () => {
@@ -109,11 +104,7 @@ function HomePage() {
 
   const handlePeptideChange = useCallback(
     (value: string) => {
-      if (value) {
-        navigate({ to: '/peptides/$compound', params: { compound: value }, search: {} })
-      } else {
-        navigate({ to: '/vendors', search: {} })
-      }
+      navigate({ to: '/vendors', search: { compound: value || undefined } })
     },
     [navigate],
   )
@@ -130,6 +121,10 @@ function HomePage() {
       <section className="py-8">
         <div className="mx-auto max-w-3xl space-y-6">
           <div className="text-center">
+            <div className="mb-4 inline-flex items-center rounded-lg border border-neutral-200/80 bg-white/70 px-3 py-1.5 text-sm font-medium text-neutral-700 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-neutral-200">
+              <span className="mr-1.5" aria-hidden="true">🧪</span>
+              Peptide Research
+            </div>
             <h1 className="mx-auto max-w-2xl text-3xl font-[900] capitalize leading-tight tracking-[-1px] text-neutral-950 dark:text-white sm:text-4xl">
               Find trusted peptide vendors
             </h1>
@@ -200,7 +195,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="space-y-3" aria-label="Featured vendors">
+      <section className="space-y-5" aria-label="Featured vendors">
         <div className="flex items-center justify-between gap-3 border-b border-neutral-200/80 pb-3 dark:border-white/[0.08]">
           <h2 className="text-xl font-semibold leading-tight text-neutral-950 dark:text-white">Featured Vendors</h2>
           <Link
@@ -218,7 +213,7 @@ function HomePage() {
         />
       </section>
 
-      <section className="space-y-3" aria-label="Featured peptides">
+      <section className="space-y-5" aria-label="Featured peptides">
         <div className="flex items-center justify-between gap-3 border-b border-neutral-200/80 pb-3 dark:border-white/[0.08]">
           <h2 className="text-xl font-semibold leading-tight text-neutral-950 dark:text-white">Featured Peptides</h2>
           <Link
@@ -235,54 +230,22 @@ function HomePage() {
           emptyDescription="Browse the peptide directory while featured peptides are being selected."
         />
       </section>
+
+      <FeaturedResources />
     </div>
   )
 }
 
 function QuickFilterNav() {
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const [canScrollLeft, setCanScrollLeft] = useState(false)
-  const [canScrollRight, setCanScrollRight] = useState(false)
-
-  const checkScroll = useCallback(() => {
-    const el = scrollRef.current
-    if (!el) return
-    setCanScrollLeft(el.scrollLeft > 2)
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 2)
-  }, [])
-
-  useEffect(() => {
-    const el = scrollRef.current
-    if (!el) return
-    checkScroll()
-    el.addEventListener('scroll', checkScroll, { passive: true })
-    window.addEventListener('resize', checkScroll)
-    return () => {
-      el.removeEventListener('scroll', checkScroll)
-      window.removeEventListener('resize', checkScroll)
-    }
-  }, [checkScroll])
-
-  const scroll = (direction: 'left' | 'right') => {
-    const el = scrollRef.current
-    if (!el) return
-    el.scrollBy({ left: direction === 'left' ? -200 : 200, behavior: 'smooth' })
-  }
-
   return (
-    <div className="relative flex items-center">
-      <button
-        type="button"
-        onClick={() => scroll('left')}
-        className={`${quickFilterArrowClass(canScrollLeft)} left-0`}
-        aria-label="Scroll popular filters left"
-      >
-        <ChevronLeftIcon className="h-3.5 w-3.5" />
-      </button>
+    <div className="flex items-center gap-3">
+      <div className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-neutral-950 dark:text-white">
+        <TrendingUpIcon className="h-4 w-4" />
+        Trending
+      </div>
 
       <nav
-        ref={scrollRef}
-        className="mx-[44px] flex gap-3 overflow-x-auto py-1"
+        className="flex min-w-0 gap-3 overflow-x-auto py-1"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         aria-label="Popular filters"
       >
@@ -298,7 +261,7 @@ function QuickFilterNav() {
           <span className="mr-1.5 shrink-0" aria-hidden="true">🏋️</span>
           Weight Loss
         </Link>
-        <Link to="/peptides/$compound" params={{ compound: 'bpc-157' }} className={quickFilterLinkClass}>
+        <Link to="/vendors" search={{ compound: 'bpc-157' }} className={quickFilterLinkClass}>
           <span className="mr-1.5 shrink-0" aria-hidden="true">🧬</span>
           BPC-157
         </Link>
@@ -319,15 +282,6 @@ function QuickFilterNav() {
           Promo Code
         </Link>
       </nav>
-
-      <button
-        type="button"
-        onClick={() => scroll('right')}
-        className={`${quickFilterArrowClass(canScrollRight)} right-0`}
-        aria-label="Scroll popular filters right"
-      >
-        <ChevronRightIcon className="h-3.5 w-3.5" />
-      </button>
     </div>
   )
 }

@@ -31,8 +31,3 @@ export const PEPTIDE_CATEGORIES: { id: string; name: string; emoji: string }[] =
   { id: 'longevity', name: 'Longevity', emoji: '⏳' },
   { id: 'research', name: 'Research', emoji: '🧪' },
 ]
-
-export const COUNTRIES = [
-  'All Countries',
-  'USA',
-] as const

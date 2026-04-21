@@ -83,10 +83,17 @@ function PeptideCard({ id, name, description, categories, vendorCount }: Compoun
           {description}
         </p>
 
-        <div className="mt-auto flex items-center gap-3">
+        <div className="mt-auto flex flex-col gap-3">
           <Link
             to="/peptides/$compound"
             params={{ compound: id }}
+            className="inline-flex min-h-12 items-center justify-center rounded-lg bg-neutral-50 px-5 py-3 text-center text-base font-semibold text-neutral-700 transition-colors hover:bg-neutral-100 dark:bg-white/[0.04] dark:text-neutral-200 dark:hover:bg-white/[0.08]"
+          >
+            About {name}
+          </Link>
+          <Link
+            to="/vendors"
+            search={{ compound: id }}
             className="inline-flex min-h-12 flex-1 items-center justify-center rounded-lg bg-black px-5 py-3 text-center text-base font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
           >
             {name} Vendors

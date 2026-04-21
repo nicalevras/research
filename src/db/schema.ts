@@ -140,3 +140,17 @@ export const compounds = pgTable('compounds', {
 }, (t) => [
   index('idx_compounds_sort_order').on(t.sortOrder),
 ])
+
+export const compoundStudies = pgTable('compound_studies', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  compoundId: text('compound_id').notNull().references(() => compounds.id, { onDelete: 'cascade' }),
+  title: text('title').notNull(),
+  source: text('source').notNull(),
+  url: text('url').notNull(),
+  sortOrder: integer('sort_order').notNull().default(0),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+}, (t) => [
+  index('idx_compound_studies_compound').on(t.compoundId),
+  index('idx_compound_studies_sort_order').on(t.sortOrder),
+])

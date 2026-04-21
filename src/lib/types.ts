@@ -30,6 +30,20 @@ export interface VendorCompoundOption {
   compoundSlugs: string[]
 }
 
+export interface CompoundProfileVendor {
+  id: string
+  name: string
+  logoUrl: string | null
+  rating: number
+}
+
+export interface CompoundProfileData {
+  id: string
+  name: string
+  description: string
+  categories: string[]
+}
+
 export interface FeatureFilter {
   id: string
   name: string
@@ -42,6 +56,13 @@ export interface Compound {
   categories: string[]
   featured: boolean
   vendorCount?: number
+}
+
+export interface CompoundStudy {
+  id: string
+  title: string
+  source: string
+  url: string
 }
 
 export interface Review {

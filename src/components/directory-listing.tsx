@@ -1,5 +1,5 @@
 import type { Compound, VendorSummary } from '~/lib/types'
-import { COUNTRIES, FEATURE_FILTERS } from '~/lib/constants'
+import { FEATURE_FILTERS } from '~/lib/constants'
 import { PillNav } from '~/components/pill-nav'
 import { VendorGrid, VendorGridSkeleton } from '~/components/vendor-grid'
 import { SearchIcon, XIcon, ChevronDownIcon } from '~/components/icons'
@@ -10,14 +10,13 @@ interface DirectoryListingProps {
   heading: string
   description: string
   searchQuery: string
-  countryFilter: string
   vendors: VendorSummary[]
   compounds: Compound[]
   activeFeatures: string
   activeCompound: string
 }
 
-export function DirectoryListing({ heading, description, searchQuery, countryFilter, vendors, compounds, activeFeatures, activeCompound }: DirectoryListingProps) {
+export function DirectoryListing({ heading, description, searchQuery, vendors, compounds, activeFeatures, activeCompound }: DirectoryListingProps) {
   const navigate = useNavigate()
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
   const searchRef = useRef<HTMLInputElement>(null)
@@ -56,30 +55,19 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
   const currentSearch = useMemo(() => {
     const s: Record<string, string | undefined> = {}
     if (searchQuery) s.q = searchQuery
-    if (countryFilter) s.country = countryFilter
     if (activeFeatures) s.features = activeFeatures
+    if (activeCompound) s.compound = activeCompound
     return s
-  }, [searchQuery, countryFilter, activeFeatures])
-
-  const navTo = activeCompound ? ('/peptides/$compound' as const) : '/vendors'
-  const navParams = useMemo(() => activeCompound ? { compound: activeCompound } : undefined, [activeCompound])
+  }, [searchQuery, activeFeatures, activeCompound])
 
   const handleSearch = useCallback(
     (value: string) => {
       if (debounceRef.current) clearTimeout(debounceRef.current)
       debounceRef.current = setTimeout(() => {
-        navigate({ to: navTo, params: navParams, search: { ...currentSearch, q: value || undefined } })
+        navigate({ to: '/vendors', search: { ...currentSearch, q: value || undefined } })
       }, 300)
     },
-    [navigate, navTo, navParams, currentSearch],
-  )
-
-  const handleCountryChange = useCallback(
-    (value: string) => {
-      const country = value === 'All Countries' ? undefined : value
-      navigate({ to: navTo, params: navParams, search: { ...currentSearch, country } })
-    },
-    [navigate, navTo, navParams, currentSearch],
+    [navigate, currentSearch],
   )
 
   const handleToggleFeature = useCallback(
@@ -87,9 +75,9 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
       const next = localFeatures.includes(featureId) ? localFeatures.filter((t) => t !== featureId) : [...localFeatures, featureId]
       setLocalFeatures(next)
       const featuresParam = next.length > 0 ? next.join(',') : undefined
-      navigate({ to: navTo, params: navParams, search: { ...currentSearch, features: featuresParam } })
+      navigate({ to: '/vendors', search: { ...currentSearch, features: featuresParam } })
     },
-    [navigate, navTo, navParams, currentSearch, localFeatures],
+    [navigate, currentSearch, localFeatures],
   )
 
   return (
@@ -129,7 +117,7 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
                 onClick={() => {
                   const { q, ...rest } = currentSearch
                   setLocalQuery('')
-                  navigate({ to: navTo, params: navParams, search: rest })
+                  navigate({ to: '/vendors', search: rest })
                   searchRef.current?.focus()
                 }}
                 className="absolute right-3 top-1/2 z-10 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-300 transition-colors"
@@ -146,30 +134,13 @@ export function DirectoryListing({ heading, description, searchQuery, countryFil
                 value={activeCompound || ''}
                 onChange={(e) => {
                   const val = e.target.value
-                  if (val) {
-                    navigate({ to: '/peptides/$compound', params: { compound: val }, search: {} })
-                  } else {
-                    navigate({ to: '/vendors', search: {} })
-                  }
+                  navigate({ to: '/vendors', search: { ...currentSearch, compound: val || undefined } })
                 }}
                 className="w-full appearance-none rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer dark:[color-scheme:dark]"
               >
                 <option value="">All Peptides</option>
                 {compounds.map((c) => (
                   <option key={c.id} value={c.id}>{c.name}</option>
-                ))}
-              </select>
-              <ChevronDownIcon className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
-            </div>
-
-            <div className="relative flex-1 sm:flex-none sm:w-40">
-              <select
-                value={countryFilter || 'All Countries'}
-                onChange={(e) => handleCountryChange(e.target.value)}
-                className="w-full appearance-none rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer dark:[color-scheme:dark]"
-              >
-                {COUNTRIES.map((country) => (
-                  <option key={country} value={country}>{country}</option>
                 ))}
               </select>
               <ChevronDownIcon className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />

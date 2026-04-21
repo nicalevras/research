@@ -17,6 +17,59 @@ function selectedCategoryIds(categories: string | undefined) {
   return categories?.split(',').filter((categoryId) => PEPTIDE_CATEGORY_BY_ID.has(categoryId)) ?? []
 }
 
+function peptideLandingCopy(filters: {
+  q?: string
+  categories?: string
+  vendor?: string
+  vendorName?: string
+}) {
+  const search = filters.q?.trim()
+  const selectedCategories = selectedCategoryIds(filters.categories)
+  const categoryLabels = selectedCategories.flatMap((categoryId) => {
+    const category = PEPTIDE_CATEGORY_BY_ID.get(categoryId)
+    return category ? [category.name] : []
+  })
+  const searchParams = new URLSearchParams()
+  if (search) searchParams.set('q', search)
+  if (filters.categories) searchParams.set('categories', filters.categories)
+  if (filters.vendor) searchParams.set('vendor', filters.vendor)
+  const canonicalPath = searchParams.size > 0 ? `/peptides?${searchParams.toString()}` : '/peptides'
+
+  if (categoryLabels.length > 0) {
+    const label = categoryLabels.join(' + ')
+    return {
+      heading: `${label} Peptides`,
+      description: `Browse ${label.toLowerCase()} research peptides and compare vendors carrying each peptide.`,
+      pageTitle: `${label} Peptides - Peptide Vendor Directory`,
+      listName: `${label} Peptides`,
+      canonicalPath,
+      noindex: Boolean(search),
+    }
+  }
+
+  if (filters.vendor && filters.vendorName) {
+    return {
+      heading: `${filters.vendorName} Peptides`,
+      description: `Browse research peptides listed for ${filters.vendorName}. Compare peptide profiles and matching vendor availability.`,
+      pageTitle: `${filters.vendorName} Peptides - Peptide Vendor Directory`,
+      listName: `${filters.vendorName} Peptides`,
+      canonicalPath,
+      noindex: Boolean(search),
+    }
+  }
+
+  return {
+    heading: search ? 'Peptide Search Results' : 'Peptides',
+    description: search
+      ? `Search results for peptides matching "${search}".`
+      : 'Browse research peptides and compare vendors carrying each peptide.',
+    pageTitle: search ? 'Peptide Search Results - Peptide Vendor Directory' : 'Peptides - Peptide Vendor Directory',
+    listName: 'Peptides',
+    canonicalPath,
+    noindex: Boolean(search),
+  }
+}
+
 function filterCompounds(compounds: Compound[], q: string | undefined, categories: string | undefined, vendorCompoundSlugs: string[] | undefined) {
   const query = q?.trim().toLowerCase()
   const selectedCategories = selectedCategoryIds(categories)
@@ -39,24 +92,23 @@ export const Route = createFileRoute('/peptides/')({
     ])
     const selectedVendor = deps.vendor ? vendors.find((vendor) => vendor.id === deps.vendor) : undefined
     const compounds = filterCompounds(withVendorCounts(allCompounds, vendors), deps.q, deps.categories, selectedVendor?.compoundSlugs)
-    return { ...deps, compounds, vendors }
+    const landing = peptideLandingCopy({ ...deps, vendorName: selectedVendor?.name })
+    return { ...deps, compounds, vendors, landing }
   },
   head: ({ loaderData }) => {
-    const { q, categories, vendor } = loaderData ?? {}
-    const isFiltered = !!q || !!categories || !!vendor
-    const pageTitle = 'Peptides - Peptide Vendor Directory'
-    const pageDescription = 'Browse research peptides and compare vendors carrying each peptide.'
-    const canonicalUrl = `${SITE_URL}/peptides`
+    const landing = loaderData?.landing ?? peptideLandingCopy({})
+    const pageDescription = landing.description
+    const canonicalUrl = `${SITE_URL}${landing.canonicalPath}`
 
     return {
       meta: [
-        { title: pageTitle },
+        { title: landing.pageTitle },
         { name: 'description', content: pageDescription },
-        ...(isFiltered ? [{ name: 'robots', content: 'noindex, follow' as const }] : []),
-        { property: 'og:title', content: pageTitle },
+        ...(landing.noindex ? [{ name: 'robots', content: 'noindex, follow' as const }] : []),
+        { property: 'og:title', content: landing.pageTitle },
         { property: 'og:description', content: pageDescription },
         { property: 'og:url', content: canonicalUrl },
-        { name: 'twitter:title', content: pageTitle },
+        { name: 'twitter:title', content: landing.pageTitle },
         { name: 'twitter:description', content: pageDescription },
       ],
       links: [{ rel: 'canonical', href: canonicalUrl }],
@@ -67,7 +119,7 @@ export const Route = createFileRoute('/peptides/')({
               children: JSON.stringify({
                 '@context': 'https://schema.org',
                 '@type': 'ItemList',
-                name: 'Peptides',
+                name: landing.listName,
                 url: canonicalUrl,
                 numberOfItems: loaderData.compounds.length,
                 itemListElement: loaderData.compounds.map((compound, index) => ({
@@ -102,7 +154,7 @@ export const Route = createFileRoute('/peptides/')({
 function PeptidesPage() {
   const navigate = useNavigate()
   const { q, categories, vendor } = Route.useSearch()
-  const { compounds, vendors } = Route.useLoaderData()
+  const { compounds, vendors, landing } = Route.useLoaderData()
   const searchRef = useRef<HTMLInputElement>(null)
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
   const [localQuery, setLocalQuery] = useState(q ?? '')
@@ -176,9 +228,9 @@ function PeptidesPage() {
   return (
     <div className="space-y-6">
       <section className="rounded-lg border border-neutral-200/80 bg-white px-5 py-20 dark:border-white/[0.08] dark:bg-neutral-900">
-        <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">Peptides</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">{landing.heading}</h1>
         <p className="mt-1.5 max-w-xl text-pretty text-sm text-neutral-500 dark:text-neutral-400">
-          Browse research peptides and compare vendors carrying each peptide.
+          {landing.description}
         </p>
       </section>
 

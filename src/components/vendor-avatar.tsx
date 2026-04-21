@@ -1,11 +1,12 @@
-import type { VendorSummary } from '~/lib/types'
-
 function vendorInitial(name: string) {
   return name.trim().charAt(0).toUpperCase() || '?'
 }
 
 interface VendorAvatarProps {
-  vendor: VendorSummary
+  vendor: {
+    name: string
+    logoUrl: string | null
+  }
 }
 
 export function VendorAvatar({ vendor }: VendorAvatarProps) {

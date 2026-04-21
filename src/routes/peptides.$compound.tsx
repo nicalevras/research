@@ -1,72 +1,64 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
-import { zodValidator } from '@tanstack/zod-adapter'
-import { DirectoryListing } from '~/components/directory-listing'
+import { PeptideProfile } from '~/components/peptide-profile'
 import { SITE_URL } from '~/lib/constants'
-import { itemListSchema, breadcrumbSchema } from '~/lib/schema'
-import { vendorDirectorySearchSchema } from '~/lib/search'
-import { filterVendors, getCompounds } from '~/lib/data'
+import { breadcrumbSchema } from '~/lib/schema'
+import { getCompoundProfile } from '~/lib/data'
 
 export const Route = createFileRoute('/peptides/$compound')({
-  validateSearch: zodValidator(vendorDirectorySearchSchema),
-  loaderDeps: ({ search }) => ({ q: search.q, country: search.country, features: search.features }),
-  loader: async ({ params, deps }) => {
-    const compounds = await getCompounds()
-    const compoundRecord = compounds.find((c) => c.id === params.compound)
-    if (!compoundRecord) {
-      throw notFound()
-    }
-
-    const vendors = await filterVendors({
-      data: {
-        q: deps.q,
-        country: deps.country,
-        features: deps.features,
-        compound: params.compound,
-      },
-    })
-
-    return {
-      compound: params.compound,
-      compoundName: compoundRecord.name,
-      compoundDescription: compoundRecord.description,
-      compounds,
-      ...deps,
-      vendors,
-    }
+  loader: async ({ params }) => {
+    const profile = await getCompoundProfile({ data: params.compound })
+    if (!profile) throw notFound()
+    return profile
   },
   head: ({ loaderData }) => {
-    const { q, country, features, compound, compoundName, compoundDescription, vendors } = loaderData ?? {}
+    const compound = loaderData?.compound
+    const vendors = loaderData?.vendors
     if (!compound) return { meta: [], links: [] }
 
-    const name = compoundName ?? compound
-    const isFiltered = !!q || !!country || !!features
-    const pageTitle = `${name} Vendors - Peptide Vendor Directory`
-    const pageDescription = compoundDescription || `${name} vendor listings and reviews on Peptide Vendor Directory.`
-    const canonicalPath = `/peptides/${compound}`
+    const pageTitle = `${compound.name} Peptide Profile - Peptide Vendor Directory`
+    const pageDescription = compound.description || `${compound.name} peptide profile and vendors carrying this peptide.`
+    const canonicalPath = `/peptides/${compound.id}`
     const canonicalUrl = `${SITE_URL}${canonicalPath}`
 
     return {
       meta: [
         { title: pageTitle },
-        { name: 'description', content: pageDescription },
+        { name: 'description', content: pageDescription.slice(0, 160) },
         { property: 'og:title', content: pageTitle },
-        { property: 'og:description', content: pageDescription },
+        { property: 'og:description', content: pageDescription.slice(0, 160) },
         { property: 'og:url', content: canonicalUrl },
         { name: 'twitter:title', content: pageTitle },
-        { name: 'twitter:description', content: pageDescription },
-        ...(isFiltered ? [{ name: 'robots', content: 'noindex, follow' as const }] : []),
+        { name: 'twitter:description', content: pageDescription.slice(0, 160) },
       ],
       links: [{ rel: 'canonical', href: canonicalUrl }],
       scripts: [
         ...(vendors
-          ? [{ type: 'application/ld+json' as const, children: JSON.stringify(itemListSchema(vendors, `${name} Vendors`, canonicalPath)) }]
+          ? [{
+              type: 'application/ld+json' as const,
+              children: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'ItemList',
+                name: `${compound.name} Vendors`,
+                url: `${SITE_URL}/vendors?compound=${compound.id}`,
+                numberOfItems: vendors.length,
+                itemListElement: vendors.map((vendor, index) => ({
+                  '@type': 'ListItem',
+                  position: index + 1,
+                  item: {
+                    '@type': 'Organization',
+                    name: vendor.name,
+                    url: `${SITE_URL}/vendors/${vendor.id}`,
+                  },
+                })),
+              }),
+            }]
           : []),
         {
           type: 'application/ld+json' as const,
           children: JSON.stringify(breadcrumbSchema([
             { name: 'Home', url: '/' },
             { name: 'Peptides', url: '/peptides' },
-            { name: `${name} Vendors`, url: canonicalPath },
+            { name: compound.name, url: canonicalPath },
           ])),
         },
       ],
@@ -76,24 +68,11 @@ export const Route = createFileRoute('/peptides/$compound')({
     'Cache-Control': 'public, max-age=300, stale-while-revalidate=3600',
     'Vary': 'Accept, Accept-Encoding',
   }),
-  component: PeptideVendorsPage,
+  component: PeptideProfilePage,
 })
 
-function PeptideVendorsPage() {
-  const { compound } = Route.useParams()
-  const { q, country, features } = Route.useSearch()
-  const { vendors, compounds, compoundName, compoundDescription } = Route.useLoaderData()
+function PeptideProfilePage() {
+  const { compound, vendors, studies } = Route.useLoaderData()
 
-  return (
-    <DirectoryListing
-      heading={`${compoundName} Vendors`}
-      description={compoundDescription}
-      searchQuery={q ?? ''}
-      countryFilter={country ?? ''}
-      vendors={vendors}
-      compounds={compounds}
-      activeFeatures={features ?? ''}
-      activeCompound={compound}
-    />
-  )
+  return <PeptideProfile compound={compound} vendors={vendors} studies={studies} />
 }

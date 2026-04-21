@@ -1,14 +1,24 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { SITE_URL } from '~/lib/constants'
-import { filterVendors, getCompounds } from '~/lib/data'
+import { FEATURE_FILTERS, PEPTIDE_CATEGORIES, SITE_URL } from '~/lib/constants'
+import { filterVendors, getCompounds, getVendorCompoundOptions } from '~/lib/data'
+
+function xmlEscape(value: string) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;')
+}
 
 export const Route = createFileRoute('/sitemap.xml')({
   server: {
     handlers: {
       GET: async () => {
-        const [vendors, compounds] = await Promise.all([
+        const [vendors, compounds, vendorOptions] = await Promise.all([
           filterVendors({ data: {} }),
           getCompounds(),
+          getVendorCompoundOptions(),
         ])
 
         const urls: { loc: string; priority: string; changefreq: string }[] = [
@@ -24,12 +34,25 @@ export const Route = createFileRoute('/sitemap.xml')({
 
         for (const compound of compounds) {
           urls.push({ loc: `/peptides/${compound.id}`, priority: '0.7', changefreq: 'weekly' })
+          urls.push({ loc: `/vendors?compound=${compound.id}`, priority: '0.7', changefreq: 'weekly' })
+        }
+
+        for (const feature of FEATURE_FILTERS) {
+          urls.push({ loc: `/vendors?features=${feature.id}`, priority: '0.6', changefreq: 'weekly' })
+        }
+
+        for (const category of PEPTIDE_CATEGORIES) {
+          urls.push({ loc: `/peptides?categories=${category.id}`, priority: '0.6', changefreq: 'weekly' })
+        }
+
+        for (const vendor of vendorOptions) {
+          urls.push({ loc: `/peptides?vendor=${vendor.id}`, priority: '0.5', changefreq: 'weekly' })
         }
 
         const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((u) => `  <url>
-    <loc>${SITE_URL}${u.loc}</loc>
+    <loc>${xmlEscape(`${SITE_URL}${u.loc}`)}</loc>
     <changefreq>${u.changefreq}</changefreq>
     <priority>${u.priority}</priority>
   </url>`).join('\n')}

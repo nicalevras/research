@@ -130,8 +130,8 @@ function HomePage() {
       <section className="py-8">
         <div className="mx-auto max-w-3xl space-y-6">
           <div className="text-center">
-            <h1 className="mx-auto max-w-2xl text-3xl font-semibold leading-tight text-neutral-950 dark:text-white sm:text-4xl">
-              Find trusted peptide vendors faster
+            <h1 className="mx-auto max-w-2xl text-3xl font-[900] capitalize leading-tight tracking-[-1px] text-neutral-950 dark:text-white sm:text-4xl">
+              Find trusted peptide vendors
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-pretty text-base leading-7 text-neutral-600 dark:text-neutral-300">
               Compare vendor ratings, promo codes, COAs, payment methods, and peptide availability in one focused research directory.
@@ -201,14 +201,14 @@ function HomePage() {
       </section>
 
       <section className="space-y-3" aria-label="Featured vendors">
-        <div className="flex items-end justify-between gap-3 pb-3">
-          <h2 className="text-xl font-semibold leading-[0.5] tracking-tight text-neutral-950 dark:text-white">Featured Vendors</h2>
+        <div className="flex items-center justify-between gap-3 border-b border-neutral-200/80 pb-3 dark:border-white/[0.08]">
+          <h2 className="text-xl font-semibold leading-tight text-neutral-950 dark:text-white">Featured Vendors</h2>
           <Link
             to="/vendors"
-            className="inline-flex min-h-9 items-center justify-center rounded-lg border border-neutral-200/80 bg-white/70 px-3.5 text-sm text-neutral-900 backdrop-blur-sm transition-colors hover:bg-white dark:border-white/[0.08] dark:bg-white/[0.06] dark:text-white dark:hover:bg-white/[0.10]"
+            className="inline-flex items-center text-sm font-medium leading-tight text-neutral-500 transition-colors hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white"
           >
             All Vendors
-            <ChevronRightIcon className="ml-1.5 h-3.5 w-3.5" />
+            <ChevronRightIcon className="ml-1 h-3.5 w-3.5" />
           </Link>
         </div>
         <VendorGrid
@@ -219,14 +219,14 @@ function HomePage() {
       </section>
 
       <section className="space-y-3" aria-label="Featured peptides">
-        <div className="flex items-end justify-between gap-3 pb-3">
-          <h2 className="text-xl font-semibold leading-[0.65] tracking-tight text-neutral-950 dark:text-white">Featured Peptides</h2>
+        <div className="flex items-center justify-between gap-3 border-b border-neutral-200/80 pb-3 dark:border-white/[0.08]">
+          <h2 className="text-xl font-semibold leading-tight text-neutral-950 dark:text-white">Featured Peptides</h2>
           <Link
             to="/peptides"
-            className="inline-flex min-h-9 items-center justify-center rounded-lg border border-neutral-200/80 bg-white/70 px-3.5 text-sm text-neutral-900 backdrop-blur-sm transition-colors hover:bg-white dark:border-white/[0.08] dark:bg-white/[0.06] dark:text-white dark:hover:bg-white/[0.10]"
+            className="inline-flex items-center text-sm font-medium leading-tight text-neutral-500 transition-colors hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white"
           >
             All Peptides
-            <ChevronRightIcon className="ml-1.5 h-3.5 w-3.5" />
+            <ChevronRightIcon className="ml-1 h-3.5 w-3.5" />
           </Link>
         </div>
         <PeptideGrid
@@ -274,7 +274,7 @@ function QuickFilterNav() {
       <button
         type="button"
         onClick={() => scroll('left')}
-        className={`${quickFilterArrowClass(canScrollLeft)} -left-1`}
+        className={`${quickFilterArrowClass(canScrollLeft)} left-0`}
         aria-label="Scroll popular filters left"
       >
         <ChevronLeftIcon className="h-3.5 w-3.5" />
@@ -282,7 +282,7 @@ function QuickFilterNav() {
 
       <nav
         ref={scrollRef}
-        className="mx-[34px] flex gap-1.5 overflow-x-auto py-1"
+        className="mx-[44px] flex gap-3 overflow-x-auto py-1"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         aria-label="Popular filters"
       >
@@ -323,7 +323,7 @@ function QuickFilterNav() {
       <button
         type="button"
         onClick={() => scroll('right')}
-        className={`${quickFilterArrowClass(canScrollRight)} -right-1`}
+        className={`${quickFilterArrowClass(canScrollRight)} right-0`}
         aria-label="Scroll popular filters right"
       >
         <ChevronRightIcon className="h-3.5 w-3.5" />

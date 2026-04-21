@@ -51,7 +51,7 @@ export function PillNav({ items, activeItems, onToggleItem }: PillNavProps) {
       <button
         type="button"
         onClick={() => scroll('left')}
-        className={`${arrowStyle(canScrollLeft)} -left-1`}
+        className={`${arrowStyle(canScrollLeft)} left-0`}
         aria-label="Scroll left"
       >
         <ChevronLeftIcon className="h-3.5 w-3.5" />
@@ -59,7 +59,7 @@ export function PillNav({ items, activeItems, onToggleItem }: PillNavProps) {
 
       <nav
         ref={scrollRef}
-        className="flex gap-1.5 overflow-x-auto py-1 mx-[34px]"
+        className="mx-[44px] flex gap-3 overflow-x-auto py-1"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         aria-label="Filter by tag"
       >
@@ -87,7 +87,7 @@ export function PillNav({ items, activeItems, onToggleItem }: PillNavProps) {
       <button
         type="button"
         onClick={() => scroll('right')}
-        className={`${arrowStyle(canScrollRight)} -right-1`}
+        className={`${arrowStyle(canScrollRight)} right-0`}
         aria-label="Scroll right"
       >
         <ChevronRightIcon className="h-3.5 w-3.5" />

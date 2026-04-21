@@ -97,7 +97,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
                 </div>
               </header>
 
-              <main className="flex-1 px-4 sm:px-6 lg:px-8 pt-6">{children}</main>
+              <main className="flex-1 px-4 sm:px-6 lg:px-8 pt-0">{children}</main>
 
               <footer className="mx-auto w-full px-4 sm:px-6 lg:px-8 mt-16 border-t border-neutral-200/60 dark:border-white/[0.06] py-8">
                 <div className="flex items-center justify-center text-sm text-neutral-400 dark:text-neutral-500">

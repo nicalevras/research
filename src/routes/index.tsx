@@ -117,15 +117,15 @@ function HomePage() {
   )
 
   return (
-    <div className="space-y-6">
-      <section className="py-8">
+    <div>
+      <section className="py-16">
         <div className="mx-auto max-w-3xl space-y-6">
           <div className="text-center">
             <div className="mb-4 inline-flex items-center rounded-lg bg-black px-3 py-1.5 text-sm font-medium text-white backdrop-blur-sm dark:bg-white dark:text-neutral-950">
               <span className="mr-1.5" aria-hidden="true">🧪</span>
               Peptide Research
             </div>
-            <h1 className="mx-auto max-w-2xl text-3xl font-[900] capitalize leading-tight tracking-[-1px] text-neutral-950 dark:text-white sm:text-4xl">
+            <h1 className="mx-auto max-w-2xl text-3xl font-[900] font-stretch-semi-expanded capitalize leading-tight tracking-[-1px] text-neutral-950 dark:text-white sm:text-4xl">
               Find trusted peptide vendors
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-pretty text-base leading-7 text-neutral-600 dark:text-neutral-300">
@@ -195,9 +195,9 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="space-y-5" aria-label="Featured vendors">
-        <div className="flex items-center justify-between gap-3 border-b border-neutral-200/80 pb-3 dark:border-white/[0.08]">
-          <h2 className="text-xl font-semibold leading-tight text-neutral-950 dark:text-white">Featured Vendors</h2>
+      <section className="space-y-5 border-b border-neutral-200/80 pb-6 dark:border-white/[0.08]" aria-label="Featured vendors">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-xl font-[800] font-stretch-semi-expanded leading-tight tracking-[-1px] text-neutral-950 dark:text-white">Featured Vendors</h2>
           <Link
             to="/vendors"
             className="inline-flex items-center text-sm font-medium leading-tight text-neutral-500 transition-colors hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white"
@@ -213,9 +213,9 @@ function HomePage() {
         />
       </section>
 
-      <section className="space-y-5" aria-label="Featured peptides">
-        <div className="flex items-center justify-between gap-3 border-b border-neutral-200/80 pb-3 dark:border-white/[0.08]">
-          <h2 className="text-xl font-semibold leading-tight text-neutral-950 dark:text-white">Featured Peptides</h2>
+      <section className="mt-6 space-y-5 border-b border-neutral-200/80 pb-6 dark:border-white/[0.08]" aria-label="Featured peptides">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-xl font-[800] font-stretch-semi-expanded leading-tight tracking-[-1px] text-neutral-950 dark:text-white">Featured Peptides</h2>
           <Link
             to="/peptides"
             className="inline-flex items-center text-sm font-medium leading-tight text-neutral-500 transition-colors hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white"
@@ -231,7 +231,9 @@ function HomePage() {
         />
       </section>
 
-      <FeaturedResources />
+      <div className="mt-6">
+        <FeaturedResources />
+      </div>
     </div>
   )
 }

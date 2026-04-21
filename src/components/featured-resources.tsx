@@ -25,8 +25,8 @@ const resources = [
 export function FeaturedResources() {
   return (
     <section className="space-y-5" aria-label="Featured resources">
-      <div className="flex items-center justify-between gap-3 border-b border-neutral-200/80 pb-3 dark:border-white/[0.08]">
-        <h2 className="text-xl font-semibold leading-tight text-neutral-950 dark:text-white">Featured Resources</h2>
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-xl font-[800] font-stretch-semi-expanded leading-tight tracking-[-1px] text-neutral-950 dark:text-white">Featured Resources</h2>
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

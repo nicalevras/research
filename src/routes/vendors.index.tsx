@@ -52,7 +52,7 @@ function vendorLandingCopy(filters: {
   }
 
   return {
-    heading: search ? 'Vendor Search Results' : 'Vendors',
+    heading: search ? 'Vendor Search Results' : 'Peptide Vendors',
     description: search
       ? `Search results for peptide vendors matching "${search}".`
       : 'Browse every peptide vendor in the directory. Compare ratings, certifications, promo codes, and vendor details in one place.',

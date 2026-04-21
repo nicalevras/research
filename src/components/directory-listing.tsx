@@ -83,17 +83,17 @@ export function DirectoryListing({ heading, description, searchQuery, vendors, c
   return (
     <>
       <div className="space-y-4">
-        <div className="rounded-lg border border-neutral-200/80 bg-white px-5 py-20 dark:border-white/[0.08] dark:bg-neutral-900">
+        <div className="py-8">
           {isRouteChanging ? (
-            <>
-              <div className="h-7 w-72 rounded-lg bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
-              <div className="h-4 w-96 max-w-full rounded-lg bg-neutral-100 dark:bg-neutral-800 animate-pulse mt-1.5" />
-            </>
+            <div className="mx-auto max-w-3xl">
+              <div className="mx-auto h-9 w-72 rounded-lg bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
+              <div className="mx-auto mt-4 h-4 w-96 max-w-full rounded-lg bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
+            </div>
           ) : (
-            <>
-              <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">{heading}</h1>
-              <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-xl text-pretty mt-1.5">{description}</p>
-            </>
+            <div className="max-w-3xl">
+              <h1 className="max-w-2xl text-3xl font-[900] font-stretch-semi-expanded capitalize leading-tight tracking-[-1px] text-neutral-950 dark:text-white sm:text-4xl">{heading}</h1>
+              <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-neutral-600 dark:text-neutral-300">{description}</p>
+            </div>
           )}
         </div>
 

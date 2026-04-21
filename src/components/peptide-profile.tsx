@@ -110,10 +110,9 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
             <Link
               to="/vendors"
               search={{ compound: compound.id }}
-              className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-neutral-900 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
+              className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-black px-5 py-3 text-base font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
             >
               View Vendors
-              <ChevronRightIcon className="h-4 w-4" />
             </Link>
           </div>
         </div>

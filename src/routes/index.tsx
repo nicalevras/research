@@ -121,7 +121,7 @@ function HomePage() {
       <section className="py-8">
         <div className="mx-auto max-w-3xl space-y-6">
           <div className="text-center">
-            <div className="mb-4 inline-flex items-center rounded-lg border border-neutral-200/80 bg-white/70 px-3 py-1.5 text-sm font-medium text-neutral-700 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-neutral-200">
+            <div className="mb-4 inline-flex items-center rounded-lg bg-black px-3 py-1.5 text-sm font-medium text-white backdrop-blur-sm dark:bg-white dark:text-neutral-950">
               <span className="mr-1.5" aria-hidden="true">🧪</span>
               Peptide Research
             </div>
@@ -237,6 +237,8 @@ function HomePage() {
 }
 
 function QuickFilterNav() {
+  const [isPaused, setIsPaused] = useState(false)
+
   return (
     <div className="flex items-center gap-3">
       <div className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-neutral-950 dark:text-white">
@@ -245,43 +247,59 @@ function QuickFilterNav() {
       </div>
 
       <nav
-        className="flex min-w-0 gap-3 overflow-x-auto py-1"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        className="quick-filter-marquee min-w-0 flex-1 overflow-hidden py-1"
+        data-paused={isPaused ? 'true' : undefined}
+        onTouchStart={() => setIsPaused(true)}
+        onTouchEnd={() => setIsPaused(false)}
+        onTouchCancel={() => setIsPaused(false)}
         aria-label="Popular filters"
       >
-        <Link to="/vendors" search={{ features: 'coa' }} className={quickFilterLinkClass}>
-          <FileIcon className="mr-1.5 h-4 w-4 shrink-0 text-emerald-500" />
-          COAs
-        </Link>
-        <Link to="/vendors" search={{ features: 'international' }} className={quickFilterLinkClass}>
-          <span className="mr-1.5 shrink-0" aria-hidden="true">🌍</span>
-          International Shipping
-        </Link>
-        <Link to="/peptides" search={{ categories: 'weight-loss' }} className={quickFilterLinkClass}>
-          <span className="mr-1.5 shrink-0" aria-hidden="true">🏋️</span>
-          Weight Loss
-        </Link>
-        <Link to="/vendors" search={{ compound: 'bpc-157' }} className={quickFilterLinkClass}>
-          <span className="mr-1.5 shrink-0" aria-hidden="true">🧬</span>
-          BPC-157
-        </Link>
-        <Link to="/peptides" search={{ categories: 'cosmetic' }} className={quickFilterLinkClass}>
-          <span className="mr-1.5 shrink-0" aria-hidden="true">✨</span>
-          Cosmetic
-        </Link>
-        <Link to="/peptides" search={{ categories: 'focus' }} className={quickFilterLinkClass}>
-          <span className="mr-1.5 shrink-0" aria-hidden="true">🧠</span>
-          Focus
-        </Link>
-        <Link to="/vendors" search={{ features: 'crypto' }} className={quickFilterLinkClass}>
-          <BitcoinIcon className="mr-1.5 h-4 w-4 shrink-0" />
-          Crypto Accepted
-        </Link>
-        <Link to="/vendors" search={{ features: 'promo-code' }} className={quickFilterLinkClass}>
-          <span className="mr-1.5 shrink-0" aria-hidden="true">🏷️</span>
-          Promo Code
-        </Link>
+        <div className="quick-filter-marquee-track flex w-max">
+          <QuickFilterLinkSet />
+          <QuickFilterLinkSet duplicate />
+        </div>
       </nav>
+    </div>
+  )
+}
+
+function QuickFilterLinkSet({ duplicate = false }: { duplicate?: boolean }) {
+  const duplicateProps = duplicate ? { 'aria-hidden': true, tabIndex: -1 } : {}
+
+  return (
+    <div className="flex shrink-0 gap-3 pr-3">
+      <Link to="/vendors" search={{ features: 'coa' }} className={quickFilterLinkClass} {...duplicateProps}>
+        <FileIcon className="mr-1.5 h-4 w-4 shrink-0 text-emerald-500" />
+        COAs
+      </Link>
+      <Link to="/vendors" search={{ features: 'international' }} className={quickFilterLinkClass} {...duplicateProps}>
+        <span className="mr-1.5 shrink-0" aria-hidden="true">🌍</span>
+        International Shipping
+      </Link>
+      <Link to="/peptides" search={{ categories: 'weight-loss' }} className={quickFilterLinkClass} {...duplicateProps}>
+        <span className="mr-1.5 shrink-0" aria-hidden="true">🏋️</span>
+        Weight Loss
+      </Link>
+      <Link to="/vendors" search={{ compound: 'bpc-157' }} className={quickFilterLinkClass} {...duplicateProps}>
+        <span className="mr-1.5 shrink-0" aria-hidden="true">🧬</span>
+        BPC-157
+      </Link>
+      <Link to="/peptides" search={{ categories: 'cosmetic' }} className={quickFilterLinkClass} {...duplicateProps}>
+        <span className="mr-1.5 shrink-0" aria-hidden="true">✨</span>
+        Cosmetic
+      </Link>
+      <Link to="/peptides" search={{ categories: 'focus' }} className={quickFilterLinkClass} {...duplicateProps}>
+        <span className="mr-1.5 shrink-0" aria-hidden="true">🧠</span>
+        Focus
+      </Link>
+      <Link to="/vendors" search={{ features: 'crypto' }} className={quickFilterLinkClass} {...duplicateProps}>
+        <BitcoinIcon className="mr-1.5 h-4 w-4 shrink-0" />
+        Crypto Accepted
+      </Link>
+      <Link to="/vendors" search={{ features: 'promo-code' }} className={quickFilterLinkClass} {...duplicateProps}>
+        <span className="mr-1.5 shrink-0" aria-hidden="true">🏷️</span>
+        Promo Code
+      </Link>
     </div>
   )
 }

@@ -45,4 +45,34 @@
     box-shadow: var(--shadow-lg);
   }
 
+  .quick-filter-marquee {
+    --quick-filter-marquee-duration: 44s;
+    mask-image: linear-gradient(to right, transparent, black 18px, black calc(100% - 18px), transparent);
+  }
+
+  .quick-filter-marquee-track {
+    animation: quick-filter-marquee var(--quick-filter-marquee-duration) linear infinite;
+  }
+
+  .quick-filter-marquee:hover .quick-filter-marquee-track,
+  .quick-filter-marquee:focus-within .quick-filter-marquee-track,
+  .quick-filter-marquee[data-paused='true'] .quick-filter-marquee-track {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .quick-filter-marquee-track {
+      animation: none;
+    }
+  }
+
+  @keyframes quick-filter-marquee {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
+  }
 }

@@ -4,7 +4,7 @@ import { getVendorById, getVendorReviews } from '~/lib/data'
 import { FEATURE_FILTERS, FEATURE_LABELS, SITE_URL } from '~/lib/constants'
 import { ReviewsList, ReviewStars } from '~/components/reviews'
 import { breadcrumbSchema, organizationSchema } from '~/lib/schema'
-import { BadgeCheckIcon, BitcoinIcon, CircleAlertIcon, ChevronRightIcon, ExternalLinkIcon, FileIcon } from '~/components/icons'
+import { BadgeCheckIcon, BitcoinIcon, CircleAlertIcon, ChevronRightIcon, FileIcon } from '~/components/icons'
 import { CountryFlag } from '~/components/flags'
 import { FavoriteButton } from '~/components/favorite-button'
 import { PromoCodeBadge } from '~/components/promo-code'
@@ -303,10 +303,9 @@ function VendorDetailPage() {
               href={vendor.website}
               target="_blank"
               rel="noopener noreferrer nofollow"
-              className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-neutral-900 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
+              className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-black px-5 py-3 text-base font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
             >
               View Website
-              <ExternalLinkIcon className="h-4 w-4" />
             </a>
           </div>
         </div>

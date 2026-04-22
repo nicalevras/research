@@ -39,7 +39,7 @@ export const Route = createFileRoute('/peptides/$compound')({
                 '@context': 'https://schema.org',
                 '@type': 'ItemList',
                 name: `${compound.name} Vendors`,
-                url: `${SITE_URL}/vendors?compound=${compound.id}`,
+                url: `${SITE_URL}/vendors?peptide=${compound.id}`,
                 numberOfItems: vendors.length,
                 itemListElement: vendors.map((vendor, index) => ({
                   '@type': 'ListItem',

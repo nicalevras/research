@@ -303,7 +303,7 @@ function VendorDetailPage() {
               href={vendor.website}
               target="_blank"
               rel="noopener noreferrer nofollow"
-              className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-black px-5 py-3 text-base font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
+              className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-black px-5 py-3 text-base font-bold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
             >
               View Website
             </a>
@@ -375,7 +375,7 @@ function VendorDetailPage() {
                           href={vendor.website}
                           target="_blank"
                           rel="noopener noreferrer nofollow"
-                          className="inline-flex items-center justify-center rounded-lg bg-neutral-900 dark:bg-white px-3 py-1.5 text-xs font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
+                          className="inline-flex items-center justify-center rounded-lg bg-neutral-900 dark:bg-white px-3 py-1.5 text-xs font-semibold text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
                         >
                           Buy
                         </a>

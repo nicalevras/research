@@ -44,6 +44,15 @@
 }
 
 @layer components {
+  .native-select {
+    color-scheme: light;
+  }
+
+  .native-select option {
+    background-color: #ffffff;
+    color: #171717;
+  }
+
   .glass-card-solid {
     @apply rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06];
     box-shadow: var(--shadow-lg);

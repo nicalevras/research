@@ -207,7 +207,7 @@ function readPeptideDescriptionMap() {
     }
 
     const name = requiredField(row, compoundKey, 'compound')
-    const description = requiredField(row, descriptionKey, `${name} description`)
+    const description = stripDescriptionSourceNotes(requiredField(row, descriptionKey, `${name} description`))
     const id = slugify(name)
 
     if (descriptionMap.has(id)) {
@@ -218,6 +218,10 @@ function readPeptideDescriptionMap() {
   })
 
   return descriptionMap
+}
+
+function stripDescriptionSourceNotes(description: string): string {
+  return description.replace(/\s+\[[^\]]+\]\s*$/, '').trim()
 }
 
 function categoryIdFromHeader(header: string): string | undefined {

@@ -18,13 +18,15 @@ function PeptideCard({ id, name, description, categories, vendorCount }: Compoun
       <div className="flex flex-1 flex-col gap-4">
         <header>
           <div className="flex min-w-0 items-start gap-2">
-            <div
+            <Link
+              to="/peptides/$compound"
+              params={{ compound: id }}
+              aria-label={`View ${name}`}
               className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-neutral-200/80 px-1 text-center text-[11px] font-bold leading-none tracking-normal text-neutral-950 shadow-inner dark:border-white/[0.08]"
               style={{ backgroundImage: gradient }}
-              aria-hidden="true"
             >
               <span className="whitespace-pre-line">{iconLabel}</span>
-            </div>
+            </Link>
             <div className="min-w-0 flex-1">
               <div className="flex min-h-7 min-w-0 items-start">
                 <Link
@@ -73,7 +75,7 @@ function PeptideCard({ id, name, description, categories, vendorCount }: Compoun
           </Link>
           <Link
             to="/vendors"
-            search={{ compound: id }}
+            search={{ peptide: id }}
             className="inline-flex min-h-12 flex-1 items-center justify-center rounded-lg bg-black px-5 py-3 text-center text-base font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
           >
             {name} Vendors

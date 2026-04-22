@@ -21,7 +21,7 @@ export function PromoCodeBadge({ code, discountPercent, className = '', size = '
     <div className={`flex ${widthClass} max-w-full items-center gap-3 rounded-lg border border-neutral-200/60 bg-neutral-50 p-2 text-sm text-neutral-700 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-neutral-200 ${className}`}>
       <span className="inline-flex shrink-0 items-center gap-2 font-semibold text-neutral-700 dark:text-neutral-200">
         <TagIcon className={`${iconClass} text-neutral-500 dark:text-neutral-400`} />
-        {discountPercent ? `${discountPercent}% off` : 'Promo code'}
+        {discountPercent ? `${discountPercent}% OFF` : 'Promo code'}
       </span>
       <span className="h-5 w-px shrink-0 bg-neutral-200 dark:bg-white/[0.08]" aria-hidden="true" />
       <div className="group/code min-w-0 flex-1 rounded-lg border border-neutral-200/80 bg-white/80 transition-colors hover:border-emerald-200 hover:bg-emerald-50/60 dark:border-white/[0.08] dark:bg-white/[0.06] dark:hover:border-emerald-400/20 dark:hover:bg-emerald-400/10">

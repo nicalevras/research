@@ -3,7 +3,7 @@ import { createFileRoute, Link, redirect, useRouter } from '@tanstack/react-rout
 import { getSession } from '~/lib/auth.functions'
 import { getUserReviews, updateReview, deleteReview, changeUsername, getHasPassword, deleteAccountAndCleanup } from '~/lib/data'
 import { authClient } from '~/lib/auth-client'
-import { ChevronLeftIcon, KeyIcon, TrashIcon, PenIcon, UserIcon } from '~/components/icons'
+import { ChevronRightIcon, KeyIcon, TrashIcon, PenIcon, UserIcon } from '~/components/icons'
 import { ReviewStars, StarPicker } from '~/components/reviews'
 
 export const Route = createFileRoute('/account')({
@@ -453,53 +453,58 @@ function AccountPage() {
   const isOAuthOnly = !hasPassword
 
   return (
-    <div className="space-y-6 max-w-2xl mx-auto">
-      <Link
-        to="/peptides"
-        className="inline-flex items-center gap-1.5 text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
-      >
-        <ChevronLeftIcon className="h-3.5 w-3.5" />
-        Back to Peptides
-      </Link>
+    <div className="space-y-6 pt-6">
+      <nav className="flex items-center gap-1.5 text-sm">
+        <Link
+          to="/"
+          className="text-neutral-400 transition-colors hover:text-neutral-900 dark:text-neutral-500 dark:hover:text-white"
+        >
+          Home
+        </Link>
+        <ChevronRightIcon className="h-3.5 w-3.5 text-neutral-300 dark:text-neutral-600" />
+        <span className="truncate font-medium text-neutral-900 dark:text-white">
+          Account
+        </span>
+      </nav>
 
-      {/* Account info */}
-      <div className="glass-card-solid p-6 space-y-1">
-        <h1 className="text-xl font-semibold tracking-tight text-neutral-900 dark:text-white">Account</h1>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400">
-          {currentUsername && <span className="font-medium text-neutral-700 dark:text-neutral-200">@{currentUsername}</span>}
-          {currentUsername && ' \u00b7 '}
-          {session.user.name} &middot; {session.user.email}
-        </p>
-      </div>
-
-      {/* Username section */}
-      <ChangeUsernameSection currentUsername={currentUsername} />
-
-      {/* Reviews section */}
-      <div className="glass-card-solid p-6 space-y-4">
-        <h2 className="text-sm font-semibold text-neutral-900 dark:text-white">
-          Your Reviews {reviews.length > 0 && `(${reviews.length})`}
-        </h2>
-
-        {reviews.length > 0 ? (
-          <div className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] divide-y divide-neutral-200/60 dark:divide-white/[0.06]">
-            {reviews.map((review: UserReview) => (
-              <UserReviewCard
-                key={review.id}
-                review={review}
-                onUpdated={() => router.invalidate()}
-              />
-            ))}
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)]">
+        <div className="space-y-6">
+          <div className="glass-card-solid p-6 space-y-1">
+            <h1 className="text-xl font-semibold tracking-tight text-neutral-900 dark:text-white">Account</h1>
+            <p className="text-sm text-neutral-500 dark:text-neutral-400">
+              {currentUsername && <span className="font-medium text-neutral-700 dark:text-neutral-200">@{currentUsername}</span>}
+              {currentUsername && ' \u00b7 '}
+              {session.user.name} &middot; {session.user.email}
+            </p>
           </div>
-        ) : (
-          <p className="text-sm text-neutral-400 dark:text-neutral-500">
-            You haven&apos;t written any reviews yet.
-          </p>
-        )}
-      </div>
 
-      <ChangePasswordSection isOAuthOnly={isOAuthOnly} />
-      <DeleteAccountSection isOAuthOnly={isOAuthOnly} />
+          <ChangeUsernameSection currentUsername={currentUsername} />
+          <ChangePasswordSection isOAuthOnly={isOAuthOnly} />
+          <DeleteAccountSection isOAuthOnly={isOAuthOnly} />
+        </div>
+
+        <div className="glass-card-solid p-6 space-y-4">
+          <h2 className="text-sm font-semibold text-neutral-900 dark:text-white">
+            Your Reviews {reviews.length > 0 && `(${reviews.length})`}
+          </h2>
+
+          {reviews.length > 0 ? (
+            <div className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] divide-y divide-neutral-200/60 dark:divide-white/[0.06]">
+              {reviews.map((review: UserReview) => (
+                <UserReviewCard
+                  key={review.id}
+                  review={review}
+                  onUpdated={() => router.invalidate()}
+                />
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-neutral-400 dark:text-neutral-500">
+              You haven&apos;t written any reviews yet.
+            </p>
+          )}
+        </div>
+      </div>
     </div>
   )
 }

@@ -57,7 +57,7 @@ export function DirectoryListing({ heading, description, searchQuery, vendors, c
     const s: Record<string, string | undefined> = {}
     if (searchQuery) s.q = searchQuery
     if (activeFeatures) s.features = activeFeatures
-    if (activeCompound) s.compound = activeCompound
+    if (activeCompound) s.peptide = activeCompound
     return s
   }, [searchQuery, activeFeatures, activeCompound])
 
@@ -151,9 +151,9 @@ export function DirectoryListing({ heading, description, searchQuery, vendors, c
                 value={activeCompound || ''}
                 onChange={(e) => {
                   const val = e.target.value
-                  navigate({ to: '/vendors', search: { ...currentSearch, compound: val || undefined } })
+                  navigate({ to: '/vendors', search: { ...currentSearch, peptide: val || undefined } })
                 }}
-                className="w-full appearance-none rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] pl-4 pr-9 py-2 text-sm text-neutral-700 dark:text-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all backdrop-blur-sm cursor-pointer dark:[color-scheme:dark]"
+                className="native-select w-full appearance-none rounded-lg border border-neutral-200/60 bg-white/70 py-2 pl-4 pr-9 text-sm text-neutral-700 backdrop-blur-sm transition-all focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-neutral-300 dark:focus:ring-white/10 cursor-pointer"
               >
                 <option value="">All Peptides</option>
                 {compounds.map((c) => (

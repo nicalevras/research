@@ -10,8 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VendorsRouteImport } from './routes/vendors'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PeptidesRouteImport } from './routes/peptides'
 import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as CalculatorRouteImport } from './routes/calculator'
@@ -28,6 +30,11 @@ const VendorsRoute = VendorsRouteImport.update({
   path: '/vendors',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -36,6 +43,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PeptidesRoute = PeptidesRouteImport.update({
@@ -95,8 +107,10 @@ export interface FileRoutesByFullPath {
   '/calculator': typeof CalculatorRoute
   '/favorites': typeof FavoritesRoute
   '/peptides': typeof PeptidesRouteWithChildren
+  '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/vendors': typeof VendorsRouteWithChildren
   '/peptides/$compound': typeof PeptidesCompoundRoute
   '/vendors/$id': typeof VendorsIdRoute
@@ -109,8 +123,10 @@ export interface FileRoutesByTo {
   '/account': typeof AccountRoute
   '/calculator': typeof CalculatorRoute
   '/favorites': typeof FavoritesRoute
+  '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/peptides/$compound': typeof PeptidesCompoundRoute
   '/vendors/$id': typeof VendorsIdRoute
   '/peptides': typeof PeptidesIndexRoute
@@ -124,8 +140,10 @@ export interface FileRoutesById {
   '/calculator': typeof CalculatorRoute
   '/favorites': typeof FavoritesRoute
   '/peptides': typeof PeptidesRouteWithChildren
+  '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/terms': typeof TermsRoute
   '/vendors': typeof VendorsRouteWithChildren
   '/peptides/$compound': typeof PeptidesCompoundRoute
   '/vendors/$id': typeof VendorsIdRoute
@@ -141,8 +159,10 @@ export interface FileRouteTypes {
     | '/calculator'
     | '/favorites'
     | '/peptides'
+    | '/privacy'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/terms'
     | '/vendors'
     | '/peptides/$compound'
     | '/vendors/$id'
@@ -155,8 +175,10 @@ export interface FileRouteTypes {
     | '/account'
     | '/calculator'
     | '/favorites'
+    | '/privacy'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/terms'
     | '/peptides/$compound'
     | '/vendors/$id'
     | '/peptides'
@@ -169,8 +191,10 @@ export interface FileRouteTypes {
     | '/calculator'
     | '/favorites'
     | '/peptides'
+    | '/privacy'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/terms'
     | '/vendors'
     | '/peptides/$compound'
     | '/vendors/$id'
@@ -185,8 +209,10 @@ export interface RootRouteChildren {
   CalculatorRoute: typeof CalculatorRoute
   FavoritesRoute: typeof FavoritesRoute
   PeptidesRoute: typeof PeptidesRouteWithChildren
+  PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  TermsRoute: typeof TermsRoute
   VendorsRoute: typeof VendorsRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -198,6 +224,13 @@ declare module '@tanstack/react-router' {
       path: '/vendors'
       fullPath: '/vendors'
       preLoaderRoute: typeof VendorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -212,6 +245,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/peptides': {
@@ -320,8 +360,10 @@ const rootRouteChildren: RootRouteChildren = {
   CalculatorRoute: CalculatorRoute,
   FavoritesRoute: FavoritesRoute,
   PeptidesRoute: PeptidesRouteWithChildren,
+  PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  TermsRoute: TermsRoute,
   VendorsRoute: VendorsRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }

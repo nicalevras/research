@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { getSession } from '~/lib/auth.functions'
 import { getFavoriteVendors } from '~/lib/data'
 import { useAuthModal } from '~/lib/auth-context'
 import { useFavorites } from '~/lib/favorites-context'
 import { VendorGrid } from '~/components/vendor-grid'
-import { ChevronLeftIcon, HeartIcon } from '~/components/icons'
+import { HeartIcon } from '~/components/icons'
 
 export const Route = createFileRoute('/favorites')({
   loader: async () => {
@@ -61,31 +61,42 @@ function FavoritesPage() {
     return vendors.filter((vendor) => favoriteIds.has(vendor.id))
   }, [favoriteIds, favoritesLoaded, vendors])
 
-  if (!session) return <FavoritesAuthGate />
+  if (!session) {
+    return (
+      <div>
+        <FavoritesHero />
+        <FavoritesAuthGate />
+      </div>
+    )
+  }
 
   return (
-    <div className="space-y-6">
-      <Link
-        to="/peptides"
-        className="inline-flex items-center gap-1.5 text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
-      >
-        <ChevronLeftIcon className="h-3.5 w-3.5" />
-        Back to Peptides
-      </Link>
+    <div>
+      <FavoritesHero />
 
-      <div className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">Favorites</h1>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-xl text-pretty">
-          Your saved vendors are listed here.
+      <section className="mt-6" aria-label="Favorite vendors">
+        <VendorGrid
+          data={visibleVendors}
+          initialFavorites
+          emptyTitle="No favorites yet"
+          emptyDescription="Save vendors from the directory or vendor profile pages."
+        />
+      </section>
+    </div>
+  )
+}
+
+function FavoritesHero() {
+  return (
+    <section className="py-16">
+      <div className="max-w-3xl">
+        <h1 className="max-w-2xl text-3xl font-[900] font-stretch-semi-expanded capitalize leading-tight tracking-[-1px] text-neutral-950 dark:text-white sm:text-4xl">
+          Favorites
+        </h1>
+        <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-neutral-600 dark:text-neutral-300">
+          Your saved peptide vendors are listed here.
         </p>
       </div>
-
-      <VendorGrid
-        data={visibleVendors}
-        initialFavorites
-        emptyTitle="No favorites yet"
-        emptyDescription="Save vendors from the directory or vendor profile pages."
-      />
-    </div>
+    </section>
   )
 }

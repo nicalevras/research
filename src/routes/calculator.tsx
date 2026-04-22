@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { SITE_URL } from '~/lib/constants'
 import { breadcrumbSchema } from '~/lib/schema'
-import { CircleAlertIcon, ChevronRightIcon } from '~/components/icons'
+import { CircleAlertIcon } from '~/components/icons'
 
 export const Route = createFileRoute('/calculator')({
   head: () => {
@@ -215,25 +215,16 @@ function CalculatorPage() {
 
   return (
     <div>
-      <nav className="mb-6 flex items-center gap-1.5 text-sm">
-        <Link
-          to="/"
-          className="text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
-        >
-          Home
-        </Link>
-        <ChevronRightIcon className="h-3.5 w-3.5 text-neutral-300 dark:text-neutral-600" />
-        <span className="text-neutral-900 dark:text-white font-medium">Calculator</span>
-      </nav>
-
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-white">
-          Peptide Reconstitution Calculator
-        </h1>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-xl text-pretty mt-1.5">
-          Free peptide reconstitution calculator for accurate dosing. Calculate concentrations, mixing volumes, and syringe units instantly for any peptide.
-        </p>
-      </div>
+      <section className="py-16">
+        <div className="max-w-3xl">
+          <h1 className="max-w-2xl text-3xl font-[900] font-stretch-semi-expanded capitalize leading-tight tracking-[-1px] text-neutral-950 dark:text-white sm:text-4xl">
+            Peptide Reconstitution Calculator
+          </h1>
+          <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-neutral-600 dark:text-neutral-300">
+            Free peptide reconstitution calculator for accurate dosing. Calculate concentrations, mixing volumes, and syringe units instantly for any peptide.
+          </p>
+        </div>
+      </section>
 
       {/* Inputs */}
       <div className="glass-card-solid shadow-none p-6">

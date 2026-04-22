@@ -34,7 +34,7 @@ export const Route = createFileRoute('/sitemap.xml')({
 
         for (const compound of compounds) {
           urls.push({ loc: `/peptides/${compound.id}`, priority: '0.7', changefreq: 'weekly' })
-          urls.push({ loc: `/vendors?compound=${compound.id}`, priority: '0.7', changefreq: 'weekly' })
+          urls.push({ loc: `/vendors?peptide=${compound.id}`, priority: '0.7', changefreq: 'weekly' })
         }
 
         for (const feature of FEATURE_FILTERS) {

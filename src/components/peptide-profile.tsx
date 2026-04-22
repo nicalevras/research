@@ -57,12 +57,12 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
                 >
                   <span className="whitespace-pre-line">{iconLabel}</span>
                 </div>
-                <div className="min-w-0 flex-1">
+                <div className="flex min-h-14 min-w-0 flex-1 flex-col justify-between">
                   <h1 className="truncate text-xl font-bold leading-[1.1] text-neutral-950 dark:text-white">
                     {compound.name}
                   </h1>
                   {categoryLabels.length > 0 && (
-                    <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                    <div className="flex flex-wrap items-center gap-1.5">
                       {categoryLabels.map((category) => (
                         <span key={category.id} className="inline-flex shrink-0 items-center rounded-lg bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-600 dark:bg-white/[0.06] dark:text-neutral-300">
                           <span className="mr-1" aria-hidden="true">{category.emoji}</span>{category.name}
@@ -89,8 +89,8 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
 
             <Link
               to="/vendors"
-              search={{ compound: compound.id }}
-              className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-black px-5 py-3 text-base font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
+              search={{ peptide: compound.id }}
+              className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-black px-5 py-3 text-base font-bold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
             >
               View Vendors
             </Link>
@@ -185,7 +185,7 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
                     <Link
                       to="/vendors/$id"
                       params={{ id: vendor.id }}
-                      className="inline-flex items-center justify-center rounded-lg bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
+                      className="inline-flex items-center justify-center rounded-lg bg-neutral-900 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
                     >
                       Profile
                     </Link>

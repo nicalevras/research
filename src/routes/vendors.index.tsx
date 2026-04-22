@@ -12,10 +12,10 @@ const FEATURE_FILTER_BY_ID = new Map(FEATURE_FILTERS.map((feature) => [feature.i
 function vendorLandingCopy(filters: {
   q?: string
   features?: string
-  compound?: string
+  peptide?: string
   compounds: Compound[]
 }) {
-  const compound = filters.compound ? filters.compounds.find((item) => item.id === filters.compound) : undefined
+  const compound = filters.peptide ? filters.compounds.find((item) => item.id === filters.peptide) : undefined
   const featureIds = filters.features?.split(',').filter(Boolean) ?? []
   const featureLabels = featureIds.flatMap((featureId) => {
     const feature = FEATURE_FILTER_BY_ID.get(featureId)
@@ -25,15 +25,17 @@ function vendorLandingCopy(filters: {
   const searchParams = new URLSearchParams()
   if (search) searchParams.set('q', search)
   if (filters.features) searchParams.set('features', filters.features)
-  if (compound) searchParams.set('compound', compound.id)
+  if (compound) searchParams.set('peptide', compound.id)
   const canonicalPath = searchParams.size > 0 ? `/vendors?${searchParams.toString()}` : '/vendors'
 
   if (compound) {
+    const compoundVendorTitle = `${compound.name} Peptide Vendors`
+
     return {
-      heading: `${compound.name} Vendors`,
+      heading: compoundVendorTitle,
       description: `Compare peptide vendors carrying ${compound.name}. Review ratings, vendor profiles, payment methods, and category matches in one place.`,
-      pageTitle: `${compound.name} Vendors - Peptide Vendor Directory`,
-      listName: `${compound.name} Vendors`,
+      pageTitle: `${compoundVendorTitle} - Peptide Vendor Directory`,
+      listName: compoundVendorTitle,
       canonicalPath,
       noindex: Boolean(search),
     }
@@ -65,10 +67,10 @@ function vendorLandingCopy(filters: {
 
 export const Route = createFileRoute('/vendors/')({
   validateSearch: zodValidator(vendorDirectorySearchSchema),
-  loaderDeps: ({ search }) => ({ q: search.q, features: search.features, compound: search.compound }),
+  loaderDeps: ({ search }) => ({ q: search.q, features: search.features, peptide: search.peptide }),
   loader: async ({ deps }) => {
     const [vendors, compounds] = await Promise.all([
-      filterVendors({ data: { q: deps.q, features: deps.features, compound: deps.compound } }),
+      filterVendors({ data: { q: deps.q, features: deps.features, peptide: deps.peptide } }),
       getCompounds(),
     ])
     const landing = vendorLandingCopy({ ...deps, compounds })
@@ -113,9 +115,9 @@ export const Route = createFileRoute('/vendors/')({
 })
 
 function VendorsPage() {
-  const { q, features, compound } = Route.useSearch()
-  const { vendors, compounds, landing } = Route.useLoaderData()
-  const activeCompoundProfile = compound ? compounds.find((item) => item.id === compound) : undefined
+  const { q, features } = Route.useSearch()
+  const { vendors, compounds, landing, peptide } = Route.useLoaderData()
+  const activeCompoundProfile = peptide ? compounds.find((item) => item.id === peptide) : undefined
 
   return (
     <DirectoryListing
@@ -125,7 +127,7 @@ function VendorsPage() {
       vendors={vendors}
       compounds={compounds}
       activeFeatures={features ?? ''}
-      activeCompound={compound ?? ''}
+      activeCompound={peptide ?? ''}
       activeCompoundProfile={activeCompoundProfile}
     />
   )

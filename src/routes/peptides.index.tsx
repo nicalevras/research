@@ -277,7 +277,7 @@ function PeptidesPage() {
             <select
               value={vendor ?? ''}
               onChange={(event) => handleVendorChange(event.target.value)}
-              className="w-full cursor-pointer appearance-none rounded-lg border border-neutral-200/60 bg-white/70 py-2 pl-4 pr-9 text-sm text-neutral-700 backdrop-blur-sm transition-all focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-neutral-300 dark:[color-scheme:dark] dark:focus:ring-white/10"
+              className="native-select w-full cursor-pointer appearance-none rounded-lg border border-neutral-200/60 bg-white/70 py-2 pl-4 pr-9 text-sm text-neutral-700 backdrop-blur-sm transition-all focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-neutral-300 dark:focus:ring-white/10"
             >
               <option value="">All Vendors</option>
               {vendors.map((vendorOption) => (

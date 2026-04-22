@@ -236,14 +236,14 @@ export const getCompoundProfile = createServerFn({ method: 'GET' })
   })
 
 export const filterVendors = createServerFn({ method: 'GET' })
-  .inputValidator((d: { q?: string; features?: string; compound?: string }) => d)
+  .inputValidator((d: { q?: string; features?: string; peptide?: string }) => d)
   .handler(async ({ data: filters }) => {
-    const { q, features: featureString, compound } = filters
+    const { q, features: featureString, peptide } = filters
     const featureIds = featureString ? featureString.split(',').filter(Boolean) : []
     const conditions: SQL[] = []
 
-    if (compound) {
-      conditions.push(sql`${vendors.compoundSlugs} @> ARRAY[${compound}]::text[]`)
+    if (peptide) {
+      conditions.push(sql`${vendors.compoundSlugs} @> ARRAY[${peptide}]::text[]`)
     }
 
     for (const featureId of featureIds) {

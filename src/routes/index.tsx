@@ -104,7 +104,7 @@ function HomePage() {
 
   const handlePeptideChange = useCallback(
     (value: string) => {
-      navigate({ to: '/vendors', search: { compound: value || undefined } })
+      navigate({ to: '/vendors', search: { peptide: value || undefined } })
     },
     [navigate],
   )
@@ -164,7 +164,7 @@ function HomePage() {
                   <select
                     defaultValue=""
                     onChange={(event) => handlePeptideChange(event.target.value)}
-                    className="w-full cursor-pointer appearance-none rounded-lg border border-neutral-200/60 bg-white/70 py-2 pl-4 pr-9 text-sm text-neutral-700 backdrop-blur-sm transition-all focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-neutral-300 dark:[color-scheme:dark] dark:focus:ring-white/10"
+                    className="native-select w-full cursor-pointer appearance-none rounded-lg border border-neutral-200/60 bg-white/70 py-2 pl-4 pr-9 text-sm text-neutral-700 backdrop-blur-sm transition-all focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-neutral-300 dark:focus:ring-white/10"
                   >
                     <option value="">All Peptides</option>
                     {compoundOptions.map((compound) => (
@@ -178,7 +178,7 @@ function HomePage() {
                   <select
                     defaultValue=""
                     onChange={(event) => handleVendorChange(event.target.value)}
-                    className="w-full cursor-pointer appearance-none rounded-lg border border-neutral-200/60 bg-white/70 py-2 pl-4 pr-9 text-sm text-neutral-700 backdrop-blur-sm transition-all focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-neutral-300 dark:[color-scheme:dark] dark:focus:ring-white/10"
+                    className="native-select w-full cursor-pointer appearance-none rounded-lg border border-neutral-200/60 bg-white/70 py-2 pl-4 pr-9 text-sm text-neutral-700 backdrop-blur-sm transition-all focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-neutral-300 dark:focus:ring-white/10"
                   >
                     <option value="">All Vendors</option>
                     {vendorOptions.map((vendorOption) => (
@@ -282,7 +282,7 @@ function QuickFilterLinkSet({ duplicate = false }: { duplicate?: boolean }) {
         <span className="mr-1.5 shrink-0" aria-hidden="true">🏋️</span>
         Weight Loss
       </Link>
-      <Link to="/vendors" search={{ compound: 'bpc-157' }} className={quickFilterLinkClass} {...duplicateProps}>
+      <Link to="/vendors" search={{ peptide: 'bpc-157' }} className={quickFilterLinkClass} {...duplicateProps}>
         <span className="mr-1.5 shrink-0" aria-hidden="true">🧬</span>
         BPC-157
       </Link>

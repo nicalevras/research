@@ -1,37 +1,17 @@
 import { Link } from '@tanstack/react-router'
 import { PEPTIDE_CATEGORIES } from '~/lib/constants'
 import type { Compound } from '~/lib/types'
+import { peptideGradient, peptideIconLabel } from '~/lib/peptide-icons'
 
 const PEPTIDE_CATEGORY_BY_ID = new Map(PEPTIDE_CATEGORIES.map((category) => [category.id, category]))
-
-function hashString(value: string) {
-  let hash = 0
-  for (let index = 0; index < value.length; index++) {
-    hash = (hash * 31 + value.charCodeAt(index)) >>> 0
-  }
-  return hash
-}
-
-function peptideInitials(name: string) {
-  return name.replace(/[^a-zA-Z0-9]/g, '').slice(0, 2).toUpperCase() || 'PE'
-}
-
-function peptideGradient(id: string) {
-  const hash = hashString(id)
-  const hue = hash % 360
-  const secondHue = (hue + 95 + (hash % 35)) % 360
-  const thirdHue = (hue + 205 + (hash % 55)) % 360
-
-  return `linear-gradient(135deg, hsl(${hue} 78% 42%), hsl(${secondHue} 72% 48%), hsl(${thirdHue} 80% 40%))`
-}
 
 function PeptideCard({ id, name, description, categories, vendorCount }: Compound) {
   const categoryLabels = categories.flatMap((categoryId) => {
     const category = PEPTIDE_CATEGORY_BY_ID.get(categoryId)
     return category ? [category] : []
   })
-  const initials = peptideInitials(name)
-  const gradient = peptideGradient(id)
+  const iconLabel = peptideIconLabel(id, name)
+  const gradient = peptideGradient()
 
   return (
     <article className="flex h-full flex-col rounded-lg border border-neutral-200/80 bg-white p-5 dark:border-white/[0.08] dark:bg-neutral-900">
@@ -39,18 +19,18 @@ function PeptideCard({ id, name, description, categories, vendorCount }: Compoun
         <header>
           <div className="flex min-w-0 items-start gap-2">
             <div
-              className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg text-lg font-semibold tracking-normal text-white shadow-inner"
+              className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-neutral-200/80 px-1 text-center text-[11px] font-bold leading-none tracking-normal text-neutral-950 shadow-inner dark:border-white/[0.08]"
               style={{ backgroundImage: gradient }}
               aria-hidden="true"
             >
-              {initials}
+              <span className="whitespace-pre-line">{iconLabel}</span>
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex min-h-7 min-w-0 items-start">
                 <Link
                   to="/peptides/$compound"
                   params={{ compound: id }}
-                  className="block min-w-0 flex-1 truncate text-lg font-semibold leading-none text-neutral-950 transition-colors hover:text-neutral-700 dark:text-white dark:hover:text-neutral-300"
+                  className="block min-w-0 flex-1 truncate text-lg font-bold leading-[1.1] text-neutral-950 transition-colors hover:text-neutral-700 dark:text-white dark:hover:text-neutral-300"
                 >
                   {name}
                 </Link>

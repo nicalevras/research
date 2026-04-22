@@ -48,7 +48,7 @@ export function FeaturedResources() {
                       <div className="flex min-h-7 min-w-0 items-start">
                         <Link
                           to={resource.to}
-                          className="block min-w-0 flex-1 truncate text-lg font-semibold leading-none text-neutral-950 transition-colors hover:text-neutral-700 dark:text-white dark:hover:text-neutral-300"
+                          className="block min-w-0 flex-1 truncate text-lg font-bold leading-[1.1] text-neutral-950 transition-colors hover:text-neutral-700 dark:text-white dark:hover:text-neutral-300"
                         >
                           {resource.title}
                         </Link>

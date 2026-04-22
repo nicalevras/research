@@ -17,6 +17,10 @@ function selectedCategoryIds(categories: string | undefined) {
   return categories?.split(',').filter((categoryId) => PEPTIDE_CATEGORY_BY_ID.has(categoryId)) ?? []
 }
 
+function vendorPeptidesHeading(vendorName: string) {
+  return /\bpeptides?$/i.test(vendorName.trim()) ? vendorName : `${vendorName} Peptides`
+}
+
 function peptideLandingCopy(filters: {
   q?: string
   categories?: string
@@ -48,11 +52,13 @@ function peptideLandingCopy(filters: {
   }
 
   if (filters.vendor && filters.vendorName) {
+    const vendorHeading = vendorPeptidesHeading(filters.vendorName)
+
     return {
-      heading: `${filters.vendorName} Peptides`,
+      heading: vendorHeading,
       description: `Browse research peptides listed for ${filters.vendorName}. Compare peptide profiles and matching vendor availability.`,
-      pageTitle: `${filters.vendorName} Peptides - Peptide Vendor Directory`,
-      listName: `${filters.vendorName} Peptides`,
+      pageTitle: `${vendorHeading} - Peptide Vendor Directory`,
+      listName: vendorHeading,
       canonicalPath,
       noindex: Boolean(search),
     }
@@ -196,9 +202,7 @@ function PeptidesPage() {
 
   const handleToggleCategory = useCallback(
     (categoryId: string) => {
-      const next = localCategories.includes(categoryId)
-        ? localCategories.filter((id) => id !== categoryId)
-        : [...localCategories, categoryId]
+      const next = localCategories.includes(categoryId) ? [] : [categoryId]
 
       setLocalCategories(next)
       navigate({
@@ -226,8 +230,8 @@ function PeptidesPage() {
   )
 
   return (
-    <div className="space-y-6">
-      <section className="py-8">
+    <div>
+      <section className="py-16">
         <div className="max-w-3xl">
           <h1 className="max-w-2xl text-3xl font-[900] font-stretch-semi-expanded capitalize leading-tight tracking-[-1px] text-neutral-950 dark:text-white sm:text-4xl">{landing.heading}</h1>
           <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-neutral-600 dark:text-neutral-300">
@@ -236,7 +240,7 @@ function PeptidesPage() {
         </div>
       </section>
 
-      <div className="space-y-4">
+      <div>
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-3">
           <div className="relative flex-1">
             <SearchIcon className="pointer-events-none absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-neutral-400 dark:text-neutral-500" />
@@ -284,10 +288,12 @@ function PeptidesPage() {
           </div>
         </div>
 
-        <PillNav items={PEPTIDE_CATEGORIES} activeItems={localCategories} onToggleItem={handleToggleCategory} />
+        <div className="mt-4">
+          <PillNav items={PEPTIDE_CATEGORIES} activeItems={localCategories} onToggleItem={handleToggleCategory} />
+        </div>
       </div>
 
-      <section aria-label="Peptides">
+      <section className="mt-6" aria-label="Peptides">
         <PeptideGrid
           data={compounds}
           emptyTitle="No peptides match the current filters"

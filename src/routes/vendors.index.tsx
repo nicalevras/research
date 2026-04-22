@@ -115,6 +115,7 @@ export const Route = createFileRoute('/vendors/')({
 function VendorsPage() {
   const { q, features, compound } = Route.useSearch()
   const { vendors, compounds, landing } = Route.useLoaderData()
+  const activeCompoundProfile = compound ? compounds.find((item) => item.id === compound) : undefined
 
   return (
     <DirectoryListing
@@ -125,6 +126,7 @@ function VendorsPage() {
       compounds={compounds}
       activeFeatures={features ?? ''}
       activeCompound={compound ?? ''}
+      activeCompoundProfile={activeCompoundProfile}
     />
   )
 }

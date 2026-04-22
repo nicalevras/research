@@ -3,7 +3,7 @@ import { FEATURE_FILTERS } from '~/lib/constants'
 import { PillNav } from '~/components/pill-nav'
 import { VendorGrid, VendorGridSkeleton } from '~/components/vendor-grid'
 import { SearchIcon, XIcon, ChevronDownIcon } from '~/components/icons'
-import { useNavigate, useRouterState } from '@tanstack/react-router'
+import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
 import { useMemo, useRef, useCallback, useEffect, useState } from 'react'
 
 interface DirectoryListingProps {
@@ -14,9 +14,10 @@ interface DirectoryListingProps {
   compounds: Compound[]
   activeFeatures: string
   activeCompound: string
+  activeCompoundProfile?: Compound
 }
 
-export function DirectoryListing({ heading, description, searchQuery, vendors, compounds, activeFeatures, activeCompound }: DirectoryListingProps) {
+export function DirectoryListing({ heading, description, searchQuery, vendors, compounds, activeFeatures, activeCompound, activeCompoundProfile }: DirectoryListingProps) {
   const navigate = useNavigate()
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
   const searchRef = useRef<HTMLInputElement>(null)
@@ -72,7 +73,7 @@ export function DirectoryListing({ heading, description, searchQuery, vendors, c
 
   const handleToggleFeature = useCallback(
     (featureId: string) => {
-      const next = localFeatures.includes(featureId) ? localFeatures.filter((t) => t !== featureId) : [...localFeatures, featureId]
+      const next = localFeatures.includes(featureId) ? [] : [featureId]
       setLocalFeatures(next)
       const featuresParam = next.length > 0 ? next.join(',') : undefined
       navigate({ to: '/vendors', search: { ...currentSearch, features: featuresParam } })
@@ -82,8 +83,8 @@ export function DirectoryListing({ heading, description, searchQuery, vendors, c
 
   return (
     <>
-      <div className="space-y-4">
-        <div className="py-8">
+      <div>
+        <div className="py-16">
           {isRouteChanging ? (
             <div className="mx-auto max-w-3xl">
               <div className="mx-auto h-9 w-72 rounded-lg bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
@@ -92,7 +93,23 @@ export function DirectoryListing({ heading, description, searchQuery, vendors, c
           ) : (
             <div className="max-w-3xl">
               <h1 className="max-w-2xl text-3xl font-[900] font-stretch-semi-expanded capitalize leading-tight tracking-[-1px] text-neutral-950 dark:text-white sm:text-4xl">{heading}</h1>
-              <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-neutral-600 dark:text-neutral-300">{description}</p>
+              <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-neutral-600 dark:text-neutral-300">
+                {description}
+                {activeCompoundProfile && (
+                  <>
+                    {' '}
+                    Learn more about{' '}
+                    <Link
+                      to="/peptides/$compound"
+                      params={{ compound: activeCompoundProfile.id }}
+                      className="font-medium text-neutral-950 underline decoration-neutral-300 underline-offset-4 transition-colors hover:text-neutral-600 dark:text-white dark:decoration-white/30 dark:hover:text-neutral-300"
+                    >
+                      {activeCompoundProfile.name}
+                    </Link>
+                    .
+                  </>
+                )}
+              </p>
             </div>
           )}
         </div>
@@ -148,9 +165,11 @@ export function DirectoryListing({ heading, description, searchQuery, vendors, c
           </div>
         </div>
 
-        <PillNav items={FEATURE_FILTERS} activeItems={localFeatures} onToggleItem={handleToggleFeature} />
+        <div className="mt-4">
+          <PillNav items={FEATURE_FILTERS} activeItems={localFeatures} onToggleItem={handleToggleFeature} />
+        </div>
 
-        <section aria-label="Vendor listings">
+        <section className="mt-4" aria-label="Vendor listings">
           <h2 className="sr-only">Vendors</h2>
           {isGridLoading ? <VendorGridSkeleton /> : <VendorGrid data={vendors} />}
         </section>

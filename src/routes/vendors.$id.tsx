@@ -104,7 +104,7 @@ function Shimmer({ className }: { className?: string }) {
 
 function VendorSkeleton() {
   return (
-    <div>
+    <div className="pt-6">
       {/* Breadcrumb */}
       <div className="mb-6 flex items-center gap-1.5">
         <Shimmer className="h-4 w-12" />
@@ -246,7 +246,7 @@ function VendorDetailPage() {
   ]
 
   return (
-    <div>
+    <div className="pt-6">
       <nav className="mb-6 flex items-center gap-1.5 text-sm">
         <Link
           to="/"
@@ -275,11 +275,11 @@ function VendorDetailPage() {
                 <div className="flex h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50 dark:border-white/[0.08] dark:bg-white/[0.04]">
                   <VendorAvatar vendor={vendor} />
                 </div>
-                <div className="min-w-0 flex-1">
-                  <h1 className="truncate text-xl font-semibold leading-none text-neutral-950 dark:text-white">
+                <div className="flex min-h-14 min-w-0 flex-1 flex-col justify-between">
+                  <h1 className="truncate text-xl font-bold leading-none text-neutral-950 dark:text-white">
                     {vendor.name}
                   </h1>
-                  <div className="mt-1.5 flex flex-wrap items-center gap-3 leading-none">
+                  <div className="flex flex-wrap items-center gap-1.5 leading-none">
                     <ReviewStars rating={vendor.rating} size="lg" />
                     <span className="text-lg font-semibold leading-none tabular-nums text-neutral-950 dark:text-white">
                       {vendor.rating.toFixed(1)}
@@ -297,7 +297,7 @@ function VendorDetailPage() {
               {vendor.description}
             </p>
 
-            <PromoCodeBadge code={vendor.promoCode} discountPercent={vendor.promoDiscountPercent} />
+            <PromoCodeBadge code={vendor.promoCode} discountPercent={vendor.promoDiscountPercent} fullWidth={false} />
 
             <a
               href={vendor.website}
@@ -377,7 +377,7 @@ function VendorDetailPage() {
                           rel="noopener noreferrer nofollow"
                           className="inline-flex items-center justify-center rounded-lg bg-neutral-900 dark:bg-white px-3 py-1.5 text-xs font-medium text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
                         >
-                          View Website
+                          Buy
                         </a>
                       </td>
                     </tr>

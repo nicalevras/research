@@ -26,6 +26,10 @@
     @apply text-neutral-900 bg-neutral-50 antialiased;
   }
 
+  html {
+    scrollbar-gutter: stable;
+  }
+
   html.dark,
   html.dark body {
     @apply text-neutral-100 bg-neutral-950;
@@ -58,12 +62,6 @@
   .quick-filter-marquee:focus-within .quick-filter-marquee-track,
   .quick-filter-marquee[data-paused='true'] .quick-filter-marquee-track {
     animation-play-state: paused;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .quick-filter-marquee-track {
-      animation: none;
-    }
   }
 
   @keyframes quick-filter-marquee {

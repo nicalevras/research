@@ -271,20 +271,20 @@ function VendorDetailPage() {
         <div className="glass-card-solid overflow-hidden shadow-none p-5">
           <div className="space-y-4">
             <header className="flex min-w-0 flex-col gap-4">
-              <div className="relative flex min-w-0 items-start gap-4 pr-10">
+              <div className="relative flex min-w-0 items-start gap-2 pr-10">
                 <div className="flex h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50 dark:border-white/[0.08] dark:bg-white/[0.04]">
                   <VendorAvatar vendor={vendor} />
                 </div>
-                <div className="flex min-h-14 min-w-0 flex-1 flex-col justify-between">
-                  <h1 className="truncate text-xl font-bold leading-none text-neutral-950 dark:text-white">
+                <div className="min-w-0 flex-1 space-y-2">
+                  <h1 className="truncate text-xl font-bold leading-[1.1] text-neutral-950 dark:text-white">
                     {vendor.name}
                   </h1>
                   <div className="flex flex-wrap items-center gap-1.5 leading-none">
-                    <ReviewStars rating={vendor.rating} size="lg" />
-                    <span className="text-lg font-semibold leading-none tabular-nums text-neutral-950 dark:text-white">
+                    <ReviewStars rating={vendor.rating} size="md" />
+                    <span className="text-sm font-semibold leading-none tabular-nums text-neutral-950 dark:text-white">
                       {vendor.rating.toFixed(1)}
                     </span>
-                    <span className="text-base leading-none text-neutral-500 dark:text-neutral-400">
+                    <span className="text-sm leading-none text-neutral-500 dark:text-neutral-400">
                       {vendor.reviewCount > 0 ? `(${vendor.reviewCount} ${vendor.reviewCount === 1 ? 'review' : 'reviews'})` : '(No reviews)'}
                     </span>
                   </div>
@@ -293,11 +293,11 @@ function VendorDetailPage() {
               </div>
             </header>
 
+            <PromoCodeBadge code={vendor.promoCode} discountPercent={vendor.promoDiscountPercent} fullWidth={false} />
+
             <p className="max-w-3xl text-base leading-7 text-neutral-500 dark:text-neutral-300">
               {vendor.description}
             </p>
-
-            <PromoCodeBadge code={vendor.promoCode} discountPercent={vendor.promoDiscountPercent} fullWidth={false} />
 
             <a
               href={vendor.website}

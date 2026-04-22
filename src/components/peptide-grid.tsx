@@ -50,10 +50,10 @@ function PeptideCard({ id, name, description, categories, vendorCount }: Compoun
 
         {typeof vendorCount === 'number' && (
           <div className="flex flex-wrap items-center gap-1.5 leading-none">
-            <span className="text-lg font-semibold leading-none tabular-nums text-neutral-950 dark:text-white">
+            <span className="text-sm font-semibold leading-none text-neutral-950 dark:text-white">
               {vendorCount}
             </span>
-            <span className="text-base leading-none text-neutral-500 dark:text-neutral-400">
+            <span className="text-sm leading-none text-neutral-500 dark:text-neutral-400">
               {vendorCount === 1 ? 'Vendor' : 'Vendors'}
             </span>
           </div>

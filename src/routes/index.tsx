@@ -213,7 +213,7 @@ function HomePage() {
         />
       </section>
 
-      <section className="mt-6 space-y-5 border-b border-neutral-200/80 pb-6 dark:border-white/[0.08]" aria-label="Featured peptides">
+      <section className="mt-5 space-y-5 border-b border-neutral-200/80 pb-6 dark:border-white/[0.08]" aria-label="Featured peptides">
         <div className="flex items-center justify-between gap-3">
           <h2 className="text-xl font-[800] font-stretch-semi-expanded leading-tight tracking-[-1px] text-neutral-950 dark:text-white">Featured Peptides</h2>
           <Link
@@ -231,7 +231,7 @@ function HomePage() {
         />
       </section>
 
-      <div className="mt-6">
+      <div className="mt-5">
         <FeaturedResources />
       </div>
     </div>

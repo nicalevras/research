@@ -78,8 +78,9 @@ export function HamburgerMenu() {
       align="right"
       trigger={<MenuIcon className="h-5 w-5" strokeWidth={1.5} />}
     >
-      <DropdownLink to="/vendors">All Vendors</DropdownLink>
-      <DropdownLink to="/peptides">All Peptides</DropdownLink>
+      <DropdownLink to="/vendors">Vendors</DropdownLink>
+      <DropdownDivider />
+      <DropdownLink to="/peptides">Peptides</DropdownLink>
       <DropdownDivider />
       <DropdownLink to="/calculator">Calculator</DropdownLink>
       <DropdownDivider />
@@ -107,13 +108,14 @@ export function UserMenu() {
         <DropdownItem>Loading...</DropdownItem>
       ) : session ? (
         <>
-          <DropdownLink to="/account">
-            <SettingsIcon className="h-4 w-4" strokeWidth={1.5} />
-            Account
-          </DropdownLink>
           <DropdownLink to="/favorites">
             <HeartIcon className="h-4 w-4" strokeWidth={1.5} />
             Favorites
+          </DropdownLink>
+          <DropdownDivider />
+          <DropdownLink to="/account">
+            <SettingsIcon className="h-4 w-4" strokeWidth={1.5} />
+            Account
           </DropdownLink>
           <DropdownDivider />
           <DropdownItem onClick={handleSignOut}>

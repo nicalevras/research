@@ -36,7 +36,7 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummar
                   className="-mt-1"
                 />
               </div>
-              <div className="mt-1 flex flex-wrap items-center gap-1.5">
+              <div className="mt-3 flex flex-wrap items-center gap-1.5">
                 <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-600 dark:bg-white/[0.06] dark:text-neutral-300">
                   <CountryFlag country={vendor.country} />
                   {vendor.country}
@@ -59,11 +59,11 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummar
         </header>
 
         <div className="flex flex-wrap items-center gap-3 leading-none">
-          <ReviewStars rating={vendor.rating} size="lg" />
-          <span className="text-lg font-semibold leading-none tabular-nums text-neutral-950 dark:text-white">
+          <ReviewStars rating={vendor.rating} size="md" />
+          <span className="text-sm font-semibold leading-none tabular-nums text-neutral-950 dark:text-white">
             {vendor.rating.toFixed(1)}
           </span>
-          <span className="text-base leading-none text-neutral-500 dark:text-neutral-400">
+          <span className="text-sm leading-none text-neutral-500 dark:text-neutral-400">
             {reviewLabel}
           </span>
         </div>

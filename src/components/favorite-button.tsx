@@ -43,7 +43,7 @@ export function FavoriteButton({ vendorId, variant = 'icon', initialFavorited = 
       aria-label={label}
       aria-pressed={active}
       title={label}
-      className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-colors cursor-pointer disabled:opacity-50 ${active ? 'bg-rose-50 text-rose-600 hover:bg-rose-100 dark:bg-rose-500/10 dark:text-rose-300 dark:hover:bg-rose-500/15' : 'bg-white/70 text-neutral-400 hover:bg-rose-50 hover:text-rose-600 dark:bg-white/[0.04] dark:text-neutral-500 dark:hover:bg-rose-500/10 dark:hover:text-rose-300'} ${className}`}
+      className={`inline-flex h-5 w-5 shrink-0 items-center justify-center transition-colors cursor-pointer disabled:opacity-50 ${active ? 'text-rose-600 hover:text-rose-700 dark:text-rose-300 dark:hover:text-rose-200' : 'text-neutral-400 hover:text-rose-600 dark:text-neutral-500 dark:hover:text-rose-300'} ${className}`}
     >
       <HeartIcon className="h-5 w-5" fill={active ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={active ? 0 : 1.6} />
     </button>

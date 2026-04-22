@@ -49,7 +49,7 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
         <div className="glass-card-solid overflow-hidden p-5 shadow-none">
           <div className="space-y-4">
             <header className="flex min-w-0 flex-col gap-4">
-              <div className="flex min-w-0 items-start gap-4">
+              <div className="flex min-w-0 items-start gap-2">
                 <div
                   className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-neutral-200/80 px-1 text-center text-[11px] font-bold leading-none tracking-normal text-neutral-950 shadow-inner dark:border-white/[0.08]"
                   style={{ backgroundImage: gradient }}
@@ -57,31 +57,31 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
                 >
                   <span className="whitespace-pre-line">{iconLabel}</span>
                 </div>
-                <div className="flex min-h-14 min-w-0 flex-1 flex-col justify-between">
-                  <h1 className="truncate text-xl font-bold leading-none text-neutral-950 dark:text-white">
+                <div className="min-w-0 flex-1">
+                  <h1 className="truncate text-xl font-bold leading-[1.1] text-neutral-950 dark:text-white">
                     {compound.name}
                   </h1>
-                  <div className="flex flex-wrap items-center gap-1.5 leading-none">
-                    <span className="text-lg font-semibold leading-none tabular-nums text-neutral-950 dark:text-white">
-                      {vendors.length}
-                    </span>
-                    <span className="text-base leading-none text-neutral-500 dark:text-neutral-400">
-                      {vendorLabel}
-                    </span>
-                  </div>
+                  {categoryLabels.length > 0 && (
+                    <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                      {categoryLabels.map((category) => (
+                        <span key={category.id} className="inline-flex shrink-0 items-center rounded-lg bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-600 dark:bg-white/[0.06] dark:text-neutral-300">
+                          <span className="mr-1" aria-hidden="true">{category.emoji}</span>{category.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </header>
 
-            {categoryLabels.length > 0 && (
-              <div className="flex flex-wrap items-center gap-1.5">
-                {categoryLabels.map((category) => (
-                  <span key={category.id} className="inline-flex shrink-0 items-center rounded-lg bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-600 dark:bg-white/[0.06] dark:text-neutral-300">
-                    <span className="mr-1" aria-hidden="true">{category.emoji}</span>{category.name}
-                  </span>
-                ))}
-              </div>
-            )}
+            <div className="flex flex-wrap items-center gap-1.5 leading-none">
+              <span className="text-sm font-semibold leading-none text-neutral-950 dark:text-white">
+                {vendors.length}
+              </span>
+              <span className="text-sm leading-none text-neutral-500 dark:text-neutral-400">
+                {vendorLabel}
+              </span>
+            </div>
 
             <p className="max-w-3xl text-base leading-7 text-neutral-500 dark:text-neutral-300">
               {compound.description}

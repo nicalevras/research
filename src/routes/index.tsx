@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { BitcoinIcon, ChevronDownIcon, ChevronRightIcon, FileIcon, SearchIcon, TrendingUpIcon, XIcon } from '~/components/icons'
 import { FeaturedResources } from '~/components/featured-resources'
+import { HandwrittenUnderline } from '~/components/handwritten-underline'
 import { PeptideGrid } from '~/components/peptide-grid'
 import { VendorGrid } from '~/components/vendor-grid'
 import { withVendorCounts } from '~/lib/compound-counts'
@@ -120,7 +121,7 @@ function HomePage() {
               Peptide Research
             </div>
             <h1 className="mx-auto max-w-2xl text-3xl font-[900] font-stretch-semi-expanded capitalize leading-tight tracking-[-1px] text-neutral-950 dark:text-white sm:text-4xl">
-              Find trusted peptide vendors
+              Find <HandwrittenUnderline color="#84e100">Trusted</HandwrittenUnderline> Peptide Vendors
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-pretty text-base leading-7 text-neutral-600 dark:text-neutral-300">
               Compare vendor ratings, promo codes, COAs, payment methods, and peptide availability in one focused research directory.

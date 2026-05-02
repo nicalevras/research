@@ -73,6 +73,21 @@
     animation-play-state: paused;
   }
 
+  .handwritten-underline {
+    transform: rotate(-0.8deg);
+  }
+
+  .handwritten-underline path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: handwritten-underline-draw 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .handwritten-underline path:last-child {
+    animation-delay: 0.12s;
+    animation-duration: 0.78s;
+  }
+
   @keyframes quick-filter-marquee {
     from {
       transform: translateX(0);
@@ -80,6 +95,21 @@
 
     to {
       transform: translateX(-50%);
+    }
+  }
+
+  @keyframes handwritten-underline-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @layer components {
+    .handwritten-underline path {
+      animation: none;
+      stroke-dashoffset: 0;
     }
   }
 }

@@ -7,9 +7,10 @@ interface VendorAvatarProps {
     name: string
     logoUrl: string | null
   }
+  loading?: 'eager' | 'lazy'
 }
 
-export function VendorAvatar({ vendor }: VendorAvatarProps) {
+export function VendorAvatar({ vendor, loading = 'lazy' }: VendorAvatarProps) {
   const fallback = (
     <span className="flex h-full w-full items-center justify-center text-2xl font-semibold text-neutral-400 dark:text-neutral-500">
       {vendorInitial(vendor.name)}
@@ -25,7 +26,7 @@ export function VendorAvatar({ vendor }: VendorAvatarProps) {
         src={vendor.logoUrl}
         alt={`${vendor.name} logo`}
         className="absolute inset-0 h-full w-full object-cover"
-        loading="lazy"
+        loading={loading}
         onError={(event) => {
           event.currentTarget.style.display = 'none'
         }}

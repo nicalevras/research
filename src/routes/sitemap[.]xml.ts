@@ -1,6 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { FEATURE_FILTERS, PEPTIDE_CATEGORIES, SITE_URL } from '~/lib/constants'
-import { filterVendors, getCompounds, getVendorCompoundOptions } from '~/lib/data'
+import { SITE_URL } from '~/lib/constants'
+import { filterVendors, getPeptideProfileSitemapEntries } from '~/lib/data'
+import { APPROVED_PEPTIDE_INDEX_CATEGORIES } from '~/lib/peptide-directory-seo'
+import { APPROVED_VENDOR_INDEX_FEATURES } from '~/lib/vendor-directory-seo'
 
 function xmlEscape(value: string) {
   return value
@@ -11,17 +13,25 @@ function xmlEscape(value: string) {
     .replace(/'/g, '&apos;')
 }
 
+function formatLastmod(value?: string) {
+  if (!value) return undefined
+
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return undefined
+
+  return date.toISOString()
+}
+
 export const Route = createFileRoute('/sitemap.xml')({
   server: {
     handlers: {
       GET: async () => {
-        const [vendors, compounds, vendorOptions] = await Promise.all([
+        const [vendors, peptideProfiles] = await Promise.all([
           filterVendors({ data: {} }),
-          getCompounds(),
-          getVendorCompoundOptions(),
+          getPeptideProfileSitemapEntries(),
         ])
 
-        const urls: { loc: string; priority: string; changefreq: string }[] = [
+        const urls: { loc: string; priority: string; changefreq: string; lastmod?: string }[] = [
           { loc: '/', priority: '1.0', changefreq: 'daily' },
           { loc: '/vendors', priority: '0.9', changefreq: 'daily' },
           { loc: '/peptides', priority: '0.9', changefreq: 'weekly' },
@@ -29,31 +39,37 @@ export const Route = createFileRoute('/sitemap.xml')({
         ]
 
         for (const vendor of vendors) {
-          urls.push({ loc: `/vendors/${vendor.id}`, priority: '0.8', changefreq: 'weekly' })
+          urls.push({
+            loc: `/vendors/${vendor.id}`,
+            priority: '0.8',
+            changefreq: 'weekly',
+            lastmod: formatLastmod(vendor.updatedAt),
+          })
         }
 
-        for (const compound of compounds) {
-          urls.push({ loc: `/peptides/${compound.id}`, priority: '0.7', changefreq: 'weekly' })
-          urls.push({ loc: `/vendors?peptide=${compound.id}`, priority: '0.7', changefreq: 'weekly' })
+        for (const peptideProfile of peptideProfiles) {
+          urls.push({
+            loc: `/peptides/${peptideProfile.id}`,
+            priority: '0.7',
+            changefreq: 'weekly',
+            lastmod: formatLastmod(peptideProfile.updatedAt),
+          })
+          urls.push({ loc: `/vendors?peptide=${peptideProfile.id}`, priority: '0.7', changefreq: 'weekly' })
         }
 
-        for (const feature of FEATURE_FILTERS) {
+        for (const feature of APPROVED_VENDOR_INDEX_FEATURES) {
           urls.push({ loc: `/vendors?features=${feature.id}`, priority: '0.6', changefreq: 'weekly' })
         }
 
-        for (const category of PEPTIDE_CATEGORIES) {
+        for (const category of APPROVED_PEPTIDE_INDEX_CATEGORIES) {
           urls.push({ loc: `/peptides?categories=${category.id}`, priority: '0.6', changefreq: 'weekly' })
-        }
-
-        for (const vendor of vendorOptions) {
-          urls.push({ loc: `/peptides?vendor=${vendor.id}`, priority: '0.5', changefreq: 'weekly' })
         }
 
         const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((u) => `  <url>
     <loc>${xmlEscape(`${SITE_URL}${u.loc}`)}</loc>
-    <changefreq>${u.changefreq}</changefreq>
+${u.lastmod ? `    <lastmod>${xmlEscape(u.lastmod)}</lastmod>\n` : ''}    <changefreq>${u.changefreq}</changefreq>
     <priority>${u.priority}</priority>
   </url>`).join('\n')}
 </urlset>`

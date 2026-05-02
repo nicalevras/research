@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { PEPTIDE_CATEGORIES } from '~/lib/constants'
 import type { CompoundProfileData, CompoundProfileVendor, CompoundStudy } from '~/lib/types'
-import { ChevronRightIcon, ExternalLinkIcon } from '~/components/icons'
+import { ChevronRightIcon } from '~/components/icons'
 import { ReviewStars } from '~/components/reviews'
 import { VendorAvatar } from '~/components/vendor-avatar'
 import { peptideGradient, peptideIconLabel } from '~/lib/peptide-icons'
@@ -97,23 +97,30 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
           </div>
         </div>
 
-        <aside className="glass-card-solid overflow-hidden p-5 shadow-none">
+        <aside
+          className="glass-card-solid overflow-hidden p-5 shadow-none"
+          aria-labelledby="peptide-studies-heading"
+        >
+          <h2 id="peptide-studies-heading" className="sr-only">
+            Linked studies for {compound.name}
+          </h2>
           <div className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
-            <table className="w-full border-collapse text-sm" aria-label="Linked studies">
+            <div className="max-h-64 overflow-y-scroll">
+              <table className="w-full border-collapse text-sm" aria-label="Linked studies">
               <colgroup>
                 <col />
                 <col className="w-24" />
               </colgroup>
               <thead>
-                <tr className="border-b border-neutral-200/60 bg-neutral-50 dark:border-white/[0.06] dark:bg-white/[0.02]">
-                  <th className="px-4 py-2.5 text-left text-sm font-bold text-neutral-900 dark:text-white">Study</th>
-                  <th className="px-4 py-2.5 text-right text-sm font-bold text-neutral-900 dark:text-white">Source</th>
+                <tr className="border-b border-neutral-200/60 dark:border-white/[0.06]">
+                  <th className="sticky top-0 z-10 bg-neutral-50 px-4 py-2.5 text-left text-sm font-bold text-neutral-900 dark:bg-white/[0.02] dark:text-white">Study</th>
+                  <th className="sticky top-0 z-10 bg-neutral-50 px-4 py-2.5 text-right text-sm font-bold text-neutral-900 dark:bg-white/[0.02] dark:text-white">Source</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-200/60 dark:divide-white/[0.06]">
                 {studies.length > 0 ? studies.map((study) => (
                   <tr key={study.id} className="transition-colors hover:bg-neutral-50 dark:hover:bg-white/[0.02]">
-                    <td className="px-4 py-3 font-semibold text-neutral-700 dark:text-neutral-200">
+                    <td className="pl-4 py-3 text-xs font-normal text-neutral-700 dark:text-neutral-200">
                       {study.title}
                     </td>
                     <td className="px-4 py-3 text-right">
@@ -121,10 +128,9 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
                         href={study.url}
                         target="_blank"
                         rel="noopener noreferrer nofollow"
-                        className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
+                        className="inline-flex items-center justify-center rounded-lg bg-neutral-900 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
                       >
                         {study.source}
-                        <ExternalLinkIcon className="h-3.5 w-3.5" />
                       </a>
                     </td>
                   </tr>
@@ -136,12 +142,19 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
                   </tr>
                 )}
               </tbody>
-            </table>
+              </table>
+            </div>
           </div>
         </aside>
       </section>
 
-      <section className="mt-6 glass-card-solid overflow-hidden p-5 shadow-none">
+      <section
+        className="mt-6 glass-card-solid overflow-hidden p-5 shadow-none"
+        aria-labelledby="peptide-vendors-heading"
+      >
+        <h2 id="peptide-vendors-heading" className="sr-only">
+          Vendors carrying {compound.name}
+        </h2>
         <div className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
           <table className="w-full border-collapse text-sm">
             <colgroup>

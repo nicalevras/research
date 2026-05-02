@@ -16,12 +16,14 @@ export interface VendorSummary {
   shipsInternational: boolean
   rating: number
   reviewCount: number
+  updatedAt?: string
 }
 
 export interface Vendor extends VendorSummary {
   website: string
   compoundNames: string[]
   compoundSlugs: string[]
+  updatedAt: string
 }
 
 export interface VendorCompoundOption {
@@ -42,6 +44,11 @@ export interface CompoundProfileData {
   name: string
   description: string
   categories: string[]
+}
+
+export interface PeptideProfileSitemapEntry {
+  id: string
+  updatedAt: string
 }
 
 export interface FeatureFilter {

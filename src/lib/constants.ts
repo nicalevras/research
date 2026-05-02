@@ -1,4 +1,5 @@
 export const SITE_URL = process.env.SITE_URL || ''
+export const SITE_NAME = 'Peptide Vendor Directory'
 
 export const FEATURE_LABELS = {
   coa: 'COAs',

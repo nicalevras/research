@@ -3,13 +3,13 @@ import type { ReactNode } from 'react'
 import { getVendorById, getVendorReviews } from '~/lib/data'
 import { FEATURE_FILTERS, FEATURE_LABELS, SITE_URL } from '~/lib/constants'
 import { ReviewsList, ReviewStars } from '~/components/reviews'
-import { breadcrumbSchema, organizationSchema } from '~/lib/schema'
+import { breadcrumbSchema, vendorProfileSchema } from '~/lib/schema'
 import { BadgeCheckIcon, BitcoinIcon, CircleAlertIcon, ChevronRightIcon, FileIcon } from '~/components/icons'
 import { CountryFlag } from '~/components/flags'
 import { FavoriteButton } from '~/components/favorite-button'
 import { PromoCodeBadge } from '~/components/promo-code'
 import { VendorAvatar } from '~/components/vendor-avatar'
-import type { Vendor } from '~/lib/types'
+import { buildVendorProfileDescription, buildVendorProfileTitle, vendorProfilePath } from '~/lib/vendor-profile-seo'
 
 function VendorNotFound() {
   return (
@@ -21,10 +21,6 @@ function VendorNotFound() {
       <p className="mt-1 text-sm text-neutral-400 dark:text-neutral-500">The vendor you&apos;re looking for doesn&apos;t exist.</p>
     </div>
   )
-}
-
-function vendorDescription(vendor: Vendor) {
-  return vendor.description
 }
 
 type DetailItem = {
@@ -56,18 +52,21 @@ export const Route = createFileRoute('/vendors/$id')({
     const vendor = loaderData?.vendor
     const reviews = loaderData?.reviews
     if (!vendor) return { meta: [], links: [] }
-    const pageTitle = `${vendor.name} — Peptide Vendor Profile`
-    const pageDescription = vendorDescription(vendor).slice(0, 160)
-    const canonicalUrl = `${SITE_URL}/vendors/${vendor.id}`
+    const canonicalPath = vendorProfilePath(vendor.id)
+    const pageTitle = buildVendorProfileTitle(vendor)
+    const pageDescription = buildVendorProfileDescription(vendor)
+    const canonicalUrl = `${SITE_URL}${canonicalPath}`
     const ogImage = `${SITE_URL}/og-image.png`
     return {
       meta: [
         { title: pageTitle },
         { name: 'description', content: pageDescription },
+        { property: 'og:type', content: 'website' },
         { property: 'og:title', content: pageTitle },
         { property: 'og:description', content: pageDescription },
         { property: 'og:url', content: canonicalUrl },
         { property: 'og:image', content: ogImage },
+        { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: pageTitle },
         { name: 'twitter:description', content: pageDescription },
         { name: 'twitter:image', content: ogImage },
@@ -76,14 +75,20 @@ export const Route = createFileRoute('/vendors/$id')({
       scripts: [
         {
           type: 'application/ld+json',
-          children: JSON.stringify(organizationSchema(vendor, reviews)),
+          children: JSON.stringify(vendorProfileSchema({
+            vendor,
+            reviews,
+            path: canonicalPath,
+            title: pageTitle,
+            description: pageDescription,
+          })),
         },
         {
           type: 'application/ld+json',
           children: JSON.stringify(breadcrumbSchema([
             { name: 'Home', url: '/' },
             { name: 'Vendors', url: '/vendors' },
-            { name: vendor.name, url: `/vendors/${vendor.id}` },
+            { name: vendor.name, url: canonicalPath },
           ])),
         },
       ],
@@ -273,7 +278,7 @@ function VendorDetailPage() {
             <header className="flex min-w-0 flex-col gap-4">
               <div className="relative flex min-w-0 items-start gap-2 pr-10">
                 <div className="flex h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50 dark:border-white/[0.08] dark:bg-white/[0.04]">
-                  <VendorAvatar vendor={vendor} />
+                  <VendorAvatar vendor={vendor} loading="eager" />
                 </div>
                 <div className="min-w-0 flex-1 space-y-2">
                   <h1 className="truncate text-xl font-bold leading-[1.1] text-neutral-950 dark:text-white">
@@ -310,7 +315,8 @@ function VendorDetailPage() {
           </div>
         </div>
 
-        <aside className="glass-card-solid overflow-hidden shadow-none p-5">
+        <section className="glass-card-solid overflow-hidden shadow-none p-5" aria-labelledby="vendor-details-heading">
+          <h2 id="vendor-details-heading" className="sr-only">Vendor Details</h2>
           <div className="space-y-5">
             <div className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
               <table className="w-full text-sm border-collapse">
@@ -336,12 +342,13 @@ function VendorDetailPage() {
               </table>
             </div>
           </div>
-        </aside>
+        </section>
       </section>
 
       {/* Compounds table */}
       {vendor.compoundNames.length > 0 && (
-        <section className="mt-6 glass-card-solid overflow-hidden shadow-none p-5">
+        <section className="mt-6 glass-card-solid overflow-hidden shadow-none p-5" aria-labelledby="available-peptides-heading">
+          <h2 id="available-peptides-heading" className="sr-only">Available Peptides</h2>
           <div className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
             <table className="w-full text-sm border-collapse">
               <colgroup>
@@ -390,12 +397,12 @@ function VendorDetailPage() {
       )}
 
       {/* Reviews card */}
-      <div className="mt-6 glass-card-solid overflow-hidden shadow-none p-5 space-y-6">
-        <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+      <section className="mt-6 glass-card-solid overflow-hidden shadow-none p-5 space-y-6" aria-labelledby="vendor-reviews-heading">
+        <h2 id="vendor-reviews-heading" className="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
           Reviews
         </h2>
         <ReviewsList reviews={reviews} vendorId={vendor.id} />
-      </div>
+      </section>
     </div>
   )
 }

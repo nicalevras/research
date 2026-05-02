@@ -6,12 +6,32 @@ import { PeptideGrid } from '~/components/peptide-grid'
 import { PillNav } from '~/components/pill-nav'
 import { withVendorCounts } from '~/lib/compound-counts'
 import { PEPTIDE_CATEGORIES, SITE_URL } from '~/lib/constants'
-import { breadcrumbSchema } from '~/lib/schema'
+import { breadcrumbSchema, collectionPageSchema, compoundItemListSchema } from '~/lib/schema'
 import { getCompounds, getVendorCompoundOptions } from '~/lib/data'
 import { peptideDirectorySearchSchema } from '~/lib/search'
 import type { Compound } from '~/lib/types'
+import {
+  peptideCategoryPath,
+  peptideSearchPath,
+  peptideVendorPath,
+  resolvePeptideDirectorySeoContext,
+} from '~/lib/peptide-directory-seo'
 
 const PEPTIDE_CATEGORY_BY_ID = new Map(PEPTIDE_CATEGORIES.map((category) => [category.id, category]))
+
+type PeptideDirectoryLanding = {
+  heading: string
+  description: string
+  pageTitle: string
+  listName: string
+  resultSummary: string
+}
+
+type PeptideDirectorySeo = {
+  canonicalPath: string
+  noindex: boolean
+  indexable: boolean
+}
 
 function selectedCategoryIds(categories: string | undefined) {
   return categories?.split(',').filter((categoryId) => PEPTIDE_CATEGORY_BY_ID.has(categoryId)) ?? []
@@ -21,23 +41,23 @@ function vendorPeptidesHeading(vendorName: string) {
   return /\bpeptides?$/i.test(vendorName.trim()) ? vendorName : `${vendorName} Peptides`
 }
 
+function peptideCountLabel(count: number) {
+  return `${count} peptide${count === 1 ? '' : 's'}`
+}
+
 function peptideLandingCopy(filters: {
-  q?: string
-  categories?: string
-  vendor?: string
+  query?: string
+  categoryIds: string[]
   vendorName?: string
-}) {
-  const search = filters.q?.trim()
-  const selectedCategories = selectedCategoryIds(filters.categories)
-  const categoryLabels = selectedCategories.flatMap((categoryId) => {
+  peptideCount: number
+  indexable: boolean
+}): PeptideDirectoryLanding {
+  const search = filters.query
+  const categoryLabels = filters.categoryIds.flatMap((categoryId) => {
     const category = PEPTIDE_CATEGORY_BY_ID.get(categoryId)
     return category ? [category.name] : []
   })
-  const searchParams = new URLSearchParams()
-  if (search) searchParams.set('q', search)
-  if (filters.categories) searchParams.set('categories', filters.categories)
-  if (filters.vendor) searchParams.set('vendor', filters.vendor)
-  const canonicalPath = searchParams.size > 0 ? `/peptides?${searchParams.toString()}` : '/peptides'
+  const peptideCountSummary = `Showing ${peptideCountLabel(filters.peptideCount)}`
 
   if (categoryLabels.length > 0) {
     const label = categoryLabels.join(' + ')
@@ -46,12 +66,13 @@ function peptideLandingCopy(filters: {
       description: `Browse ${label.toLowerCase()} research peptides and compare vendors carrying each peptide.`,
       pageTitle: `${label} Peptides - Peptide Vendor Directory`,
       listName: `${label} Peptides`,
-      canonicalPath,
-      noindex: Boolean(search),
+      resultSummary: filters.indexable && categoryLabels.length === 1
+        ? `${peptideCountSummary} in ${label}.`
+        : `${peptideCountSummary} matching current filters.`,
     }
   }
 
-  if (filters.vendor && filters.vendorName) {
+  if (filters.vendorName) {
     const vendorHeading = vendorPeptidesHeading(filters.vendorName)
 
     return {
@@ -59,8 +80,9 @@ function peptideLandingCopy(filters: {
       description: `Browse research peptides listed for ${filters.vendorName}. Compare peptide profiles and matching vendor availability.`,
       pageTitle: `${vendorHeading} - Peptide Vendor Directory`,
       listName: vendorHeading,
-      canonicalPath,
-      noindex: Boolean(search),
+      resultSummary: search
+        ? `${peptideCountSummary} matching current filters.`
+        : `${peptideCountSummary} listed for ${filters.vendorName}.`,
     }
   }
 
@@ -71,8 +93,75 @@ function peptideLandingCopy(filters: {
       : 'Browse research peptides and compare vendors carrying each peptide.',
     pageTitle: search ? 'Peptide Search Results - Peptide Vendor Directory' : 'Peptides - Peptide Vendor Directory',
     listName: 'Peptides',
-    canonicalPath,
-    noindex: Boolean(search),
+    resultSummary: search
+      ? `${peptideCountSummary} matching your search.`
+      : `${peptideCountSummary} in the directory.`,
+  }
+}
+
+function peptideSeo(filters: {
+  query?: string
+  categoryIds: string[]
+  invalidCategoryIds: string[]
+  vendorId?: string
+  hasInvalidVendor: boolean
+}): PeptideDirectorySeo {
+  const singleCategoryId = filters.categoryIds.length === 1 ? filters.categoryIds[0] : undefined
+  const hasMultipleCategories = filters.categoryIds.length > 1
+  const hasInvalidParams = filters.invalidCategoryIds.length > 0 || filters.hasInvalidVendor
+
+  if (singleCategoryId && (filters.query || filters.vendorId || hasInvalidParams)) {
+    return {
+      canonicalPath: peptideCategoryPath(singleCategoryId),
+      noindex: true,
+      indexable: false,
+    }
+  }
+
+  if (hasMultipleCategories) {
+    return {
+      canonicalPath: '/peptides',
+      noindex: true,
+      indexable: false,
+    }
+  }
+
+  if (filters.query) {
+    return {
+      canonicalPath: peptideSearchPath(filters.query),
+      noindex: true,
+      indexable: false,
+    }
+  }
+
+  if (filters.vendorId) {
+    return {
+      canonicalPath: peptideVendorPath(filters.vendorId),
+      noindex: true,
+      indexable: false,
+    }
+  }
+
+  if (hasInvalidParams) {
+    return {
+      canonicalPath: '/peptides',
+      noindex: true,
+      indexable: false,
+    }
+  }
+
+  if (singleCategoryId) {
+    return {
+      canonicalPath: peptideCategoryPath(singleCategoryId),
+      noindex: false,
+      indexable: true,
+    }
+  }
+
+  return {
+    canonicalPath: '/peptides',
+    noindex: false,
+    indexable: true,
   }
 }
 
@@ -96,48 +185,81 @@ export const Route = createFileRoute('/peptides/')({
       getCompounds(),
       getVendorCompoundOptions(),
     ])
-    const selectedVendor = deps.vendor ? vendors.find((vendor) => vendor.id === deps.vendor) : undefined
-    const compounds = filterCompounds(withVendorCounts(allCompounds, vendors), deps.q, deps.categories, selectedVendor?.compoundSlugs)
-    const landing = peptideLandingCopy({ ...deps, vendorName: selectedVendor?.name })
-    return { ...deps, compounds, vendors, landing }
+    const seoContext = resolvePeptideDirectorySeoContext(deps, vendors)
+    const q = seoContext.query
+    const categories = seoContext.validCategoryIds.join(',') || undefined
+    const vendor = seoContext.validVendor?.id
+    const compounds = filterCompounds(
+      withVendorCounts(allCompounds, vendors),
+      q,
+      categories,
+      seoContext.validVendor?.compoundSlugs,
+    )
+    const seo = peptideSeo({
+      query: seoContext.query,
+      categoryIds: seoContext.validCategoryIds,
+      invalidCategoryIds: seoContext.invalidCategoryIds,
+      vendorId: seoContext.validVendor?.id,
+      hasInvalidVendor: seoContext.hasInvalidVendor,
+    })
+    const landing = peptideLandingCopy({
+      query: seoContext.query,
+      categoryIds: seoContext.validCategoryIds,
+      vendorName: seoContext.validVendor?.name,
+      peptideCount: compounds.length,
+      indexable: seo.indexable,
+    })
+
+    return { q, categories, vendor, compounds, vendors, landing, seo }
   },
   head: ({ loaderData }) => {
-    const landing = loaderData?.landing ?? peptideLandingCopy({})
+    const landing = loaderData?.landing ?? peptideLandingCopy({
+      categoryIds: [],
+      peptideCount: 0,
+      indexable: true,
+    })
+    const seo = loaderData?.seo ?? {
+      canonicalPath: '/peptides',
+      noindex: false,
+      indexable: true,
+    }
     const pageDescription = landing.description
-    const canonicalUrl = `${SITE_URL}${landing.canonicalPath}`
+    const canonicalUrl = `${SITE_URL}${seo.canonicalPath}`
+    const ogImage = `${SITE_URL}/og-image.png`
+    const itemListId = seo.indexable ? `${canonicalUrl}#peptide-list` : undefined
 
     return {
       meta: [
         { title: landing.pageTitle },
         { name: 'description', content: pageDescription },
-        ...(landing.noindex ? [{ name: 'robots', content: 'noindex, follow' as const }] : []),
+        ...(seo.noindex ? [{ name: 'robots', content: 'noindex, follow' as const }] : []),
         { property: 'og:title', content: landing.pageTitle },
+        { property: 'og:type', content: 'website' },
         { property: 'og:description', content: pageDescription },
         { property: 'og:url', content: canonicalUrl },
+        { property: 'og:image', content: ogImage },
+        { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: landing.pageTitle },
         { name: 'twitter:description', content: pageDescription },
+        { name: 'twitter:image', content: ogImage },
       ],
       links: [{ rel: 'canonical', href: canonicalUrl }],
       scripts: [
-        ...(loaderData?.compounds
+        ...(seo.indexable
           ? [{
               type: 'application/ld+json' as const,
-              children: JSON.stringify({
-                '@context': 'https://schema.org',
-                '@type': 'ItemList',
-                name: landing.listName,
-                url: canonicalUrl,
-                numberOfItems: loaderData.compounds.length,
-                itemListElement: loaderData.compounds.map((compound, index) => ({
-                  '@type': 'ListItem',
-                  position: index + 1,
-                  item: {
-                    '@type': 'Thing',
-                    name: compound.name,
-                    url: `${SITE_URL}/peptides/${compound.id}`,
-                  },
-                })),
-              }),
+              children: JSON.stringify(collectionPageSchema({
+                name: landing.pageTitle,
+                description: pageDescription,
+                url: seo.canonicalPath,
+                mainEntityId: itemListId!,
+              })),
+            }]
+          : []),
+        ...(loaderData?.compounds && seo.indexable
+          ? [{
+              type: 'application/ld+json' as const,
+              children: JSON.stringify(compoundItemListSchema(loaderData.compounds, landing.listName, seo.canonicalPath, itemListId ? { id: itemListId } : undefined)),
             }]
           : []),
         {
@@ -159,8 +281,7 @@ export const Route = createFileRoute('/peptides/')({
 
 function PeptidesPage() {
   const navigate = useNavigate()
-  const { q, categories, vendor } = Route.useSearch()
-  const { compounds, vendors, landing } = Route.useLoaderData()
+  const { q, categories, vendor, compounds, vendors, landing } = Route.useLoaderData()
   const searchRef = useRef<HTMLInputElement>(null)
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
   const [localQuery, setLocalQuery] = useState(q ?? '')
@@ -235,7 +356,10 @@ function PeptidesPage() {
         <div className="max-w-3xl">
           <h1 className="max-w-2xl text-3xl font-[900] font-stretch-semi-expanded capitalize leading-tight tracking-[-1px] text-neutral-950 dark:text-white sm:text-4xl">{landing.heading}</h1>
           <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-neutral-600 dark:text-neutral-300">
-          {landing.description}
+            {landing.description}
+          </p>
+          <p className="mt-3 text-sm font-medium text-neutral-500 dark:text-neutral-400">
+            {landing.resultSummary}
           </p>
         </div>
       </section>
@@ -294,6 +418,7 @@ function PeptidesPage() {
       </div>
 
       <section className="mt-6" aria-label="Peptides">
+        <h2 className="sr-only">Peptide listings</h2>
         <PeptideGrid
           data={compounds}
           emptyTitle="No peptides match the current filters"

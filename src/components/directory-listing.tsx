@@ -9,6 +9,7 @@ import { useMemo, useRef, useCallback, useEffect, useState } from 'react'
 interface DirectoryListingProps {
   heading: string
   description: string
+  resultSummary: string
   searchQuery: string
   vendors: VendorSummary[]
   compounds: Compound[]
@@ -17,7 +18,7 @@ interface DirectoryListingProps {
   activeCompoundProfile?: Compound
 }
 
-export function DirectoryListing({ heading, description, searchQuery, vendors, compounds, activeFeatures, activeCompound, activeCompoundProfile }: DirectoryListingProps) {
+export function DirectoryListing({ heading, description, resultSummary, searchQuery, vendors, compounds, activeFeatures, activeCompound, activeCompoundProfile }: DirectoryListingProps) {
   const navigate = useNavigate()
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
   const searchRef = useRef<HTMLInputElement>(null)
@@ -109,6 +110,9 @@ export function DirectoryListing({ heading, description, searchQuery, vendors, c
                     .
                   </>
                 )}
+              </p>
+              <p className="mt-3 text-sm font-medium text-neutral-500 dark:text-neutral-400">
+                {resultSummary}
               </p>
             </div>
           )}

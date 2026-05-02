@@ -5,8 +5,8 @@ import { FeaturedResources } from '~/components/featured-resources'
 import { PeptideGrid } from '~/components/peptide-grid'
 import { VendorGrid } from '~/components/vendor-grid'
 import { withVendorCounts } from '~/lib/compound-counts'
-import { SITE_URL } from '~/lib/constants'
-import { breadcrumbSchema, itemListSchema, siteSearchSchema } from '~/lib/schema'
+import { SITE_NAME, SITE_URL } from '~/lib/constants'
+import { compoundItemListSchema, itemListSchema, websiteSchema } from '~/lib/schema'
 import { getCompounds, getFeaturedVendors, getVendorCompoundOptions } from '~/lib/data'
 
 const quickFilterLinkClass = 'inline-flex shrink-0 items-center rounded-lg border border-neutral-200/60 bg-white/70 px-3.5 py-1.5 text-sm font-medium text-neutral-900 backdrop-blur-sm transition-all hover:bg-white hover:text-neutral-500 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-white dark:hover:bg-white/[0.08] dark:hover:text-neutral-400'
@@ -27,48 +27,42 @@ export const Route = createFileRoute('/')({
     }
   },
   head: ({ loaderData }) => {
-    const pageTitle = 'Peptide Vendor Directory - Featured Peptide Vendors'
-    const pageDescription = 'Compare featured peptide vendors with ratings, promo codes, and vendor details from the Peptide Vendor Directory.'
+    const pageTitle = `${SITE_NAME} - Vendors, Peptides, and Research Tools`
+    const pageDescription = 'Browse featured peptide vendors, research peptides, and core tools from the Peptide Vendor Directory.'
     const canonicalUrl = `${SITE_URL}/`
+    const ogImage = `${SITE_URL}/og-image.png`
+    const featuredVendorListId = `${canonicalUrl}#featured-vendors`
+    const featuredPeptideListId = `${canonicalUrl}#featured-peptides`
 
     return {
       meta: [
         { title: pageTitle },
         { name: 'description', content: pageDescription },
+        { property: 'og:type', content: 'website' },
         { property: 'og:title', content: pageTitle },
         { property: 'og:description', content: pageDescription },
         { property: 'og:url', content: canonicalUrl },
+        { property: 'og:image', content: ogImage },
+        { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: pageTitle },
         { name: 'twitter:description', content: pageDescription },
+        { name: 'twitter:image', content: ogImage },
       ],
       links: [{ rel: 'canonical', href: canonicalUrl }],
       scripts: [
-        { type: 'application/ld+json', children: JSON.stringify(siteSearchSchema()) },
+        { type: 'application/ld+json', children: JSON.stringify(websiteSchema()) },
         ...(loaderData?.vendors
-          ? [{ type: 'application/ld+json' as const, children: JSON.stringify(itemListSchema(loaderData.vendors, 'Featured Peptide Vendors', '/')) }]
+          ? [{
+              type: 'application/ld+json' as const,
+              children: JSON.stringify(itemListSchema(loaderData.vendors, 'Featured Peptide Vendors', '/', { id: featuredVendorListId })),
+            }]
           : []),
         ...(loaderData?.compounds
           ? [{
               type: 'application/ld+json' as const,
-              children: JSON.stringify({
-                '@context': 'https://schema.org',
-                '@type': 'ItemList',
-                name: 'Featured Peptides',
-                url: canonicalUrl,
-                numberOfItems: loaderData.compounds.length,
-                itemListElement: loaderData.compounds.map((compound, index) => ({
-                  '@type': 'ListItem',
-                  position: index + 1,
-                  item: {
-                    '@type': 'Thing',
-                    name: compound.name,
-                    url: `${SITE_URL}/peptides/${compound.id}`,
-                  },
-                })),
-              }),
+              children: JSON.stringify(compoundItemListSchema(loaderData.compounds, 'Featured Peptides', '/', { id: featuredPeptideListId })),
             }]
           : []),
-        { type: 'application/ld+json', children: JSON.stringify(breadcrumbSchema([{ name: 'Home', url: '/' }])) },
       ],
     }
   },

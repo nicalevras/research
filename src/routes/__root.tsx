@@ -15,7 +15,7 @@ import { AuthModalProvider } from '~/lib/auth-context'
 import { FavoritesProvider } from '~/lib/favorites-context'
 import { AuthModals } from '~/components/auth-modals'
 import { SiteFooter } from '~/components/site-footer'
-import { SITE_URL } from '~/lib/constants'
+import { SITE_NAME, SITE_URL } from '~/lib/constants'
 import appCss from '~/styles/app.css?url'
 
 export const Route = createRootRoute({
@@ -23,15 +23,16 @@ export const Route = createRootRoute({
     meta: [
       { charSet: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'Peptide Vendor Directory' },
+      { title: SITE_NAME },
       {
         name: 'description',
         content: 'Find and compare peptide vendors. Verified ratings, certifications, and detailed reviews for every supplier.',
       },
       { property: 'og:type', content: 'website' },
-      { property: 'og:site_name', content: 'Peptide Vendor Directory' },
+      { property: 'og:site_name', content: SITE_NAME },
       { property: 'og:image', content: `${SITE_URL}/og-image.png` },
       { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:image', content: `${SITE_URL}/og-image.png` },
     ],
     links: [
       { rel: 'stylesheet', href: appCss },
@@ -86,7 +87,6 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
                         <Link to="/vendors" activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Vendors</Link>
                         <Link to="/peptides" activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Peptides</Link>
                         <Link to="/calculator" className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Tools</Link>
-                        <a href="#" className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Community</a>
                       </nav>
                     </div>
                   </div>

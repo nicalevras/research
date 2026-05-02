@@ -6,7 +6,17 @@ import { sql } from 'drizzle-orm'
 import { db } from '~/db'
 import { vendors, reviews, user, account, compounds, compoundStudies, vendorFavorites } from '~/db/schema'
 import { auth } from '~/lib/auth'
-import type { Vendor, VendorSummary, Review, Compound, CompoundProfileData, CompoundProfileVendor, CompoundStudy, VendorCompoundOption } from './types'
+import type {
+  Vendor,
+  VendorSummary,
+  Review,
+  Compound,
+  CompoundProfileData,
+  CompoundProfileVendor,
+  CompoundStudy,
+  PeptideProfileSitemapEntry,
+  VendorCompoundOption,
+} from './types'
 
 const COMPOUND_REGISTRY_CACHE_TTL_MS = 5 * 60_000
 const VENDOR_COMPOUND_OPTIONS_CACHE_TTL_MS = 5 * 60_000
@@ -37,9 +47,31 @@ const vendorSummaryColumns = {
   shipsInternational: vendors.shipsInternational,
   rating: vendors.rating,
   reviewCount: vendors.reviewCount,
+  updatedAt: vendors.updatedAt,
 }
 
-function rowToVendorSummary(row: VendorSummary): VendorSummary {
+type VendorSummaryRow = {
+  id: string
+  name: string
+  description: string
+  logoUrl: string | null
+  promoCode: string | null
+  promoDiscountPercent: number | null
+  verified: boolean
+  featured: boolean
+  country: string
+  hasCoa: boolean
+  acceptsCreditCard: boolean
+  acceptsAch: boolean
+  acceptsCrypto: boolean
+  fastShipping: boolean
+  shipsInternational: boolean
+  rating: number
+  reviewCount: number
+  updatedAt: Date
+}
+
+function rowToVendorSummary(row: VendorSummaryRow): VendorSummary {
   return {
     id: row.id,
     name: row.name,
@@ -58,6 +90,7 @@ function rowToVendorSummary(row: VendorSummary): VendorSummary {
     shipsInternational: row.shipsInternational,
     rating: row.rating,
     reviewCount: row.reviewCount,
+    updatedAt: row.updatedAt.toISOString(),
   }
 }
 
@@ -67,6 +100,7 @@ function rowToVendor(row: typeof vendors.$inferSelect): Vendor {
     website: row.website,
     compoundNames: row.compoundNames,
     compoundSlugs: row.compoundSlugs,
+    updatedAt: row.updatedAt.toISOString(),
   }
 }
 
@@ -183,6 +217,37 @@ export const getVendorById = createServerFn({ method: 'GET' })
 export const getCompounds = createServerFn({ method: 'GET' })
   .handler(loadCompounds)
 
+export const getPeptideProfileSitemapEntries = createServerFn({ method: 'GET' })
+  .handler(async () => {
+    const rows = await db
+      .select({
+        id: compounds.id,
+        updatedAt: sql<string>`greatest(
+          ${compounds.updatedAt},
+          coalesce(
+            (
+              select max(${compoundStudies.updatedAt})
+              from ${compoundStudies}
+              where ${compoundStudies.compoundId} = ${compounds.id}
+            ),
+            ${compounds.updatedAt}
+          ),
+          coalesce(
+            (
+              select max(${vendors.updatedAt})
+              from ${vendors}
+              where ${vendors.compoundSlugs} @> ARRAY[${compounds.id}]::text[]
+            ),
+            ${compounds.updatedAt}
+          )
+        )::text`,
+      })
+      .from(compounds)
+      .orderBy(asc(compounds.sortOrder), asc(compounds.name))
+
+    return rows satisfies PeptideProfileSitemapEntry[]
+  })
+
 export const getVendorCompoundOptions = createServerFn({ method: 'GET' })
   .handler(loadVendorCompoundOptions)
 
@@ -275,7 +340,7 @@ export const filterVendors = createServerFn({ method: 'GET' })
       .select(vendorSummaryColumns)
       .from(vendors)
       .where(conditions.length > 0 ? and(...conditions) : undefined)
-      .orderBy(desc(vendors.rating))
+      .orderBy(desc(vendors.rating), asc(vendors.name))
 
     return rows.map(rowToVendorSummary)
   })

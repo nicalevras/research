@@ -1,23 +1,26 @@
 import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
-import { SITE_URL } from '~/lib/constants'
-import { breadcrumbSchema } from '~/lib/schema'
+import { SITE_NAME, SITE_URL } from '~/lib/constants'
+import { breadcrumbSchema, webApplicationSchema } from '~/lib/schema'
 import { CircleAlertIcon } from '~/components/icons'
 
 export const Route = createFileRoute('/calculator')({
   head: () => {
-    const pageTitle = 'Peptide Reconstitution Calculator — Peptide Directory'
+    const pageTitle = `Peptide Reconstitution Calculator - ${SITE_NAME}`
     const pageDescription = 'Free peptide reconstitution calculator. Calculate concentration, dose volume, and syringe units for any peptide vial.'
-    const canonicalUrl = `${SITE_URL}/calculator`
+    const canonicalPath = '/calculator'
+    const canonicalUrl = `${SITE_URL}${canonicalPath}`
     const ogImage = `${SITE_URL}/og-image.png`
     return {
       meta: [
         { title: pageTitle },
         { name: 'description', content: pageDescription },
+        { property: 'og:type', content: 'website' },
         { property: 'og:title', content: pageTitle },
         { property: 'og:description', content: pageDescription },
         { property: 'og:url', content: canonicalUrl },
         { property: 'og:image', content: ogImage },
+        { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: pageTitle },
         { name: 'twitter:description', content: pageDescription },
         { name: 'twitter:image', content: ogImage },
@@ -26,16 +29,16 @@ export const Route = createFileRoute('/calculator')({
       scripts: [
         {
           type: 'application/ld+json',
-          children: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'WebApplication',
+          children: JSON.stringify(webApplicationSchema({
+            id: '/calculator#app',
             name: 'Peptide Reconstitution Calculator',
-            url: canonicalUrl,
+            url: canonicalPath,
             description: pageDescription,
             applicationCategory: 'HealthApplication',
             operatingSystem: 'Any',
             offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-          }),
+            isAccessibleForFree: true,
+          })),
         },
         {
           type: 'application/ld+json' as const,
@@ -227,7 +230,8 @@ function CalculatorPage() {
       </section>
 
       {/* Inputs */}
-      <div className="glass-card-solid shadow-none p-6">
+      <section className="glass-card-solid shadow-none p-6" aria-labelledby="calculator-inputs-heading">
+        <h2 id="calculator-inputs-heading" className="sr-only">Calculator Inputs</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Syringe Size */}
         <div className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] p-5 space-y-2.5">
@@ -325,11 +329,11 @@ function CalculatorPage() {
           )}
         </div>
         </div>
-      </div>
+      </section>
 
       {/* Results */}
-      <div className="glass-card-solid shadow-none p-6 mt-6">
-        <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500 mb-5">Results</h2>
+      <section className="glass-card-solid shadow-none p-6 mt-6" aria-labelledby="calculator-results-heading">
+        <h2 id="calculator-results-heading" className="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500 mb-5">Results</h2>
 
         {hasResults ? (
           <div className="space-y-5">
@@ -374,7 +378,7 @@ function CalculatorPage() {
         ) : (
           <SyringeScale fillUnits={0} totalUnits={syringe.units} />
         )}
-      </div>
+      </section>
 
       {/* Disclaimer */}
       <p className="text-[11px] text-neutral-400 dark:text-neutral-500 text-center mt-6 max-w-lg mx-auto leading-relaxed">

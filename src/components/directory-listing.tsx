@@ -125,6 +125,7 @@ export function DirectoryListing({ heading, description, resultSummary, searchQu
               ref={searchRef}
               type="text"
               placeholder="Search vendors..."
+              aria-label="Search vendors"
               value={localQuery}
               onChange={(e) => {
                 setLocalQuery(e.target.value)
@@ -151,7 +152,11 @@ export function DirectoryListing({ heading, description, resultSummary, searchQu
 
           <div className="flex gap-3 shrink-0 w-full sm:w-auto">
             <div className="relative flex-1 sm:flex-none sm:w-40">
+              <label htmlFor="vendor-directory-peptide-filter" className="sr-only">
+                Filter vendors by peptide
+              </label>
               <select
+                id="vendor-directory-peptide-filter"
                 value={activeCompound || ''}
                 onChange={(e) => {
                   const val = e.target.value

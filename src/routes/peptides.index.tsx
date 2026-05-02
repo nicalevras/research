@@ -372,6 +372,7 @@ function PeptidesPage() {
               ref={searchRef}
               type="text"
               placeholder="Search peptides..."
+              aria-label="Search peptides"
               value={localQuery}
               onChange={(event) => {
                 setLocalQuery(event.target.value)
@@ -398,7 +399,11 @@ function PeptidesPage() {
           </div>
 
           <div className="relative w-full sm:w-48">
+            <label htmlFor="peptide-directory-vendor-filter" className="sr-only">
+              Filter peptides by vendor
+            </label>
             <select
+              id="peptide-directory-vendor-filter"
               value={vendor ?? ''}
               onChange={(event) => handleVendorChange(event.target.value)}
               className="native-select w-full cursor-pointer appearance-none rounded-lg border border-neutral-200/60 bg-white/70 py-2 pl-4 pr-9 text-sm text-neutral-700 backdrop-blur-sm transition-all focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-neutral-300 dark:focus:ring-white/10"

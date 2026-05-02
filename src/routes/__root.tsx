@@ -36,7 +36,9 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: 'stylesheet', href: appCss },
-      { rel: 'icon', href: '/favicon.ico' },
+      { rel: 'icon', href: '/images/ui/favicon.ico' },
+      { rel: 'apple-touch-icon', href: '/images/ui/apple-touch-icon.png' },
+      { rel: 'manifest', href: '/site.webmanifest' },
     ],
     scripts: [
       { children: `(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark')}catch(e){}})()` },

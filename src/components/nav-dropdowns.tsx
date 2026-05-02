@@ -6,7 +6,7 @@ import { useAuthModal } from '~/lib/auth-context'
 import { authClient } from '~/lib/auth-client'
 import { MenuIcon, UserIcon, SunIcon, MoonIcon, LogInIcon, UserPlusIcon, LogOutIcon, SettingsIcon, SearchIcon, XIcon, HeartIcon } from '~/components/icons'
 
-function DropdownMenu({ trigger, children, align = 'right' }: { trigger: ReactNode; children: ReactNode; align?: 'left' | 'right' }) {
+function DropdownMenu({ trigger, children, align = 'right', ariaLabel }: { trigger: ReactNode; children: ReactNode; align?: 'left' | 'right'; ariaLabel: string }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -32,6 +32,7 @@ function DropdownMenu({ trigger, children, align = 'right' }: { trigger: ReactNo
       <button
         type="button"
         onClick={() => setOpen(!open)}
+        aria-label={ariaLabel}
         className="inline-flex items-center justify-center rounded-lg h-8 w-8 cursor-pointer bg-white/70 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/[0.06] text-neutral-500 dark:text-neutral-400 hover:bg-white dark:hover:bg-white/[0.08] hover:text-neutral-900 dark:hover:text-white transition-all duration-200"
       >
         {trigger}
@@ -76,6 +77,7 @@ export function HamburgerMenu() {
   return (
     <DropdownMenu
       align="right"
+      ariaLabel="Open navigation menu"
       trigger={<MenuIcon className="h-5 w-5" strokeWidth={1.5} />}
     >
       <DropdownLink to="/vendors">Vendors</DropdownLink>
@@ -102,6 +104,7 @@ export function UserMenu() {
 
   return (
     <DropdownMenu
+      ariaLabel="Open account menu"
       trigger={<UserIcon className="h-5 w-5" strokeWidth={1.5} />}
     >
       {isPending ? (
@@ -211,6 +214,7 @@ export function NavSearch() {
             ref={mobileInputRef}
             type="text"
             placeholder="Search"
+            aria-label="Search vendors"
             value={query}
             onChange={(e) => handleChange(e.target.value)}
             onKeyDown={(e) => {
@@ -242,6 +246,7 @@ export function NavSearch() {
         <input
           type="text"
           placeholder="Search"
+          aria-label="Search vendors"
           value={query}
           onChange={(e) => handleChange(e.target.value)}
           onKeyDown={(e) => {

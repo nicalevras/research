@@ -21,10 +21,10 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummar
             <Link
               to="/vendors/$id"
               params={{ id: vendor.id }}
-              aria-label={`View ${vendor.name}`}
               className="flex h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50 transition-opacity hover:opacity-80 dark:border-white/[0.08] dark:bg-white/[0.04]"
             >
               <VendorAvatar vendor={vendor} />
+              <span className="sr-only">View {vendor.name}</span>
             </Link>
             <div className="min-w-0 flex-1">
               <div className="flex min-w-0 items-start gap-2">

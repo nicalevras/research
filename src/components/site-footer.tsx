@@ -3,7 +3,7 @@ import { ChevronRightIcon } from '~/components/icons'
 
 function FooterHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+    <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-300">
       {children}
     </h2>
   )
@@ -63,7 +63,7 @@ export function SiteFooter() {
         </nav>
       </div>
 
-      <div className="mt-10 flex flex-col gap-3 border-t border-neutral-200/60 pt-6 text-sm text-neutral-400 dark:border-white/[0.06] dark:text-neutral-500 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-10 flex flex-col gap-3 border-t border-neutral-200/60 pt-6 text-sm text-neutral-600 dark:border-white/[0.06] dark:text-neutral-300 sm:flex-row sm:items-center sm:justify-between">
         <p>&copy; {new Date().getFullYear()} Peptide Directory</p>
         <p className="max-w-2xl leading-6">
           For research comparison only. Not medical advice, diagnosis, or treatment.

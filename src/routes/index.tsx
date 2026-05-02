@@ -134,6 +134,7 @@ function HomePage() {
                 <input
                   type="text"
                   placeholder="Search vendors, peptides..."
+                  aria-label="Search vendors and peptides"
                   value={query}
                   onChange={(event) => handleSearch(event.target.value)}
                   className="w-full rounded-lg border border-neutral-200/60 bg-white/70 py-2 pl-9 pr-9 text-sm text-neutral-900 placeholder-neutral-400 backdrop-blur-sm transition-all focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-white dark:placeholder-neutral-500 dark:focus:border-white/20 dark:focus:ring-white/10"
@@ -155,7 +156,11 @@ function HomePage() {
 
               <div className="flex w-full shrink-0 gap-3 sm:w-auto">
                 <div className="relative flex-1 sm:w-44 sm:flex-none">
+                  <label htmlFor="home-peptide-filter" className="sr-only">
+                    Filter vendors by peptide
+                  </label>
                   <select
+                    id="home-peptide-filter"
                     defaultValue=""
                     onChange={(event) => handlePeptideChange(event.target.value)}
                     className="native-select w-full cursor-pointer appearance-none rounded-lg border border-neutral-200/60 bg-white/70 py-2 pl-4 pr-9 text-sm text-neutral-700 backdrop-blur-sm transition-all focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-neutral-300 dark:focus:ring-white/10"
@@ -169,7 +174,11 @@ function HomePage() {
                 </div>
 
                 <div className="relative flex-1 sm:w-44 sm:flex-none">
+                  <label htmlFor="home-vendor-filter" className="sr-only">
+                    Filter peptides by vendor
+                  </label>
                   <select
+                    id="home-vendor-filter"
                     defaultValue=""
                     onChange={(event) => handleVendorChange(event.target.value)}
                     className="native-select w-full cursor-pointer appearance-none rounded-lg border border-neutral-200/60 bg-white/70 py-2 pl-4 pr-9 text-sm text-neutral-700 backdrop-blur-sm transition-all focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:border-white/[0.06] dark:bg-white/[0.04] dark:text-neutral-300 dark:focus:ring-white/10"

@@ -32,6 +32,19 @@ export default defineConfig({
     }),
     viteReact(),
     nitro({
+      publicAssets: [
+        {
+          dir: 'public/images',
+          baseURL: 'images',
+          maxAge: 60 * 60 * 24 * 365,
+        },
+        {
+          dir: 'public',
+          baseURL: '',
+          maxAge: 60 * 60 * 24 * 365,
+          ignore: ['images/**'],
+        },
+      ],
       routeRules: {
         '/account': { prerender: false },
         '/favorites': { prerender: false },

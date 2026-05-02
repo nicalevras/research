@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as VendorsRouteImport } from './routes/vendors'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PeptidesRouteImport } from './routes/peptides'
@@ -38,6 +39,11 @@ const TermsRoute = TermsRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -109,6 +115,7 @@ export interface FileRoutesByFullPath {
   '/peptides': typeof PeptidesRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/vendors': typeof VendorsRouteWithChildren
@@ -125,6 +132,7 @@ export interface FileRoutesByTo {
   '/favorites': typeof FavoritesRoute
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/peptides/$compound': typeof PeptidesCompoundRoute
@@ -142,6 +150,7 @@ export interface FileRoutesById {
   '/peptides': typeof PeptidesRouteWithChildren
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/vendors': typeof VendorsRouteWithChildren
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/peptides'
     | '/privacy'
     | '/reset-password'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/terms'
     | '/vendors'
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/favorites'
     | '/privacy'
     | '/reset-password'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/terms'
     | '/peptides/$compound'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/peptides'
     | '/privacy'
     | '/reset-password'
+    | '/robots.txt'
     | '/sitemap.xml'
     | '/terms'
     | '/vendors'
@@ -211,6 +223,7 @@ export interface RootRouteChildren {
   PeptidesRoute: typeof PeptidesRouteWithChildren
   PrivacyRoute: typeof PrivacyRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   VendorsRoute: typeof VendorsRouteWithChildren
@@ -238,6 +251,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -362,6 +382,7 @@ const rootRouteChildren: RootRouteChildren = {
   PeptidesRoute: PeptidesRouteWithChildren,
   PrivacyRoute: PrivacyRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   VendorsRoute: VendorsRouteWithChildren,

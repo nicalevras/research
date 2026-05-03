@@ -10,6 +10,7 @@ import type { ReactNode } from 'react'
 import type { ErrorComponentProps } from '@tanstack/react-router'
 import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary'
 import { NotFound } from '~/components/NotFound'
+import { AminoRankMark } from '~/components/icons'
 import { HamburgerMenu, UserMenu, NavSearch } from '~/components/nav-dropdowns'
 import { AuthModalProvider } from '~/lib/auth-context'
 import { FavoritesProvider } from '~/lib/favorites-context'
@@ -78,9 +79,11 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
               <header className="relative sticky top-4 z-50 mt-4 bg-white/80 dark:bg-neutral-900/80 rounded-lg border border-neutral-200/60 dark:border-white/[0.06] mx-4 sm:mx-6 lg:mx-8 p-2.5 backdrop-blur-xl">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-900 dark:bg-white text-base" aria-hidden="true">🧪</div>
-                    <Link to="/" className="text-[15px] font-semibold tracking-tight text-neutral-900 dark:text-white">
-                      Peptide Directory
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-900 text-[#8cff00] dark:bg-white dark:text-neutral-950" aria-hidden="true">
+                      <AminoRankMark className="h-7 w-7" />
+                    </div>
+                    <Link to="/" className="text-[15px] font-[900] font-stretch-semi-expanded tracking-[-1px] text-neutral-900 dark:text-white">
+                      AminoRank
                     </Link>
                     <div className="hidden md:flex items-center gap-4 ml-2">
                       <div className="h-4 w-px bg-neutral-200 dark:bg-white/10" />

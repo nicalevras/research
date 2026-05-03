@@ -122,6 +122,29 @@ export function BadgeCheckIcon(props: IconProps) {
   )
 }
 
+export function AminoRankMark(props: IconProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      {...props}
+    >
+      <path
+        d="M6.15 11.45 10.35 15.65 14.35 11.35 18.35 7.15"
+        stroke="currentColor"
+        strokeWidth={2.15}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="6.15" cy="11.45" r="2.05" fill="currentColor" />
+      <circle cx="10.35" cy="15.65" r="2.35" fill="currentColor" />
+      <circle cx="14.35" cy="11.35" r="2.05" fill="currentColor" />
+      <circle cx="18.35" cy="7.15" r="2.05" fill="currentColor" />
+    </svg>
+  )
+}
+
 export function TagIcon(props: IconProps) {
   return (
     <Icon {...props}>

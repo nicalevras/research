@@ -4,7 +4,7 @@ import type { CompoundProfileData, CompoundProfileVendor, CompoundStudy } from '
 import { ChevronRightIcon } from '~/components/icons'
 import { ReviewStars } from '~/components/reviews'
 import { VendorAvatar } from '~/components/vendor-avatar'
-import { peptideGradient, peptideIconLabel } from '~/lib/peptide-icons'
+import { peptideIconLabel, peptideIconTheme } from '~/lib/peptide-icons'
 
 const PEPTIDE_CATEGORY_BY_ID = new Map(PEPTIDE_CATEGORIES.map((category) => [category.id, category]))
 
@@ -20,7 +20,7 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
     return category ? [category] : []
   })
   const iconLabel = peptideIconLabel(compound.id, compound.name)
-  const gradient = peptideGradient()
+  const iconTheme = peptideIconTheme(compound.categories)
   const vendorLabel = vendors.length === 1 ? 'Vendor' : 'Vendors'
 
   return (
@@ -51,8 +51,7 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
             <header className="flex min-w-0 flex-col gap-4">
               <div className="flex min-w-0 items-start gap-2">
                 <div
-                  className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-neutral-200/80 px-1 text-center text-[11px] font-bold leading-none tracking-normal text-neutral-950 shadow-inner dark:border-white/[0.08]"
-                  style={{ backgroundImage: gradient }}
+                  className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-lg px-1 text-center text-[11px] font-bold leading-none tracking-normal ${iconTheme}`}
                   aria-hidden="true"
                 >
                   <span className="whitespace-pre-line">{iconLabel}</span>

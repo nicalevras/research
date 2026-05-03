@@ -98,6 +98,23 @@ export function peptideIconLabel(id: string, name: string) {
   return PEPTIDE_ICON_LABELS[id] ?? peptideInitials(name)
 }
 
-export function peptideGradient() {
-  return 'linear-gradient(135deg, #d1fae5, #eff6ff, #ffe4e6)'
+const PEPTIDE_CATEGORY_ICON_THEME: Record<string, string> = {
+  'weight-loss': 'bg-amber-100 text-amber-700',
+  energy: 'bg-orange-100 text-orange-700',
+  focus: 'bg-indigo-100 text-indigo-700',
+  'sexual-health': 'bg-rose-100 text-rose-700',
+  cosmetic: 'bg-pink-100 text-pink-700',
+  recovery: 'bg-emerald-100 text-emerald-700',
+  muscle: 'bg-blue-100 text-blue-700',
+  longevity: 'bg-teal-100 text-teal-700',
+  research: 'bg-slate-100 text-slate-700',
+}
+
+export function peptideIconTheme(categories: string[]) {
+  for (const categoryId of categories) {
+    const theme = PEPTIDE_CATEGORY_ICON_THEME[categoryId]
+    if (theme) return theme
+  }
+
+  return 'bg-neutral-100 text-neutral-700'
 }

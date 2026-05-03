@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { PEPTIDE_CATEGORIES } from '~/lib/constants'
 import type { Compound } from '~/lib/types'
-import { peptideGradient, peptideIconLabel } from '~/lib/peptide-icons'
+import { peptideIconLabel, peptideIconTheme } from '~/lib/peptide-icons'
 
 const PEPTIDE_CATEGORY_BY_ID = new Map(PEPTIDE_CATEGORIES.map((category) => [category.id, category]))
 
@@ -11,7 +11,7 @@ function PeptideCard({ id, name, description, categories, vendorCount }: Compoun
     return category ? [category] : []
   })
   const iconLabel = peptideIconLabel(id, name)
-  const gradient = peptideGradient()
+  const iconTheme = peptideIconTheme(categories)
 
   return (
     <article className="flex h-full flex-col rounded-lg border border-neutral-200/80 bg-white p-5 dark:border-white/[0.08] dark:bg-neutral-900">
@@ -21,8 +21,7 @@ function PeptideCard({ id, name, description, categories, vendorCount }: Compoun
             <Link
               to="/peptides/$compound"
               params={{ compound: id }}
-              className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-neutral-200/80 px-1 text-center text-[11px] font-bold leading-none tracking-normal text-neutral-950 shadow-inner dark:border-white/[0.08]"
-              style={{ backgroundImage: gradient }}
+              className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-lg px-1 text-center text-[11px] font-bold leading-none tracking-normal ${iconTheme}`}
             >
               <span className="whitespace-pre-line">{iconLabel}</span>
               <span className="sr-only">View {name}</span>

@@ -4,6 +4,7 @@ import { zodValidator } from '@tanstack/zod-adapter'
 import { z } from 'zod'
 import { authClient } from '~/lib/auth-client'
 import { ChevronLeftIcon } from '~/components/icons'
+import { SITE_NAME } from '~/lib/constants'
 
 const resetSearchSchema = z.object({
   token: z.string().optional(),
@@ -16,7 +17,7 @@ export const Route = createFileRoute('/reset-password')({
   gcTime: 0,
   head: () => ({
     meta: [
-      { title: 'Reset Password — Peptide Vendor Directory' },
+      { title: `Reset Password — ${SITE_NAME}` },
       { name: 'robots', content: 'noindex, nofollow' },
     ],
   }),

@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { SITE_URL } from '~/lib/constants'
+import { SITE_NAME, SITE_URL } from '~/lib/constants'
 import { ChevronRightIcon } from '~/components/icons'
 
 export const Route = createFileRoute('/terms')({
   head: () => {
-    const pageTitle = 'Terms and Conditions - Peptide Directory'
-    const pageDescription = 'Terms and conditions for using Peptide Directory.'
+    const pageTitle = `Terms and Conditions - ${SITE_NAME}`
+    const pageDescription = `Terms and conditions for using ${SITE_NAME}.`
     const canonicalUrl = `${SITE_URL}/terms`
 
     return {
@@ -49,7 +49,7 @@ function TermsPage() {
 
           <div className="space-y-5 text-sm leading-7 text-neutral-600 dark:text-neutral-300">
             <p>
-              By using Peptide Directory, you agree to use the site for informational and research comparison purposes only.
+              By using {SITE_NAME}, you agree to use the site for informational and research comparison purposes only.
             </p>
 
             <section className="space-y-2">
@@ -76,7 +76,7 @@ function TermsPage() {
             <section className="space-y-2">
               <h2 className="text-sm font-bold text-neutral-950 dark:text-white">Research Use</h2>
               <p>
-                Peptide Directory is a comparison directory. The site does not manufacture, sell, prescribe, or dispense peptides or related products.
+                {SITE_NAME} is a comparison directory. The site does not manufacture, sell, prescribe, or dispense peptides or related products.
               </p>
             </section>
           </div>

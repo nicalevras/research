@@ -5,7 +5,7 @@ import { ChevronDownIcon, SearchIcon, XIcon } from '~/components/icons'
 import { PeptideGrid } from '~/components/peptide-grid'
 import { PillNav } from '~/components/pill-nav'
 import { withVendorCounts } from '~/lib/compound-counts'
-import { PEPTIDE_CATEGORIES, SITE_URL } from '~/lib/constants'
+import { PEPTIDE_CATEGORIES, SITE_NAME, SITE_URL } from '~/lib/constants'
 import { breadcrumbSchema, collectionPageSchema, compoundItemListSchema } from '~/lib/schema'
 import { getCompounds, getVendorCompoundOptions } from '~/lib/data'
 import { peptideDirectorySearchSchema } from '~/lib/search'
@@ -64,7 +64,7 @@ function peptideLandingCopy(filters: {
     return {
       heading: `${label} Peptides`,
       description: `Browse ${label.toLowerCase()} research peptides and compare vendors carrying each peptide.`,
-      pageTitle: `${label} Peptides - Peptide Vendor Directory`,
+      pageTitle: `${label} Peptides - ${SITE_NAME}`,
       listName: `${label} Peptides`,
       resultSummary: filters.indexable && categoryLabels.length === 1
         ? `${peptideCountSummary} in ${label}.`
@@ -78,7 +78,7 @@ function peptideLandingCopy(filters: {
     return {
       heading: vendorHeading,
       description: `Browse research peptides listed for ${filters.vendorName}. Compare peptide profiles and matching vendor availability.`,
-      pageTitle: `${vendorHeading} - Peptide Vendor Directory`,
+      pageTitle: `${vendorHeading} - ${SITE_NAME}`,
       listName: vendorHeading,
       resultSummary: search
         ? `${peptideCountSummary} matching current filters.`
@@ -91,7 +91,7 @@ function peptideLandingCopy(filters: {
     description: search
       ? `Search results for peptides matching "${search}".`
       : 'Browse research peptides and compare vendors carrying each peptide.',
-    pageTitle: search ? 'Peptide Search Results - Peptide Vendor Directory' : 'Peptides - Peptide Vendor Directory',
+    pageTitle: search ? `Peptide Search Results - ${SITE_NAME}` : `Peptides - ${SITE_NAME}`,
     listName: 'Peptides',
     resultSummary: search
       ? `${peptideCountSummary} matching your search.`

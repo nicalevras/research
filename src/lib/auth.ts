@@ -7,6 +7,7 @@ import * as schema from '~/db/schema'
 import { user as userTable } from '~/db/schema'
 import { eq, sql } from 'drizzle-orm'
 import { Resend } from 'resend'
+import { SITE_NAME } from '~/lib/constants'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -76,7 +77,7 @@ export const auth = betterAuth({
     sendResetPassword: async ({ user, url }) => {
       // Fire-and-forget: don't await to prevent timing attacks that reveal email existence
       resend.emails.send({
-        from: 'Peptide Directory <noreply@nicholasalevras.com>',
+        from: `${SITE_NAME} <noreply@nicholasalevras.com>`,
         to: user.email,
         subject: 'Reset your password',
         html: `
@@ -94,7 +95,7 @@ export const auth = betterAuth({
           <p style="margin:24px 0 0;font-size:12px;color:#a3a3a3;line-height:1.5">If you didn't request this, you can safely ignore this email. This link expires in 1 hour.</p>
         </td></tr>
         <tr><td style="padding:24px 32px 32px">
-          <p style="margin:0;font-size:12px;color:#d4d4d4">Peptide Directory</p>
+          <p style="margin:0;font-size:12px;color:#d4d4d4">${SITE_NAME}</p>
         </td></tr>
       </table>
     </td></tr>

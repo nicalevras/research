@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { SITE_URL } from '~/lib/constants'
+import { SITE_NAME, SITE_URL } from '~/lib/constants'
 import { ChevronRightIcon } from '~/components/icons'
 
 export const Route = createFileRoute('/privacy')({
   head: () => {
-    const pageTitle = 'Privacy Policy - Peptide Directory'
-    const pageDescription = 'Privacy policy for Peptide Directory, including account, favorites, review, and usage data.'
+    const pageTitle = `Privacy Policy - ${SITE_NAME}`
+    const pageDescription = `Privacy policy for ${SITE_NAME}, including account, favorites, review, and usage data.`
     const canonicalUrl = `${SITE_URL}/privacy`
 
     return {
@@ -49,7 +49,7 @@ function PrivacyPage() {
 
           <div className="space-y-5 text-sm leading-7 text-neutral-600 dark:text-neutral-300">
             <p>
-              Peptide Directory collects only the information needed to operate accounts, favorites, reviews, and site preferences.
+              {SITE_NAME} collects only the information needed to operate accounts, favorites, reviews, and site preferences.
             </p>
 
             <section className="space-y-2">

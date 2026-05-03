@@ -6,6 +6,7 @@ import { useAuthModal } from '~/lib/auth-context'
 import { useFavorites } from '~/lib/favorites-context'
 import { VendorGrid } from '~/components/vendor-grid'
 import { HeartIcon } from '~/components/icons'
+import { SITE_NAME } from '~/lib/constants'
 
 export const Route = createFileRoute('/favorites')({
   loader: async () => {
@@ -19,7 +20,7 @@ export const Route = createFileRoute('/favorites')({
   gcTime: 0,
   head: () => ({
     meta: [
-      { title: 'Favorites — Peptide Vendor Directory' },
+      { title: `Favorites — ${SITE_NAME}` },
       { name: 'robots', content: 'noindex, nofollow' },
     ],
   }),

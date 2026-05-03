@@ -5,6 +5,7 @@ import { getUserReviews, updateReview, deleteReview, changeUsername, getHasPassw
 import { authClient } from '~/lib/auth-client'
 import { ChevronRightIcon, KeyIcon, TrashIcon, PenIcon, UserIcon } from '~/components/icons'
 import { ReviewStars, StarPicker } from '~/components/reviews'
+import { SITE_NAME } from '~/lib/constants'
 
 export const Route = createFileRoute('/account')({
   beforeLoad: async () => {
@@ -23,7 +24,7 @@ export const Route = createFileRoute('/account')({
   gcTime: 0,
   head: () => ({
     meta: [
-      { title: 'Account — Peptide Vendor Directory' },
+      { title: `Account — ${SITE_NAME}` },
       { name: 'robots', content: 'noindex, nofollow' },
     ],
   }),

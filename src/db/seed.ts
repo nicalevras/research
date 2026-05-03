@@ -163,7 +163,7 @@ function readFeatured(row: CsvRow): boolean {
 function readDescription(row: CsvRow, vendorName: string): string {
   const descriptionKey = ['DESCRIPTION', 'Description', 'description'].find((key) => key in row)
   const description = descriptionKey ? row[descriptionKey]?.trim() : ''
-  return description || `${vendorName} is a peptide vendor listed in the Peptide Vendor Directory.`
+  return description || `${vendorName} is a peptide vendor listed in AminoRank.`
 }
 
 function readVendorLogoFiles() {

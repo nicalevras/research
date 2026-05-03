@@ -82,7 +82,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-900 text-[#8cff00] dark:bg-white dark:text-neutral-950" aria-hidden="true">
                       <AminoRankMark className="h-7 w-7" />
                     </div>
-                    <Link to="/" className="text-[15px] font-[900] font-stretch-semi-expanded tracking-[-1px] text-neutral-900 dark:text-white">
+                    <Link to="/" className="text-[17px] font-[900] font-stretch-semi-expanded tracking-[-1px] text-neutral-900 dark:text-white">
                       AminoRank
                     </Link>
                     <div className="hidden md:flex items-center gap-4 ml-2">

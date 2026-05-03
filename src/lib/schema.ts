@@ -26,7 +26,7 @@ export function itemListSchema(
     '@type': 'ItemList',
     ...(options?.id ? { '@id': options.id } : {}),
     name: listName,
-    description: `${listName} on Peptide Vendor Directory`,
+    description: `${listName} on ${SITE_NAME}`,
     url: `${SITE_URL}${listUrl}`,
     numberOfItems: vendors.length,
     itemListElement: vendors.map((v, i) => ({
@@ -91,7 +91,7 @@ export function compoundItemListSchema(
     '@type': 'ItemList',
     ...(options?.id ? { '@id': options.id } : {}),
     name: listName,
-    description: `${listName} on Peptide Vendor Directory`,
+    description: `${listName} on ${SITE_NAME}`,
     url: `${SITE_URL}${listUrl}`,
     numberOfItems: compounds.length,
     itemListElement: compounds.map((compound, index) => ({

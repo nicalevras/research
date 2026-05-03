@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { zodValidator } from '@tanstack/zod-adapter'
 import { DirectoryListing } from '~/components/directory-listing'
-import { SITE_URL } from '~/lib/constants'
+import { SITE_NAME, SITE_URL } from '~/lib/constants'
 import { breadcrumbSchema, collectionPageSchema, itemListSchema } from '~/lib/schema'
 import { vendorDirectorySearchSchema } from '~/lib/search'
 import { filterVendors, getCompounds } from '~/lib/data'
@@ -55,7 +55,7 @@ function vendorLandingCopy(filters: {
     return {
       heading: compoundVendorTitle,
       description: `Compare peptide vendors carrying ${compound.name}. Review ratings, vendor profiles, payment methods, and category matches in one place.`,
-      pageTitle: `${compoundVendorTitle} - Peptide Vendor Directory`,
+      pageTitle: `${compoundVendorTitle} - ${SITE_NAME}`,
       listName: compoundVendorTitle,
       resultSummary: filters.indexable
         ? `${countSummaryPrefix} that currently list ${compound.name}.`
@@ -68,7 +68,7 @@ function vendorLandingCopy(filters: {
     return {
       heading: `${label} Vendors`,
       description: `Compare peptide vendors with ${label.toLowerCase()}. Review ratings, vendor profiles, payment methods, and peptide availability.`,
-      pageTitle: `${label} Vendors - Peptide Vendor Directory`,
+      pageTitle: `${label} Vendors - ${SITE_NAME}`,
       listName: `${label} Vendors`,
       resultSummary: filters.indexable && featureLabels.length === 1
         ? `${countSummaryPrefix} marked with ${label}.`
@@ -81,7 +81,7 @@ function vendorLandingCopy(filters: {
     description: search
       ? `Search results for peptide vendors matching "${search}".`
       : 'Browse every peptide vendor in the directory. Compare ratings, certifications, promo codes, and vendor details in one place.',
-    pageTitle: search ? 'Vendor Search Results - Peptide Vendor Directory' : 'Vendors - Peptide Vendor Directory',
+    pageTitle: search ? `Vendor Search Results - ${SITE_NAME}` : `Vendors - ${SITE_NAME}`,
     listName: 'Peptide Vendors',
     resultSummary: search
       ? `${countSummaryPrefix} matching your search.`

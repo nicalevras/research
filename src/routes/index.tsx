@@ -29,7 +29,7 @@ export const Route = createFileRoute('/')({
   },
   head: ({ loaderData }) => {
     const pageTitle = `${SITE_NAME} - Vendors, Peptides, and Research Tools`
-    const pageDescription = 'Browse featured peptide vendors, research peptides, and core tools from the Peptide Vendor Directory.'
+    const pageDescription = `Browse featured peptide vendors, research peptides, and core tools from ${SITE_NAME}.`
     const canonicalUrl = `${SITE_URL}/`
     const ogImage = `${SITE_URL}/og-image.png`
     const featuredVendorListId = `${canonicalUrl}#featured-vendors`

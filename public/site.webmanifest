@@ -1,6 +1,6 @@
 {
-  "name": "Peptide Vendor Directory",
-  "short_name": "Peptides",
+  "name": "AminoRank",
+  "short_name": "AminoRank",
   "icons": [
     {
       "src": "/images/ui/android-chrome-192x192.png",

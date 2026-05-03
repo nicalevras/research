@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import { ChevronRightIcon } from '~/components/icons'
+import { AminoRankMark, ChevronRightIcon } from '~/components/icons'
+import { SITE_NAME } from '~/lib/constants'
 
 function FooterHeading({ children }: { children: React.ReactNode }) {
   return (
@@ -26,11 +27,11 @@ export function SiteFooter() {
     <footer className="mx-4 mt-16 border-t border-neutral-200/60 py-10 dark:border-white/[0.06] sm:mx-6 lg:mx-8">
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1.5fr)_repeat(3,minmax(0,1fr))]">
         <div className="max-w-md">
-          <Link to="/" className="inline-flex items-center gap-2.5 text-sm font-semibold tracking-tight text-neutral-950 dark:text-white">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-900 text-base dark:bg-white" aria-hidden="true">
-              🧪
+          <Link to="/" className="inline-flex items-center gap-2.5 text-[17px] font-[900] font-stretch-semi-expanded tracking-[-1px] text-neutral-900 dark:text-white">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-900 text-[#8cff00] dark:bg-white dark:text-neutral-950" aria-hidden="true">
+              <AminoRankMark className="h-7 w-7" />
             </span>
-            Peptide Directory
+            {SITE_NAME}
           </Link>
           <p className="mt-4 text-sm leading-6 text-neutral-500 dark:text-neutral-400">
             Compare peptide vendors, peptide profiles, promo codes, COAs, payment methods, and research tools in one focused directory.
@@ -64,7 +65,7 @@ export function SiteFooter() {
       </div>
 
       <div className="mt-10 flex flex-col gap-3 border-t border-neutral-200/60 pt-6 text-sm text-neutral-600 dark:border-white/[0.06] dark:text-neutral-300 sm:flex-row sm:items-center sm:justify-between">
-        <p>&copy; {new Date().getFullYear()} Peptide Directory</p>
+        <p>&copy; {new Date().getFullYear()} {SITE_NAME}</p>
         <p className="max-w-2xl leading-6">
           For research comparison only. Not medical advice, diagnosis, or treatment.
         </p>

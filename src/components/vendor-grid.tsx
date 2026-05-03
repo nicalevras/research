@@ -1,6 +1,6 @@
 import type { VendorSummary } from '~/lib/types'
 import { Link } from '@tanstack/react-router'
-import { BadgeCheckIcon, FileIcon, SearchIcon } from '~/components/icons'
+import { BadgeCheckIcon, SearchIcon } from '~/components/icons'
 import { ReviewStars } from '~/components/reviews'
 import { CountryFlag } from '~/components/flags'
 import { FavoriteButton } from '~/components/favorite-button'
@@ -48,13 +48,13 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummar
                 </span>
                 {vendor.verified && (
                   <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-600 dark:bg-white/[0.06] dark:text-neutral-300">
-                    <BadgeCheckIcon className="h-3.5 w-3.5 text-sky-500" aria-hidden="true" />
+                    <BadgeCheckIcon className="h-[18px] w-[18px] text-sky-500" aria-hidden="true" />
                     Verified
                   </span>
                 )}
                 {vendor.hasCoa && (
                   <span className="inline-flex shrink-0 items-center rounded-lg bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-600 dark:bg-white/[0.06] dark:text-neutral-300">
-                    <FileIcon className="mr-1 h-3.5 w-3.5 text-emerald-500 dark:text-emerald-300" aria-hidden="true" />
+                    <span className="mr-1 text-[14px] leading-none" aria-hidden="true">📋</span>
                     {FEATURE_LABELS.coa}
                   </span>
                 )}

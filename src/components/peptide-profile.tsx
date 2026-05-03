@@ -113,8 +113,8 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
               </colgroup>
               <thead>
                 <tr className="border-b border-neutral-200/60 dark:border-white/[0.06]">
-                  <th className="sticky top-0 z-10 bg-neutral-50 px-4 py-2.5 text-left text-sm font-bold text-neutral-900 dark:bg-white/[0.02] dark:text-white">Study</th>
-                  <th className="sticky top-0 z-10 bg-neutral-50 px-4 py-2.5 text-right text-sm font-bold text-neutral-900 dark:bg-white/[0.02] dark:text-white">Source</th>
+                  <th className="sticky top-0 z-10 bg-neutral-50 px-4 py-2.5 text-left text-sm font-bold text-neutral-900 dark:bg-white/[0.02] dark:text-white">Studies</th>
+                  <th className="sticky top-0 z-10 bg-neutral-50 px-4 py-2.5 text-right text-sm font-bold text-neutral-900 dark:bg-white/[0.02] dark:text-white" aria-label="Study source link" />
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-200/60 dark:divide-white/[0.06]">
@@ -153,7 +153,7 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
         aria-labelledby="peptide-vendors-heading"
       >
         <h2 id="peptide-vendors-heading" className="sr-only">
-          Vendors carrying {compound.name}
+          {compound.name} Vendors
         </h2>
         <div className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] overflow-hidden">
           <table className="w-full border-collapse text-sm">
@@ -163,10 +163,9 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
             </colgroup>
             <thead>
               <tr className="border-b border-neutral-200/60 bg-neutral-50 dark:border-white/[0.06] dark:bg-white/[0.02]">
-                <th className="px-4 py-2.5 text-left text-sm font-bold text-neutral-900 dark:text-white">
-                  Vendors Carrying {compound.name}
+                <th colSpan={2} className="px-4 py-2.5 text-left text-sm font-bold text-neutral-900 dark:text-white">
+                  {compound.name} Vendors
                 </th>
-                <th className="px-4 py-2.5 text-right text-sm font-bold text-neutral-900 dark:text-white" aria-label="Vendor link" />
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-200/60 dark:divide-white/[0.06]">

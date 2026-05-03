@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { BitcoinIcon, ChevronDownIcon, ChevronRightIcon, FileIcon, SearchIcon, TrendingUpIcon, XIcon } from '~/components/icons'
+import { BitcoinIcon, ChevronDownIcon, ChevronRightIcon, SearchIcon, TrendingUpIcon, XIcon } from '~/components/icons'
 import { FeaturedResources } from '~/components/featured-resources'
 import { HandwrittenUnderline } from '~/components/handwritten-underline'
 import { PeptideGrid } from '~/components/peptide-grid'
@@ -271,7 +271,7 @@ function QuickFilterLinkSet({ duplicate = false }: { duplicate?: boolean }) {
   return (
     <div className="flex shrink-0 gap-3 pr-3">
       <Link to="/vendors" search={{ features: 'coa' }} className={quickFilterLinkClass} {...duplicateProps}>
-        <FileIcon className="mr-1.5 h-4 w-4 shrink-0 text-emerald-500" />
+        <span className="mr-1.5 shrink-0" aria-hidden="true">📋</span>
         COAs
       </Link>
       <Link to="/vendors" search={{ features: 'international' }} className={quickFilterLinkClass} {...duplicateProps}>

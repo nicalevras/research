@@ -4,7 +4,7 @@ import { getVendorById, getVendorReviews } from '~/lib/data'
 import { FEATURE_FILTERS, FEATURE_LABELS, SITE_URL } from '~/lib/constants'
 import { ReviewsList, ReviewStars } from '~/components/reviews'
 import { breadcrumbSchema, vendorProfileSchema } from '~/lib/schema'
-import { BadgeCheckIcon, BitcoinIcon, CircleAlertIcon, ChevronRightIcon, FileIcon } from '~/components/icons'
+import { BadgeCheckIcon, BitcoinIcon, CircleAlertIcon, ChevronRightIcon } from '~/components/icons'
 import { CountryFlag } from '~/components/flags'
 import { FavoriteButton } from '~/components/favorite-button'
 import { PromoCodeBadge } from '~/components/promo-code'
@@ -197,6 +197,7 @@ function VendorSkeleton() {
 function VendorDetailPage() {
   const { vendor, reviews } = Route.useLoaderData()
   const detailIconClass = 'h-3.5 w-3.5 shrink-0'
+  const detailVerifiedIconClass = 'h-[18px] w-[18px] shrink-0'
   const paymentFeatures: DetailItem[] = ([
     vendor.acceptsCreditCard ? { label: 'Credit Card', icon: featureFilterIcon('credit-card', detailIconClass) } : undefined,
     vendor.acceptsAch ? { label: 'ACH', icon: featureFilterIcon('ach', detailIconClass) } : undefined,
@@ -221,7 +222,7 @@ function VendorDetailPage() {
       label: 'Status',
       value: vendor.verified ? (
         <span className="inline-flex items-center justify-end gap-1.5">
-          <BadgeCheckIcon className={`${detailIconClass} text-sky-500`} aria-hidden="true" />
+          <BadgeCheckIcon className={`${detailVerifiedIconClass} text-sky-500`} aria-hidden="true" />
           Verified
         </span>
       ) : 'Not listed',
@@ -240,7 +241,7 @@ function VendorDetailPage() {
       label: 'COAs',
       value: vendor.hasCoa ? (
         <span className="inline-flex items-center justify-end gap-1.5">
-          <FileIcon className={`${detailIconClass} text-emerald-500 dark:text-emerald-300`} aria-hidden="true" />
+          <span aria-hidden="true">📋</span>
           {FEATURE_LABELS.coa}
         </span>
       ) : 'Not listed',

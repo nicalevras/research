@@ -116,12 +116,8 @@ function HomePage() {
       <section className="py-16">
         <div className="mx-auto max-w-3xl space-y-6">
           <div className="text-center">
-            <div className="mb-4 inline-flex items-center rounded-lg bg-black px-3 py-1.5 text-sm font-medium text-white backdrop-blur-sm dark:bg-white dark:text-neutral-950">
-              <span className="mr-1.5" aria-hidden="true">🧪</span>
-              Peptide Research
-            </div>
             <h1 className="mx-auto max-w-2xl text-3xl font-[900] font-stretch-semi-expanded capitalize leading-tight tracking-[-1px] text-neutral-950 dark:text-white sm:text-4xl">
-              Find <HandwrittenUnderline color="#84e100">Trusted</HandwrittenUnderline> Peptide Vendors
+              Find <HandwrittenUnderline color="#8cff00">Trusted</HandwrittenUnderline> Peptide Vendors
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-pretty text-base leading-7 text-neutral-600 dark:text-neutral-300">
               Compare vendor ratings, promo codes, COAs, payment methods, and peptide availability in one focused research directory.

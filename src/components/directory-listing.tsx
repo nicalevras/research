@@ -111,7 +111,7 @@ export function DirectoryListing({ heading, description, resultSummary, searchQu
                   </>
                 )}
               </p>
-              <p className="mt-3 text-sm font-medium text-neutral-500 dark:text-neutral-400">
+              <p className="sr-only">
                 {resultSummary}
               </p>
             </div>

@@ -358,7 +358,7 @@ function PeptidesPage() {
           <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-neutral-600 dark:text-neutral-300">
             {landing.description}
           </p>
-          <p className="mt-3 text-sm font-medium text-neutral-500 dark:text-neutral-400">
+          <p className="sr-only">
             {landing.resultSummary}
           </p>
         </div>

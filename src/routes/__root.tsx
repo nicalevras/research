@@ -92,6 +92,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
                         <Link to="/vendors" activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Vendors</Link>
                         <Link to="/peptides" activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Peptides</Link>
                         <Link to="/calculator" className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Tools</Link>
+                        <a href="https://community.aminorank.com/" className="text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white">Community</a>
                       </nav>
                     </div>
                   </div>

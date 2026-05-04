@@ -86,7 +86,12 @@ export function HamburgerMenu() {
       <DropdownDivider />
       <DropdownLink to="/calculator">Calculator</DropdownLink>
       <DropdownDivider />
-      <DropdownItem>Submit a vendor</DropdownItem>
+      <a
+        href="https://community.aminorank.com/"
+        className="flex w-full items-center gap-2 px-3 py-2 text-sm text-neutral-600 transition-colors hover:bg-neutral-50 dark:text-neutral-300 dark:hover:bg-white/[0.04]"
+      >
+        Community
+      </a>
     </DropdownMenu>
   )
 }

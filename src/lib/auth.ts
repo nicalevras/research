@@ -77,7 +77,7 @@ export const auth = betterAuth({
     sendResetPassword: async ({ user, url }) => {
       // Fire-and-forget: don't await to prevent timing attacks that reveal email existence
       resend.emails.send({
-        from: `${SITE_NAME} <noreply@nicholasalevras.com>`,
+        from: `${SITE_NAME} <noreply@aminorank.com>`,
         to: user.email,
         subject: 'Reset your password',
         html: `
@@ -89,6 +89,15 @@ export const auth = betterAuth({
     <tr><td align="center">
       <table width="100%" style="max-width:460px;background:#ffffff;border-radius:12px;overflow:hidden">
         <tr><td style="padding:32px 32px 0">
+          <div style="margin:0 0 20px;text-align:center">
+            <img
+              src="${process.env.SITE_URL ?? 'https://aminorank.com'}/images/ui/android-chrome-512x512.png?v=20260504b"
+              alt="${SITE_NAME}"
+              width="52"
+              height="52"
+              style="display:inline-block;width:52px;height:52px;border:0;outline:none;text-decoration:none"
+            />
+          </div>
           <p style="margin:0 0 4px;font-size:20px;font-weight:600;color:#171717">Reset your password</p>
           <p style="margin:0 0 24px;font-size:14px;color:#737373">Hi ${escapeHtml(user.name)}, we received a request to reset your password.</p>
           <a href="${url}" style="display:inline-block;background:#171717;color:#ffffff;font-size:14px;font-weight:500;padding:10px 24px;border-radius:9999px;text-decoration:none">Reset Password</a>

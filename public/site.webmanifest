@@ -3,12 +3,12 @@
   "short_name": "AminoRank",
   "icons": [
     {
-      "src": "/images/ui/android-chrome-192x192.png",
+      "src": "/images/ui/android-chrome-192x192.png?v=20260504b",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/images/ui/android-chrome-512x512.png",
+      "src": "/images/ui/android-chrome-512x512.png?v=20260504b",
       "sizes": "512x512",
       "type": "image/png"
     }

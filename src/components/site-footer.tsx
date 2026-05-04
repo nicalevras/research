@@ -10,12 +10,29 @@ function FooterHeading({ children }: { children: React.ReactNode }) {
   )
 }
 
-function FooterLink({ to, children }: { to: string; children: React.ReactNode }) {
+function FooterLink({
+  to,
+  href,
+  children,
+}: {
+  to?: string
+  href?: string
+  children: React.ReactNode
+}) {
+  const className =
+    'inline-flex items-center gap-1.5 text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white'
+
+  if (href) {
+    return (
+      <a href={href} className={className}>
+        {children}
+        <ChevronRightIcon className="h-3 w-3 opacity-50" />
+      </a>
+    )
+  }
+
   return (
-    <Link
-      to={to}
-      className="inline-flex items-center gap-1.5 text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-950 dark:text-neutral-400 dark:hover:text-white"
-    >
+    <Link to={to!} className={className}>
       {children}
       <ChevronRightIcon className="h-3 w-3 opacity-50" />
     </Link>
@@ -39,10 +56,12 @@ export function SiteFooter() {
         </div>
 
         <nav className="space-y-3" aria-label="Footer directory links">
-          <FooterHeading>Directory</FooterHeading>
+          <FooterHeading>Navigation</FooterHeading>
           <div className="flex flex-col items-start gap-2">
             <FooterLink to="/vendors">Peptide Vendors</FooterLink>
             <FooterLink to="/peptides">Peptide Catalog</FooterLink>
+            <FooterLink href="https://community.aminorank.com/">Community</FooterLink>
+            <FooterLink href="#">Articles</FooterLink>
             <FooterLink to="/calculator">Calculator</FooterLink>
           </div>
         </nav>
@@ -60,6 +79,7 @@ export function SiteFooter() {
           <div className="flex flex-col items-start gap-2">
             <FooterLink to="/terms">Terms and Conditions</FooterLink>
             <FooterLink to="/privacy">Privacy Policy</FooterLink>
+            <FooterLink href="#">Affiliate Disclosure</FooterLink>
           </div>
         </nav>
       </div>

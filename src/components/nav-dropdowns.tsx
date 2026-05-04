@@ -4,9 +4,21 @@ import { Link, useNavigate, useRouter, useRouterState } from '@tanstack/react-ro
 import { useTheme } from '~/lib/use-theme'
 import { useAuthModal } from '~/lib/auth-context'
 import { authClient } from '~/lib/auth-client'
-import { MenuIcon, UserIcon, SunIcon, MoonIcon, LogInIcon, UserPlusIcon, LogOutIcon, SettingsIcon, SearchIcon, XIcon, HeartIcon } from '~/components/icons'
+import { MenuIcon, UserIcon, SunIcon, MoonIcon, LogInIcon, UserPlusIcon, LogOutIcon, SettingsIcon, SearchIcon, XIcon, HeartIcon, ChevronDownIcon } from '~/components/icons'
 
-function DropdownMenu({ trigger, children, align = 'right', ariaLabel }: { trigger: ReactNode; children: ReactNode; align?: 'left' | 'right'; ariaLabel: string }) {
+function DropdownMenu({
+  trigger,
+  children,
+  align = 'right',
+  ariaLabel,
+  triggerClassName,
+}: {
+  trigger: ReactNode
+  children: ReactNode
+  align?: 'left' | 'right'
+  ariaLabel: string
+  triggerClassName?: string
+}) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -33,7 +45,7 @@ function DropdownMenu({ trigger, children, align = 'right', ariaLabel }: { trigg
         type="button"
         onClick={() => setOpen(!open)}
         aria-label={ariaLabel}
-        className="inline-flex items-center justify-center rounded-lg h-8 w-8 cursor-pointer bg-white/70 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/[0.06] text-neutral-500 dark:text-neutral-400 hover:bg-white dark:hover:bg-white/[0.08] hover:text-neutral-900 dark:hover:text-white transition-all duration-200"
+        className={triggerClassName ?? 'inline-flex items-center justify-center rounded-lg h-8 w-8 cursor-pointer bg-white/70 dark:bg-white/[0.04] border border-neutral-200/60 dark:border-white/[0.06] text-neutral-500 dark:text-neutral-400 hover:bg-white dark:hover:bg-white/[0.08] hover:text-neutral-900 dark:hover:text-white transition-all duration-200'}
       >
         {trigger}
       </button>
@@ -73,6 +85,26 @@ function DropdownDivider() {
   return <div className="my-1 h-px bg-neutral-100 dark:bg-white/[0.04]" />
 }
 
+export function ResourcesMenu() {
+  return (
+    <DropdownMenu
+      align="left"
+      ariaLabel="Open resources menu"
+      triggerClassName="inline-flex cursor-pointer items-center gap-1 text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white"
+      trigger={
+        <>
+          Resources
+          <ChevronDownIcon className="h-3.5 w-3.5" />
+        </>
+      }
+    >
+      <DropdownLink to="/peptides">Articles</DropdownLink>
+      <DropdownDivider />
+      <DropdownLink to="/calculator">Calculator</DropdownLink>
+    </DropdownMenu>
+  )
+}
+
 export function HamburgerMenu() {
   return (
     <DropdownMenu
@@ -84,14 +116,16 @@ export function HamburgerMenu() {
       <DropdownDivider />
       <DropdownLink to="/peptides">Peptides</DropdownLink>
       <DropdownDivider />
-      <DropdownLink to="/calculator">Calculator</DropdownLink>
-      <DropdownDivider />
       <a
         href="https://community.aminorank.com/"
         className="flex w-full items-center gap-2 px-3 py-2 text-sm text-neutral-600 transition-colors hover:bg-neutral-50 dark:text-neutral-300 dark:hover:bg-white/[0.04]"
       >
         Community
       </a>
+      <DropdownDivider />
+      <DropdownLink to="/peptides">Articles</DropdownLink>
+      <DropdownDivider />
+      <DropdownLink to="/calculator">Calculator</DropdownLink>
     </DropdownMenu>
   )
 }

@@ -163,6 +163,42 @@ export function FileIcon(props: IconProps) {
   )
 }
 
+export function NewspaperIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M2 6h4" />
+      <path d="M2 10h4" />
+      <path d="M2 14h4" />
+      <path d="M2 18h4" />
+      <rect width="16" height="20" x="4" y="2" rx="2" />
+      <path d="M16 2v20" />
+    </Icon>
+  )
+}
+
+export function CalculatorIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <rect x="5" y="2.5" width="14" height="19" rx="2.5" ry="2.5" />
+      <rect x="8" y="5.5" width="8" height="3.5" rx="0.75" ry="0.75" />
+      <path d="M8 13h2" />
+      <path d="M14 13h2" />
+      <path d="M8 17h2" />
+      <path d="M14 17h2" />
+      <path d="M11 13h0.01" />
+      <path d="M11 17h0.01" />
+    </Icon>
+  )
+}
+
+export function MessageCircleIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
+    </Icon>
+  )
+}
+
 export function AlertTriangleIcon(props: IconProps) {
   return (
     <Icon {...props}>

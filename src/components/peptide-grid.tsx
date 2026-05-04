@@ -21,7 +21,7 @@ function PeptideCard({ id, name, description, categories, vendorCount }: Compoun
             <Link
               to="/peptides/$compound"
               params={{ compound: id }}
-              className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-lg px-1 text-center text-[11px] font-bold leading-none tracking-normal ${iconTheme}`}
+              className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-neutral-200 px-1 text-center text-[11px] font-bold leading-none tracking-normal ${iconTheme}`}
             >
               <span className="whitespace-pre-line">{iconLabel}</span>
               <span className="sr-only">View {name}</span>

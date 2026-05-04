@@ -11,13 +11,15 @@ import type { ErrorComponentProps } from '@tanstack/react-router'
 import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary'
 import { NotFound } from '~/components/NotFound'
 import { AminoRankMark } from '~/components/icons'
-import { HamburgerMenu, UserMenu, NavSearch } from '~/components/nav-dropdowns'
+import { HamburgerMenu, UserMenu, NavSearch, ResourcesMenu } from '~/components/nav-dropdowns'
 import { AuthModalProvider } from '~/lib/auth-context'
 import { FavoritesProvider } from '~/lib/favorites-context'
 import { AuthModals } from '~/components/auth-modals'
 import { SiteFooter } from '~/components/site-footer'
 import { SITE_NAME, SITE_URL } from '~/lib/constants'
 import appCss from '~/styles/app.css?url'
+
+const ICON_VERSION = '20260504b'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -37,9 +39,11 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: 'stylesheet', href: appCss },
-      { rel: 'icon', href: '/images/ui/favicon.ico' },
-      { rel: 'apple-touch-icon', href: '/images/ui/apple-touch-icon.png' },
-      { rel: 'manifest', href: '/site.webmanifest' },
+      { rel: 'icon', type: 'image/x-icon', href: `/images/ui/favicon.ico?v=${ICON_VERSION}` },
+      { rel: 'icon', type: 'image/png', sizes: '32x32', href: `/images/ui/favicon-32x32.png?v=${ICON_VERSION}` },
+      { rel: 'icon', type: 'image/png', sizes: '16x16', href: `/images/ui/favicon-16x16.png?v=${ICON_VERSION}` },
+      { rel: 'apple-touch-icon', href: `/images/ui/apple-touch-icon.png?v=${ICON_VERSION}` },
+      { rel: 'manifest', href: `/site.webmanifest?v=${ICON_VERSION}` },
     ],
     scripts: [
       { children: `(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark')}catch(e){}})()` },
@@ -91,8 +95,8 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
                         <Link to="/" activeOptions={{ exact: true }} activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Home</Link>
                         <Link to="/vendors" activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Vendors</Link>
                         <Link to="/peptides" activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Peptides</Link>
-                        <Link to="/calculator" className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Tools</Link>
                         <a href="https://community.aminorank.com/" className="text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white">Community</a>
+                        <ResourcesMenu />
                       </nav>
                     </div>
                   </div>

@@ -51,7 +51,7 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
             <header className="flex min-w-0 flex-col gap-4">
               <div className="flex min-w-0 items-start gap-2">
                 <div
-                  className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-lg px-1 text-center text-[11px] font-bold leading-none tracking-normal ${iconTheme}`}
+                  className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-neutral-200 px-1 text-center text-[11px] font-bold leading-none tracking-normal ${iconTheme}`}
                   aria-hidden="true"
                 >
                   <span className="whitespace-pre-line">{iconLabel}</span>

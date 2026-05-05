@@ -21,7 +21,7 @@ function PeptideCard({ id, name, description, categories, vendorCount }: Compoun
               params={{ compound: id }}
               className="flex h-14 w-14 shrink-0 overflow-hidden rounded-lg"
             >
-              <PeptideAvatar id={id} name={name} className="h-full w-full" />
+              <PeptideAvatar id={id} name={name} categories={categories} className="h-full w-full" />
               <span className="sr-only">View {name}</span>
             </Link>
             <div className="min-w-0 flex-1">

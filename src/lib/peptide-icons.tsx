@@ -90,12 +90,33 @@ export const PEPTIDE_ICON_LABELS: Record<string, string> = {
   vip: 'VIP',
 }
 
+const PEPTIDE_CATEGORY_ACCENTS: Record<string, { primary: string; secondary: string; glow: string }> = {
+  'weight-loss': { primary: '#fbbf24', secondary: '#f59e0b', glow: '#fde68a' },
+  energy: { primary: '#fb923c', secondary: '#f97316', glow: '#fdba74' },
+  focus: { primary: '#818cf8', secondary: '#6366f1', glow: '#a5b4fc' },
+  'sexual-health': { primary: '#fb7185', secondary: '#f43f5e', glow: '#fda4af' },
+  cosmetic: { primary: '#f472b6', secondary: '#ec4899', glow: '#f9a8d4' },
+  recovery: { primary: '#34d399', secondary: '#10b981', glow: '#86efac' },
+  muscle: { primary: '#60a5fa', secondary: '#3b82f6', glow: '#93c5fd' },
+  longevity: { primary: '#2dd4bf', secondary: '#14b8a6', glow: '#99f6e4' },
+  research: { primary: '#94a3b8', secondary: '#64748b', glow: '#cbd5e1' },
+}
+
 function peptideInitials(name: string) {
   return name.replace(/[^a-zA-Z0-9]/g, '').slice(0, 2).toUpperCase() || 'PE'
 }
 
 export function peptideIconLabel(id: string, name: string) {
   return PEPTIDE_ICON_LABELS[id] ?? peptideInitials(name)
+}
+
+function peptideAccent(categories: string[]) {
+  for (const categoryId of categories) {
+    const accent = PEPTIDE_CATEGORY_ACCENTS[categoryId]
+    if (accent) return accent
+  }
+
+  return { primary: '#84e100', secondary: '#65a30d', glow: '#bef264' }
 }
 
 function peptideAvatarFontSize(label: string) {
@@ -120,15 +141,27 @@ function peptideAvatarVerticalOffset(label: string) {
 interface PeptideAvatarProps {
   id: string
   name: string
+  categories: string[]
   className?: string
 }
 
-export function PeptideAvatar({ id, name, className = '' }: PeptideAvatarProps) {
+export function PeptideAvatar({ id, name, categories, className = '' }: PeptideAvatarProps) {
   const label = peptideIconLabel(id, name)
   const lines = label.split('\n')
   const fontSize = peptideAvatarFontSize(label)
   const lineHeight = Math.round(fontSize * 0.92)
   const startY = 256 + peptideAvatarVerticalOffset(label) - ((lines.length - 1) * lineHeight) / 2
+  const accent = peptideAccent(categories)
+  const svgId = `peptide-avatar-${id}`
+  const gradientOuterId = `${svgId}-b`
+  const gradientInnerId = `${svgId}-c`
+  const gradientStrokeId = `${svgId}-d`
+  const gradientGlowId = `${svgId}-e`
+  const clipPathId = `${svgId}-f`
+  const hexStrokeId = `${svgId}-g`
+  const shadowFilterId = `${svgId}-a`
+  const accentGradientId = `${svgId}-h`
+  const accentGlowGradientId = `${svgId}-i`
 
   return (
     <svg
@@ -137,36 +170,37 @@ export function PeptideAvatar({ id, name, className = '' }: PeptideAvatarProps) 
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       aria-hidden="true"
+      preserveAspectRatio="xMidYMid slice"
     >
       <defs>
-        <linearGradient id="peptide-avatar-b" x1="52" y1="24" x2="460" y2="486" gradientUnits="userSpaceOnUse">
+        <linearGradient id={gradientOuterId} x1="52" y1="24" x2="460" y2="486" gradientUnits="userSpaceOnUse">
           <stop offset="0" stopColor="#7b7f85" />
           <stop offset=".12" stopColor="#2a2d32" />
           <stop offset=".36" stopColor="#07090d" />
           <stop offset=".74" stopColor="#030507" />
           <stop offset="1" stopColor="#24282e" />
         </linearGradient>
-        <linearGradient id="peptide-avatar-c" x1="54" y1="26" x2="446" y2="462" gradientUnits="userSpaceOnUse">
+        <linearGradient id={gradientInnerId} x1="54" y1="26" x2="446" y2="462" gradientUnits="userSpaceOnUse">
           <stop offset="0" stopColor="#4b4f55" />
           <stop offset=".13" stopColor="#25282e" />
           <stop offset=".34" stopColor="#080b10" />
           <stop offset=".72" stopColor="#030507" />
           <stop offset="1" stopColor="#020407" />
         </linearGradient>
-        <linearGradient id="peptide-avatar-d" x1="38" y1="24" x2="450" y2="460" gradientUnits="userSpaceOnUse">
+        <linearGradient id={gradientStrokeId} x1="38" y1="24" x2="450" y2="460" gradientUnits="userSpaceOnUse">
           <stop offset="0" stopColor="#fff" stopOpacity=".86" />
           <stop offset=".18" stopColor="#eef0f2" stopOpacity=".8" />
           <stop offset=".48" stopColor="#6b7078" stopOpacity=".38" />
           <stop offset=".82" stopColor="#30343a" stopOpacity=".18" />
           <stop offset="1" stopColor="#fff" stopOpacity=".6" />
         </linearGradient>
-        <linearGradient id="peptide-avatar-g" x1="24" y1="398" x2="210" y2="296" gradientUnits="userSpaceOnUse">
+        <linearGradient id={hexStrokeId} x1="24" y1="398" x2="210" y2="296" gradientUnits="userSpaceOnUse">
           <stop offset="0" stopColor="#313844" stopOpacity=".82" />
           <stop offset=".45" stopColor="#252b33" stopOpacity=".58" />
           <stop offset="1" stopColor="#1a1e24" stopOpacity=".3" />
         </linearGradient>
         <radialGradient
-          id="peptide-avatar-e"
+          id={gradientGlowId}
           cx="0"
           cy="0"
           r="1"
@@ -177,11 +211,20 @@ export function PeptideAvatar({ id, name, className = '' }: PeptideAvatarProps) 
           <stop offset=".42" stopColor="#fff" stopOpacity=".08" />
           <stop offset="1" stopColor="#fff" stopOpacity="0" />
         </radialGradient>
-        <clipPath id="peptide-avatar-f">
+        <linearGradient id={accentGradientId} x1="340" y1="332" x2="470" y2="446" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor={accent.primary} />
+          <stop offset="1" stopColor={accent.secondary} />
+        </linearGradient>
+        <radialGradient id={accentGlowGradientId} cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(412 382) rotate(45) scale(88 68)">
+          <stop offset="0" stopColor={accent.glow} stopOpacity=".8" />
+          <stop offset=".5" stopColor={accent.primary} stopOpacity=".28" />
+          <stop offset="1" stopColor={accent.primary} stopOpacity="0" />
+        </radialGradient>
+        <clipPath id={clipPathId}>
           <rect x="28" y="12" width="456" height="456" rx="66" />
         </clipPath>
         <filter
-          id="peptide-avatar-a"
+          id={shadowFilterId}
           x="4"
           y="2"
           width="504"
@@ -193,16 +236,20 @@ export function PeptideAvatar({ id, name, className = '' }: PeptideAvatarProps) 
         </filter>
       </defs>
       <path fill="transparent" d="M0 0h512v512H0z" />
-      <g filter="url(#peptide-avatar-a)">
-        <rect x="12" y="4" width="488" height="488" rx="76" fill="url(#peptide-avatar-b)" />
-        <rect x="28" y="12" width="456" height="456" rx="66" fill="url(#peptide-avatar-c)" stroke="url(#peptide-avatar-d)" strokeWidth="3" />
-        <rect x="28" y="12" width="456" height="456" rx="66" fill="url(#peptide-avatar-e)" clipPath="url(#peptide-avatar-f)" />
+      <g filter={`url(#${shadowFilterId})`}>
+        <rect x="12" y="4" width="488" height="488" rx="76" fill={`url(#${gradientOuterId})`} />
+        <rect x="28" y="12" width="456" height="456" rx="66" fill={`url(#${gradientInnerId})`} stroke={`url(#${gradientStrokeId})`} strokeWidth="3" />
+        <rect x="28" y="12" width="456" height="456" rx="66" fill={`url(#${gradientGlowId})`} clipPath={`url(#${clipPathId})`} />
+        <g clipPath={`url(#${clipPathId})`}>
+          <path d="M340 436L430 436C452 436 468 420 468 398V322L340 436Z" fill={`url(#${accentGradientId})`} />
+          <path d="M340 436L430 436C452 436 468 420 468 398V322L340 436Z" fill={`url(#${accentGlowGradientId})`} opacity=".95" />
+        </g>
         <g
-          stroke="url(#peptide-avatar-g)"
+          stroke={`url(#${hexStrokeId})`}
           strokeWidth="2.2"
           strokeLinejoin="round"
           strokeLinecap="round"
-          clipPath="url(#peptide-avatar-f)"
+          clipPath={`url(#${clipPathId})`}
           opacity=".82"
         >
           <path d="m26 344 24-14 24 14v28l-24 14-24-14z" />

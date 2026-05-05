@@ -52,7 +52,7 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
                   className="flex h-14 w-14 shrink-0 overflow-hidden rounded-lg"
                   aria-hidden="true"
                 >
-                  <PeptideAvatar id={compound.id} name={compound.name} className="h-full w-full" />
+                  <PeptideAvatar id={compound.id} name={compound.name} categories={compound.categories} className="h-full w-full" />
                 </div>
                 <div className="flex min-h-14 min-w-0 flex-1 flex-col justify-between">
                   <h1 className="truncate text-xl font-bold leading-[1.1] text-neutral-950 dark:text-white">

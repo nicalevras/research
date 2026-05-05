@@ -1,4 +1,4 @@
-import type { SVGProps } from 'react'
+import type { ComponentType, SVGProps } from 'react'
 
 type IconProps = SVGProps<SVGSVGElement>
 
@@ -141,6 +141,114 @@ export function AminoRankMark(props: IconProps) {
       <circle cx="10.35" cy="15.65" r="2.35" fill="currentColor" />
       <circle cx="14.35" cy="11.35" r="2.05" fill="currentColor" />
       <circle cx="18.35" cy="7.15" r="2.05" fill="currentColor" />
+    </svg>
+  )
+}
+
+export function ResourceAvatar({
+  id,
+  icon: IconComponent,
+  className,
+}: {
+  id: string
+  icon: ComponentType<IconProps>
+  className?: string
+}) {
+  const svgId = `resource-avatar-${id}`
+  const gradientOuterId = `${svgId}-b`
+  const gradientInnerId = `${svgId}-c`
+  const gradientStrokeId = `${svgId}-d`
+  const gradientGlowId = `${svgId}-e`
+  const clipPathId = `${svgId}-f`
+  const hexStrokeId = `${svgId}-g`
+  const shadowFilterId = `${svgId}-a`
+
+  return (
+    <svg
+      viewBox="0 0 512 512"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      aria-hidden="true"
+      preserveAspectRatio="xMidYMid slice"
+    >
+      <defs>
+        <linearGradient id={gradientOuterId} x1="52" y1="24" x2="460" y2="486" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#ffffff" />
+          <stop offset=".18" stopColor="#f8f8f9" />
+          <stop offset=".42" stopColor="#efeff1" />
+          <stop offset=".78" stopColor="#e5e6e9" />
+          <stop offset="1" stopColor="#f2f3f5" />
+        </linearGradient>
+        <linearGradient id={gradientInnerId} x1="54" y1="26" x2="446" y2="462" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#ffffff" />
+          <stop offset=".18" stopColor="#fbfbfc" />
+          <stop offset=".48" stopColor="#f4f5f7" />
+          <stop offset=".8" stopColor="#ebecef" />
+          <stop offset="1" stopColor="#e5e7eb" />
+        </linearGradient>
+        <linearGradient id={gradientStrokeId} x1="38" y1="24" x2="450" y2="460" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#fff" stopOpacity=".96" />
+          <stop offset=".2" stopColor="#ffffff" stopOpacity=".88" />
+          <stop offset=".54" stopColor="#a1a1aa" stopOpacity=".28" />
+          <stop offset=".84" stopColor="#d4d4d8" stopOpacity=".34" />
+          <stop offset="1" stopColor="#fff" stopOpacity=".82" />
+        </linearGradient>
+        <radialGradient
+          id={gradientGlowId}
+          cx="0"
+          cy="0"
+          r="1"
+          gradientUnits="userSpaceOnUse"
+          gradientTransform="rotate(44 -12.518 143.629)scale(230 182)"
+        >
+          <stop offset="0" stopColor="#fff" stopOpacity=".28" />
+          <stop offset=".42" stopColor="#fff" stopOpacity=".08" />
+          <stop offset="1" stopColor="#fff" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id={hexStrokeId} x1="24" y1="398" x2="210" y2="296" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#d4d4d8" stopOpacity=".42" />
+          <stop offset=".45" stopColor="#d4d4d8" stopOpacity=".28" />
+          <stop offset="1" stopColor="#e4e4e7" stopOpacity=".12" />
+        </linearGradient>
+        <clipPath id={clipPathId}>
+          <rect x="28" y="12" width="456" height="456" rx="66" />
+        </clipPath>
+        <filter
+          id={shadowFilterId}
+          x="4"
+          y="2"
+          width="504"
+          height="508"
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feDropShadow dx="0" dy="8" stdDeviation="10" floodColor="#111827" floodOpacity=".1" />
+        </filter>
+      </defs>
+      <path fill="transparent" d="M0 0h512v512H0z" />
+      <g filter={`url(#${shadowFilterId})`}>
+        <rect x="12" y="4" width="488" height="488" rx="76" fill={`url(#${gradientOuterId})`} />
+        <rect x="28" y="12" width="456" height="456" rx="66" fill={`url(#${gradientInnerId})`} stroke={`url(#${gradientStrokeId})`} strokeWidth="3" />
+        <rect x="28" y="12" width="456" height="456" rx="66" fill={`url(#${gradientGlowId})`} clipPath={`url(#${clipPathId})`} />
+        <g
+          stroke={`url(#${hexStrokeId})`}
+          strokeWidth="2.2"
+          strokeLinejoin="round"
+          strokeLinecap="round"
+          clipPath={`url(#${clipPathId})`}
+          opacity=".56"
+        >
+          <path d="m26 344 24-14 24 14v28l-24 14-24-14z" />
+          <path d="m74 344 24-14 24 14v28l-24 14-24-14z" />
+          <path d="m122 344 24-14 24 14v28l-24 14-24-14z" />
+          <path d="m170 344 24-14 24 14v28l-24 14-24-14z" />
+          <path d="m50 386 24-14 24 14v28l-24 14-24-14z" />
+          <path d="m98 386 24-14 24 14v28l-24 14-24-14z" />
+          <path d="m146 386 24-14 24 14v28l-24 14-24-14z" />
+        </g>
+        <IconComponent x="138" y="138" width="236" height="236" color="#4b5563" strokeWidth={1.7} opacity=".9" />
+      </g>
     </svg>
   )
 }

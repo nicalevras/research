@@ -1,8 +1,9 @@
 import { Link } from '@tanstack/react-router'
-import { CalculatorIcon, MessageCircleIcon, NewspaperIcon } from '~/components/icons'
+import { CalculatorIcon, MessageCircleIcon, NewspaperIcon, ResourceAvatar } from '~/components/icons'
 
 const resources = [
   {
+    id: 'community',
     title: 'Community',
     description: 'Join the forum to discuss vendors, peptides, and research with other members.',
     href: 'https://community.aminorank.com/',
@@ -10,6 +11,7 @@ const resources = [
     cta: 'View Community',
   },
   {
+    id: 'calculator',
     title: 'Reconstitution Calculator',
     description: 'Calculate bacteriostatic water volume, accurate dose concentration, and units per dose.',
     to: '/calculator',
@@ -17,6 +19,7 @@ const resources = [
     cta: 'View Calculator',
   },
   {
+    id: 'articles',
     title: 'Articles',
     description: 'Read published research articles, analysis, and peptide-focused writeups in one place.',
     to: '/peptides',
@@ -47,16 +50,16 @@ export function FeaturedResources() {
                     {'to' in resource ? (
                       <Link
                         to={resource.to}
-                        className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-700 transition-colors hover:text-neutral-950 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-neutral-200 dark:hover:text-white"
+                        className="block h-14 w-14 shrink-0 overflow-hidden rounded-lg"
                       >
-                        <Icon className="h-5 w-5" />
+                        <ResourceAvatar id={resource.id} icon={Icon} className="h-full w-full" />
                       </Link>
                     ) : (
                       <a
                         href={resource.href}
-                        className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-neutral-200 bg-neutral-50 text-neutral-700 transition-colors hover:text-neutral-950 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-neutral-200 dark:hover:text-white"
+                        className="block h-14 w-14 shrink-0 overflow-hidden rounded-lg"
                       >
-                        <Icon className="h-5 w-5" />
+                        <ResourceAvatar id={resource.id} icon={Icon} className="h-full w-full" />
                       </a>
                     )}
                     <div className="min-w-0 flex-1">

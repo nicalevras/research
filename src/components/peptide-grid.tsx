@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { PEPTIDE_CATEGORIES } from '~/lib/constants'
 import type { Compound } from '~/lib/types'
-import { peptideIconLabel, peptideIconTheme } from '~/lib/peptide-icons'
+import { PeptideAvatar } from '~/lib/peptide-icons'
 
 const PEPTIDE_CATEGORY_BY_ID = new Map(PEPTIDE_CATEGORIES.map((category) => [category.id, category]))
 
@@ -10,8 +10,6 @@ function PeptideCard({ id, name, description, categories, vendorCount }: Compoun
     const category = PEPTIDE_CATEGORY_BY_ID.get(categoryId)
     return category ? [category] : []
   })
-  const iconLabel = peptideIconLabel(id, name)
-  const iconTheme = peptideIconTheme(categories)
 
   return (
     <article className="flex h-full flex-col rounded-lg border border-neutral-200/80 bg-white p-5 dark:border-white/[0.08] dark:bg-neutral-900">
@@ -21,9 +19,9 @@ function PeptideCard({ id, name, description, categories, vendorCount }: Compoun
             <Link
               to="/peptides/$compound"
               params={{ compound: id }}
-              className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-neutral-200 px-1 text-center text-[11px] font-bold leading-none tracking-normal ${iconTheme}`}
+              className="flex h-14 w-14 shrink-0 overflow-hidden rounded-lg"
             >
-              <span className="whitespace-pre-line">{iconLabel}</span>
+              <PeptideAvatar id={id} name={name} className="h-full w-full" />
               <span className="sr-only">View {name}</span>
             </Link>
             <div className="min-w-0 flex-1">

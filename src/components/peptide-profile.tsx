@@ -4,7 +4,7 @@ import type { CompoundProfileData, CompoundProfileVendor, CompoundStudy } from '
 import { ChevronRightIcon } from '~/components/icons'
 import { ReviewStars } from '~/components/reviews'
 import { VendorAvatar } from '~/components/vendor-avatar'
-import { peptideIconLabel, peptideIconTheme } from '~/lib/peptide-icons'
+import { PeptideAvatar } from '~/lib/peptide-icons'
 
 const PEPTIDE_CATEGORY_BY_ID = new Map(PEPTIDE_CATEGORIES.map((category) => [category.id, category]))
 
@@ -19,8 +19,6 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
     const category = PEPTIDE_CATEGORY_BY_ID.get(categoryId)
     return category ? [category] : []
   })
-  const iconLabel = peptideIconLabel(compound.id, compound.name)
-  const iconTheme = peptideIconTheme(compound.categories)
   const vendorLabel = vendors.length === 1 ? 'Vendor' : 'Vendors'
 
   return (
@@ -51,10 +49,10 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
             <header className="flex min-w-0 flex-col gap-4">
               <div className="flex min-w-0 items-start gap-2">
                 <div
-                  className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-lg border border-neutral-200 px-1 text-center text-[11px] font-bold leading-none tracking-normal ${iconTheme}`}
+                  className="flex h-14 w-14 shrink-0 overflow-hidden rounded-lg"
                   aria-hidden="true"
                 >
-                  <span className="whitespace-pre-line">{iconLabel}</span>
+                  <PeptideAvatar id={compound.id} name={compound.name} className="h-full w-full" />
                 </div>
                 <div className="flex min-h-14 min-w-0 flex-1 flex-col justify-between">
                   <h1 className="truncate text-xl font-bold leading-[1.1] text-neutral-950 dark:text-white">

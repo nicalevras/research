@@ -43,40 +43,89 @@ function PrivacyPage() {
               Privacy Policy
             </h1>
             <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">
-              Last updated April 22, 2026
+              Last updated May 6, 2026
             </p>
           </div>
 
           <div className="space-y-5 text-sm leading-7 text-neutral-600 dark:text-neutral-300">
             <p>
-              {SITE_NAME} collects only the information needed to operate accounts, favorites, reviews, and site preferences.
+              {SITE_NAME} collects and uses information needed to operate accounts, favorites, reviews, vendor discovery, site security, and basic product analytics.
             </p>
 
             <section className="space-y-2">
-              <h2 className="text-sm font-bold text-neutral-950 dark:text-white">Information We Use</h2>
+              <h2 className="text-sm font-bold text-neutral-950 dark:text-white">Information You Provide</h2>
               <p>
-                Account information may include your name, username, email address, sign-in provider, favorites, reviews, and basic session data. Theme preference may be stored locally in your browser.
+                Account information may include your name, username, email address, password authentication data, sign-in provider, profile image, favorites, reviews, ratings, review comments, account settings, and information you submit through the site.
               </p>
             </section>
 
             <section className="space-y-2">
-              <h2 className="text-sm font-bold text-neutral-950 dark:text-white">How We Use It</h2>
+              <h2 className="text-sm font-bold text-neutral-950 dark:text-white">Information Collected Automatically</h2>
               <p>
-                We use this information to provide account access, save favorite vendors, display reviews, protect the service, and keep the directory usable.
+                We may collect basic technical information such as session identifiers, IP address, user agent, timestamps, authentication events, and security logs. Theme preference may be stored locally in your browser.
               </p>
             </section>
 
             <section className="space-y-2">
-              <h2 className="text-sm font-bold text-neutral-950 dark:text-white">Research Content</h2>
+              <h2 className="text-sm font-bold text-neutral-950 dark:text-white">Analytics</h2>
               <p>
-                The directory is for research comparison. Do not submit private health information, medical history, or sensitive personal details in reviews or account fields.
+                We may use Plausible Analytics to understand aggregate site usage. Plausible is designed to be cookie-free and privacy-focused, and we do not use it to build cross-site advertising profiles.
               </p>
             </section>
 
             <section className="space-y-2">
-              <h2 className="text-sm font-bold text-neutral-950 dark:text-white">Your Choices</h2>
+              <h2 className="text-sm font-bold text-neutral-950 dark:text-white">How We Use Information</h2>
               <p>
-                You can update your account details, remove favorites, edit or delete reviews, and delete your account from the account page.
+                We use information to provide account access, save favorite vendors, display and manage reviews, calculate vendor ratings, prevent abuse, protect the service, troubleshoot issues, communicate about account actions, and improve the directory.
+              </p>
+            </section>
+
+            <section className="space-y-2">
+              <h2 className="text-sm font-bold text-neutral-950 dark:text-white">Public Reviews</h2>
+              <p>
+                Reviews, ratings, usernames, vendor names, and review timestamps may be visible publicly. Do not include private health information, medical history, dosing information, personal contact details, or sensitive personal data in reviews or account fields.
+              </p>
+            </section>
+
+            <section className="space-y-2">
+              <h2 className="text-sm font-bold text-neutral-950 dark:text-white">Affiliate and Outbound Links</h2>
+              <p>
+                Some outbound vendor links may be affiliate or referral links. When you click those links, the destination vendor or affiliate network may receive information needed to track the referral, such as the referring page or link identifier. Their privacy practices are governed by their own policies.
+              </p>
+            </section>
+
+            <section className="space-y-2">
+              <h2 className="text-sm font-bold text-neutral-950 dark:text-white">Service Providers</h2>
+              <p>
+                We may use service providers for hosting, databases, authentication, email delivery, analytics, security, and site operations. These providers may process information only as needed to provide their services to us.
+              </p>
+            </section>
+
+            <section className="space-y-2">
+              <h2 className="text-sm font-bold text-neutral-950 dark:text-white">Retention and Deletion</h2>
+              <p>
+                We keep information for as long as needed to operate the site, comply with legal obligations, resolve disputes, prevent abuse, and maintain records. You can edit or delete reviews, remove favorites, update account details, and delete your account from the account page.
+              </p>
+            </section>
+
+            <section className="space-y-2">
+              <h2 className="text-sm font-bold text-neutral-950 dark:text-white">Security</h2>
+              <p>
+                We use reasonable safeguards designed to protect account and site data, but no website, database, or transmission method can be guaranteed to be completely secure.
+              </p>
+            </section>
+
+            <section className="space-y-2">
+              <h2 className="text-sm font-bold text-neutral-950 dark:text-white">Minors</h2>
+              <p>
+                {SITE_NAME} is intended for adults and is not intended for minors. We do not knowingly collect personal information from minors.
+              </p>
+            </section>
+
+            <section className="space-y-2">
+              <h2 className="text-sm font-bold text-neutral-950 dark:text-white">Your Choices and Contact</h2>
+              <p>
+                You may contact us about privacy questions, account data, or deletion requests at contact@aminorank.com. Depending on where you live, you may have additional privacy rights under applicable law.
               </p>
             </section>
           </div>

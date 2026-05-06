@@ -38,6 +38,7 @@ const vendorSummaryColumns = {
   promoDiscountPercent: vendors.promoDiscountPercent,
   verified: vendors.verified,
   featured: vendors.featured,
+  sortOrder: vendors.sortOrder,
   country: vendors.country,
   hasCoa: vendors.hasCoa,
   acceptsCreditCard: vendors.acceptsCreditCard,
@@ -59,6 +60,7 @@ type VendorSummaryRow = {
   promoDiscountPercent: number | null
   verified: boolean
   featured: boolean
+  sortOrder: number
   country: string
   hasCoa: boolean
   acceptsCreditCard: boolean
@@ -81,6 +83,7 @@ function rowToVendorSummary(row: VendorSummaryRow): VendorSummary {
     promoDiscountPercent: row.promoDiscountPercent,
     verified: row.verified,
     featured: row.featured,
+    sortOrder: row.sortOrder,
     country: row.country,
     hasCoa: row.hasCoa,
     acceptsCreditCard: row.acceptsCreditCard,
@@ -177,7 +180,7 @@ async function loadFeaturedVendors(): Promise<VendorSummary[]> {
       .select(vendorSummaryColumns)
       .from(vendors)
       .where(eq(vendors.featured, true))
-      .orderBy(desc(vendors.rating), asc(vendors.name))
+      .orderBy(asc(vendors.sortOrder), asc(vendors.name))
       .then((rows) => {
         const data = rows.map(rowToVendorSummary)
         featuredVendorsCache = {
@@ -280,7 +283,7 @@ export const getCompoundProfile = createServerFn({ method: 'GET' })
         })
         .from(vendors)
         .where(sql`${vendors.compoundSlugs} @> ARRAY[${compoundId}]::text[]`)
-        .orderBy(desc(vendors.rating), asc(vendors.name)),
+        .orderBy(asc(vendors.sortOrder), asc(vendors.name)),
       db
         .select({
           id: compoundStudies.id,
@@ -340,7 +343,7 @@ export const filterVendors = createServerFn({ method: 'GET' })
       .select(vendorSummaryColumns)
       .from(vendors)
       .where(conditions.length > 0 ? and(...conditions) : undefined)
-      .orderBy(desc(vendors.rating), asc(vendors.name))
+      .orderBy(asc(vendors.sortOrder), asc(vendors.name))
 
     return rows.map(rowToVendorSummary)
   })

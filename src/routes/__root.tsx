@@ -29,7 +29,7 @@ export const Route = createRootRoute({
       { title: SITE_NAME },
       {
         name: 'description',
-        content: 'Find and compare peptide vendors. Verified ratings, certifications, and detailed reviews for every supplier.',
+        content: 'Find and compare peptide vendors. Vendor ratings, certifications, and detailed reviews for every supplier.',
       },
       { property: 'og:type', content: 'website' },
       { property: 'og:site_name', content: SITE_NAME },

@@ -7,6 +7,7 @@ export interface VendorSummary {
   promoDiscountPercent: number | null
   verified: boolean
   featured: boolean
+  sortOrder: number
   country: string
   hasCoa: boolean
   acceptsCreditCard: boolean

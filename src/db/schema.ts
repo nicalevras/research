@@ -70,6 +70,7 @@ export const vendors = pgTable('vendors', {
   promoDiscountPercent: integer('promo_discount_percent'),
   verified: boolean('verified').notNull().default(true),
   featured: boolean('featured').notNull().default(false),
+  sortOrder: integer('sort_order').notNull().default(0),
   country: text('country').notNull(),
   compoundNames: text('compound_names').array().notNull(),
   compoundSlugs: text('compound_slugs').array().notNull(),
@@ -85,6 +86,7 @@ export const vendors = pgTable('vendors', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 }, (t) => [
   check('chk_vendors_promo_discount_percent_range', sql`${t.promoDiscountPercent} IS NULL OR (${t.promoDiscountPercent} > 0 AND ${t.promoDiscountPercent} <= 100)`),
+  index('idx_vendors_sort_order').on(t.sortOrder),
   index('idx_vendors_country').on(t.country),
   index('idx_vendors_compound_slugs').using('gin', t.compoundSlugs),
 ])

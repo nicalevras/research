@@ -53,6 +53,9 @@ export function SiteFooter() {
           <p className="mt-4 text-sm leading-6 text-neutral-500 dark:text-neutral-400">
             Compare peptide vendors, peptide profiles, promo codes, COAs, payment methods, and research tools in one focused directory.
           </p>
+          <p className="mt-4 text-sm text-neutral-500 dark:text-neutral-400">
+            &copy; {new Date().getFullYear()} {SITE_NAME}
+          </p>
         </div>
 
         <nav className="space-y-3" aria-label="Footer directory links">
@@ -79,15 +82,14 @@ export function SiteFooter() {
           <div className="flex flex-col items-start gap-2">
             <FooterLink to="/terms">Terms and Conditions</FooterLink>
             <FooterLink to="/privacy">Privacy Policy</FooterLink>
-            <FooterLink href="#">Affiliate Disclosure</FooterLink>
+            <FooterLink to="/affiliate-disclosure">Affiliate Disclosure</FooterLink>
           </div>
         </nav>
       </div>
 
-      <div className="mt-10 flex flex-col gap-3 border-t border-neutral-200/60 pt-6 text-sm text-neutral-600 dark:border-white/[0.06] dark:text-neutral-300 sm:flex-row sm:items-center sm:justify-between">
-        <p>&copy; {new Date().getFullYear()} {SITE_NAME}</p>
-        <p className="max-w-2xl leading-6">
-          For research comparison only. Not medical advice, diagnosis, or treatment.
+      <div className="mt-10 border-t border-neutral-200/60 pt-6 text-neutral-600 dark:border-white/[0.06] dark:text-neutral-300">
+        <p className="max-w-5xl text-xs leading-5">
+          Some vendor links may be affiliate or referral links. {SITE_NAME} may earn a commission at no additional cost to you. For research comparison and informational purposes only. Not medical advice, diagnosis, treatment, or a recommendation to use any product or compound.
         </p>
       </div>
     </footer>

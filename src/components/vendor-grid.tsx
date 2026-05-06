@@ -79,7 +79,7 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummar
 
         <PromoCodeBadge code={vendor.promoCode} discountPercent={vendor.promoDiscountPercent} size="compact" className="text-base" />
 
-        <div className="flex items-center gap-3">
+        <div className="mt-auto flex items-center gap-3">
           <Link
             to="/vendors/$id"
             params={{ id: vendor.id }}

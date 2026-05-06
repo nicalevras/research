@@ -272,7 +272,7 @@ function buildSeedData(rows: CsvRow[]) {
   const peptideCategoryMap = readPeptideCategoryMap()
   const peptideDescriptionMap = readPeptideDescriptionMap()
 
-  const vendors = rows.map((row) => {
+  const vendors = rows.map((row, index) => {
     const name = requiredField(row, 'Vendor')
     const id = slugify(name)
     if (!id) throw new Error(`Missing vendor id for ${name}`)
@@ -301,6 +301,7 @@ function buildSeedData(rows: CsvRow[]) {
       promoDiscountPercent: readPromoDiscountPercent(row, promoCode),
       verified: readVerified(row),
       featured: readFeatured(row),
+      sortOrder: index,
       country: row.Country || 'USA',
       compoundNames,
       compoundSlugs,

@@ -19,6 +19,7 @@ import { Route as PeptidesRouteImport } from './routes/peptides'
 import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as CalculatorRouteImport } from './routes/calculator'
 import { Route as ArticlesRouteImport } from './routes/articles'
+import { Route as AffiliateDisclosureRouteImport } from './routes/affiliate-disclosure'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VendorsIndexRouteImport } from './routes/vendors.index'
@@ -78,6 +79,11 @@ const ArticlesRoute = ArticlesRouteImport.update({
   path: '/articles',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AffiliateDisclosureRoute = AffiliateDisclosureRouteImport.update({
+  id: '/affiliate-disclosure',
+  path: '/affiliate-disclosure',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccountRoute = AccountRouteImport.update({
   id: '/account',
   path: '/account',
@@ -122,6 +128,7 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/affiliate-disclosure': typeof AffiliateDisclosureRoute
   '/articles': typeof ArticlesRouteWithChildren
   '/calculator': typeof CalculatorRoute
   '/favorites': typeof FavoritesRoute
@@ -142,6 +149,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/affiliate-disclosure': typeof AffiliateDisclosureRoute
   '/calculator': typeof CalculatorRoute
   '/favorites': typeof FavoritesRoute
   '/privacy': typeof PrivacyRoute
@@ -160,6 +168,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/affiliate-disclosure': typeof AffiliateDisclosureRoute
   '/articles': typeof ArticlesRouteWithChildren
   '/calculator': typeof CalculatorRoute
   '/favorites': typeof FavoritesRoute
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/account'
+    | '/affiliate-disclosure'
     | '/articles'
     | '/calculator'
     | '/favorites'
@@ -202,6 +212,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/account'
+    | '/affiliate-disclosure'
     | '/calculator'
     | '/favorites'
     | '/privacy'
@@ -219,6 +230,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/account'
+    | '/affiliate-disclosure'
     | '/articles'
     | '/calculator'
     | '/favorites'
@@ -240,6 +252,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRoute
+  AffiliateDisclosureRoute: typeof AffiliateDisclosureRoute
   ArticlesRoute: typeof ArticlesRouteWithChildren
   CalculatorRoute: typeof CalculatorRoute
   FavoritesRoute: typeof FavoritesRoute
@@ -323,6 +336,13 @@ declare module '@tanstack/react-router' {
       path: '/articles'
       fullPath: '/articles'
       preLoaderRoute: typeof ArticlesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/affiliate-disclosure': {
+      id: '/affiliate-disclosure'
+      path: '/affiliate-disclosure'
+      fullPath: '/affiliate-disclosure'
+      preLoaderRoute: typeof AffiliateDisclosureRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account': {
@@ -426,6 +446,7 @@ const VendorsRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRoute,
+  AffiliateDisclosureRoute: AffiliateDisclosureRoute,
   ArticlesRoute: ArticlesRouteWithChildren,
   CalculatorRoute: CalculatorRoute,
   FavoritesRoute: FavoritesRoute,

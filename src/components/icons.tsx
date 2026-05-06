@@ -247,7 +247,7 @@ export function ResourceAvatar({
           <path d="m98 386 24-14 24 14v28l-24 14-24-14z" />
           <path d="m146 386 24-14 24 14v28l-24 14-24-14z" />
         </g>
-        <IconComponent x="138" y="138" width="236" height="236" color="#4b5563" strokeWidth={1.7} opacity=".9" />
+        <IconComponent x="138" y="138" width="236" height="236" color="#000000" strokeWidth={1.7} opacity=".9" />
       </g>
     </svg>
   )

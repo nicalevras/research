@@ -51,15 +51,17 @@ export function FeaturedResources() {
                       <Link
                         to={resource.to}
                         className="block h-14 w-14 shrink-0 overflow-hidden rounded-lg"
+                        aria-label={`View ${resource.title}`}
                       >
-                        <ResourceAvatar id={resource.id} icon={Icon} className="h-full w-full" />
+                        <ResourceAvatar id={resource.id} icon={Icon} className="h-full w-full" aria-hidden="true" />
                       </Link>
                     ) : (
                       <a
                         href={resource.href}
                         className="block h-14 w-14 shrink-0 overflow-hidden rounded-lg"
+                        aria-label={`View ${resource.title}`}
                       >
-                        <ResourceAvatar id={resource.id} icon={Icon} className="h-full w-full" />
+                        <ResourceAvatar id={resource.id} icon={Icon} className="h-full w-full" aria-hidden="true" />
                       </a>
                     )}
                     <div className="min-w-0 flex-1">

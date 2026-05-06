@@ -22,7 +22,7 @@ const resources = [
     id: 'articles',
     title: 'Articles',
     description: 'Read published research articles, analysis, and peptide-focused writeups in one place.',
-    to: '/peptides',
+    to: '/articles',
     icon: NewspaperIcon,
     cta: 'View Articles',
   },

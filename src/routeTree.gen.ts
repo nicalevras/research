@@ -18,10 +18,12 @@ import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PeptidesRouteImport } from './routes/peptides'
 import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as CalculatorRouteImport } from './routes/calculator'
+import { Route as ArticlesRouteImport } from './routes/articles'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VendorsIndexRouteImport } from './routes/vendors.index'
 import { Route as PeptidesIndexRouteImport } from './routes/peptides.index'
+import { Route as ArticlesIndexRouteImport } from './routes/articles.index'
 import { Route as VendorsIdRouteImport } from './routes/vendors.$id'
 import { Route as PeptidesCompoundRouteImport } from './routes/peptides.$compound'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -71,6 +73,11 @@ const CalculatorRoute = CalculatorRouteImport.update({
   path: '/calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArticlesRoute = ArticlesRouteImport.update({
+  id: '/articles',
+  path: '/articles',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccountRoute = AccountRouteImport.update({
   id: '/account',
   path: '/account',
@@ -91,6 +98,11 @@ const PeptidesIndexRoute = PeptidesIndexRouteImport.update({
   path: '/',
   getParentRoute: () => PeptidesRoute,
 } as any)
+const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ArticlesRoute,
+} as any)
 const VendorsIdRoute = VendorsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -110,6 +122,7 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/articles': typeof ArticlesRouteWithChildren
   '/calculator': typeof CalculatorRoute
   '/favorites': typeof FavoritesRoute
   '/peptides': typeof PeptidesRouteWithChildren
@@ -121,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/vendors': typeof VendorsRouteWithChildren
   '/peptides/$compound': typeof PeptidesCompoundRoute
   '/vendors/$id': typeof VendorsIdRoute
+  '/articles/': typeof ArticlesIndexRoute
   '/peptides/': typeof PeptidesIndexRoute
   '/vendors/': typeof VendorsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -137,6 +151,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/peptides/$compound': typeof PeptidesCompoundRoute
   '/vendors/$id': typeof VendorsIdRoute
+  '/articles': typeof ArticlesIndexRoute
   '/peptides': typeof PeptidesIndexRoute
   '/vendors': typeof VendorsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -145,6 +160,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/articles': typeof ArticlesRouteWithChildren
   '/calculator': typeof CalculatorRoute
   '/favorites': typeof FavoritesRoute
   '/peptides': typeof PeptidesRouteWithChildren
@@ -156,6 +172,7 @@ export interface FileRoutesById {
   '/vendors': typeof VendorsRouteWithChildren
   '/peptides/$compound': typeof PeptidesCompoundRoute
   '/vendors/$id': typeof VendorsIdRoute
+  '/articles/': typeof ArticlesIndexRoute
   '/peptides/': typeof PeptidesIndexRoute
   '/vendors/': typeof VendorsIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -165,6 +182,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/account'
+    | '/articles'
     | '/calculator'
     | '/favorites'
     | '/peptides'
@@ -176,6 +194,7 @@ export interface FileRouteTypes {
     | '/vendors'
     | '/peptides/$compound'
     | '/vendors/$id'
+    | '/articles/'
     | '/peptides/'
     | '/vendors/'
     | '/api/auth/$'
@@ -192,6 +211,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/peptides/$compound'
     | '/vendors/$id'
+    | '/articles'
     | '/peptides'
     | '/vendors'
     | '/api/auth/$'
@@ -199,6 +219,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/account'
+    | '/articles'
     | '/calculator'
     | '/favorites'
     | '/peptides'
@@ -210,6 +231,7 @@ export interface FileRouteTypes {
     | '/vendors'
     | '/peptides/$compound'
     | '/vendors/$id'
+    | '/articles/'
     | '/peptides/'
     | '/vendors/'
     | '/api/auth/$'
@@ -218,6 +240,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRoute
+  ArticlesRoute: typeof ArticlesRouteWithChildren
   CalculatorRoute: typeof CalculatorRoute
   FavoritesRoute: typeof FavoritesRoute
   PeptidesRoute: typeof PeptidesRouteWithChildren
@@ -295,6 +318,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/articles': {
+      id: '/articles'
+      path: '/articles'
+      fullPath: '/articles'
+      preLoaderRoute: typeof ArticlesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/account': {
       id: '/account'
       path: '/account'
@@ -323,6 +353,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PeptidesIndexRouteImport
       parentRoute: typeof PeptidesRoute
     }
+    '/articles/': {
+      id: '/articles/'
+      path: '/'
+      fullPath: '/articles/'
+      preLoaderRoute: typeof ArticlesIndexRouteImport
+      parentRoute: typeof ArticlesRoute
+    }
     '/vendors/$id': {
       id: '/vendors/$id'
       path: '/$id'
@@ -346,6 +383,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface ArticlesRouteChildren {
+  ArticlesIndexRoute: typeof ArticlesIndexRoute
+}
+
+const ArticlesRouteChildren: ArticlesRouteChildren = {
+  ArticlesIndexRoute: ArticlesIndexRoute,
+}
+
+const ArticlesRouteWithChildren = ArticlesRoute._addFileChildren(
+  ArticlesRouteChildren,
+)
 
 interface PeptidesRouteChildren {
   PeptidesCompoundRoute: typeof PeptidesCompoundRoute
@@ -377,6 +426,7 @@ const VendorsRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRoute,
+  ArticlesRoute: ArticlesRouteWithChildren,
   CalculatorRoute: CalculatorRoute,
   FavoritesRoute: FavoritesRoute,
   PeptidesRoute: PeptidesRouteWithChildren,

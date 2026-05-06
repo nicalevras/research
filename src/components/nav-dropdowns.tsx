@@ -98,7 +98,7 @@ export function ResourcesMenu() {
         </>
       }
     >
-      <DropdownLink to="/peptides">Articles</DropdownLink>
+      <DropdownLink to="/articles">Articles</DropdownLink>
       <DropdownDivider />
       <DropdownLink to="/calculator">Calculator</DropdownLink>
     </DropdownMenu>
@@ -123,7 +123,7 @@ export function HamburgerMenu() {
         Community
       </a>
       <DropdownDivider />
-      <DropdownLink to="/peptides">Articles</DropdownLink>
+      <DropdownLink to="/articles">Articles</DropdownLink>
       <DropdownDivider />
       <DropdownLink to="/calculator">Calculator</DropdownLink>
     </DropdownMenu>

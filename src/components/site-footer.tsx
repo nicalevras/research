@@ -61,7 +61,7 @@ export function SiteFooter() {
             <FooterLink to="/vendors">Peptide Vendors</FooterLink>
             <FooterLink to="/peptides">Peptide Catalog</FooterLink>
             <FooterLink href="https://community.aminorank.com/">Community</FooterLink>
-            <FooterLink href="#">Articles</FooterLink>
+            <FooterLink to="/articles">Articles</FooterLink>
             <FooterLink to="/calculator">Calculator</FooterLink>
           </div>
         </nav>

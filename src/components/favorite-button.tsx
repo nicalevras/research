@@ -1,14 +1,16 @@
 import { HeartIcon } from '~/components/icons'
 import { useFavorites } from '~/lib/favorites-context'
+import type { AnalyticsSurface } from '~/lib/analytics'
 
 type FavoriteButtonProps = {
   vendorId: string
   variant?: 'icon' | 'button'
   initialFavorited?: boolean
   className?: string
+  surface?: AnalyticsSurface
 }
 
-export function FavoriteButton({ vendorId, variant = 'icon', initialFavorited = false, className = '' }: FavoriteButtonProps) {
+export function FavoriteButton({ vendorId, variant = 'icon', initialFavorited = false, className = '', surface }: FavoriteButtonProps) {
   const { favoritesLoaded, authPending, isFavorite, isToggling, toggleFavorite } = useFavorites()
   const active = favoritesLoaded ? isFavorite(vendorId) : initialFavorited
   const toggling = isToggling(vendorId)
@@ -17,7 +19,7 @@ export function FavoriteButton({ vendorId, variant = 'icon', initialFavorited = 
   const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
     event.stopPropagation()
-    await toggleFavorite(vendorId)
+    await toggleFavorite(vendorId, surface)
   }
 
   if (variant === 'button') {

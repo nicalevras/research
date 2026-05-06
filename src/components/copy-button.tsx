@@ -6,6 +6,7 @@ interface CopyButtonProps {
   className?: string
   label?: string
   unstyled?: boolean
+  onCopied?: () => void
 }
 
 async function writeClipboard(value: string) {
@@ -28,7 +29,7 @@ async function writeClipboard(value: string) {
   textarea.remove()
 }
 
-export function CopyButton({ value, className = '', label = 'Copy', unstyled = false }: CopyButtonProps) {
+export function CopyButton({ value, className = '', label = 'Copy', unstyled = false, onCopied }: CopyButtonProps) {
   const [copied, setCopied] = useState(false)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const tooltipText = copied ? 'Copied' : 'Copy'
@@ -42,6 +43,7 @@ export function CopyButton({ value, className = '', label = 'Copy', unstyled = f
 
   const handleCopy = async () => {
     await writeClipboard(value)
+    onCopied?.()
     setCopied(true)
     if (timeoutRef.current) clearTimeout(timeoutRef.current)
     timeoutRef.current = setTimeout(() => setCopied(false), 1400)

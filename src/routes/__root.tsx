@@ -16,6 +16,7 @@ import { AuthModalProvider } from '~/lib/auth-context'
 import { FavoritesProvider } from '~/lib/favorites-context'
 import { AuthModals } from '~/components/auth-modals'
 import { SiteFooter } from '~/components/site-footer'
+import { trackForumClick } from '~/lib/analytics'
 import { SITE_NAME, SITE_URL } from '~/lib/constants'
 import appCss from '~/styles/app.css?url'
 
@@ -47,6 +48,8 @@ export const Route = createRootRoute({
     ],
     scripts: [
       { children: `(function(){try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark')}catch(e){}})()` },
+      { async: true, src: 'https://plausible.io/js/pa-2D0DtxDNYevc6uHP-aUCN.js' },
+      { children: `window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};plausible.init()` },
     ],
   }),
   errorComponent: (props: ErrorComponentProps) => (
@@ -95,7 +98,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
                         <Link to="/" activeOptions={{ exact: true }} activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Home</Link>
                         <Link to="/vendors" activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Vendors</Link>
                         <Link to="/peptides" activeProps={{ className: 'text-neutral-900 dark:text-white' }} className="text-sm font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors">Peptides</Link>
-                        <a href="https://community.aminorank.com/" className="text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white">Community</a>
+                        <a href="https://community.aminorank.com/" target="_blank" rel="noopener noreferrer" onClick={() => trackForumClick('top_nav')} className="text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white">Community</a>
                         <ResourcesMenu />
                       </nav>
                     </div>

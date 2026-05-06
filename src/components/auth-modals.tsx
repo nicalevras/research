@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from '@tanstack/react-router'
 import { useAuthModal } from '~/lib/auth-context'
 import { authClient } from '~/lib/auth-client'
+import { consumePendingAuthEvent, rememberPendingAuthEvent, trackAuthCompleted } from '~/lib/analytics'
 import { XIcon } from '~/components/icons'
 
 function Overlay({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
@@ -170,6 +171,7 @@ function SignInForm() {
       if (authError) {
         setError('Invalid email or password')
       } else {
+        trackAuthCompleted('Sign In Completed', 'email')
         closeModal()
         router.invalidate()
       }
@@ -181,6 +183,7 @@ function SignInForm() {
   }
 
   const handleGoogle = async () => {
+    rememberPendingAuthEvent('Sign In Completed')
     await authClient.signIn.social({
       provider: 'google',
       callbackURL: window.location.pathname,
@@ -263,6 +266,7 @@ function SignUpForm() {
       if (authError) {
         setError(authError.message ?? 'Sign up failed')
       } else {
+        trackAuthCompleted('Sign Up Completed', 'email')
         closeModal()
         router.invalidate()
       }
@@ -274,6 +278,7 @@ function SignUpForm() {
   }
 
   const handleGoogle = async () => {
+    rememberPendingAuthEvent('Sign Up Completed')
     await authClient.signIn.social({
       provider: 'google',
       callbackURL: window.location.pathname,
@@ -318,11 +323,27 @@ function SignUpForm() {
 export function AuthModals() {
   const { modal, closeModal } = useAuthModal()
 
-  if (!modal) return null
-
   return (
-    <Overlay onClose={closeModal}>
-      {modal === 'sign-in' ? <SignInForm /> : modal === 'sign-up' ? <SignUpForm /> : <ForgotPasswordForm />}
-    </Overlay>
+    <>
+      <AuthCompletionTracker />
+      {modal && (
+        <Overlay onClose={closeModal}>
+          {modal === 'sign-in' ? <SignInForm /> : modal === 'sign-up' ? <SignUpForm /> : <ForgotPasswordForm />}
+        </Overlay>
+      )}
+    </>
   )
+}
+
+function AuthCompletionTracker() {
+  const { data: session, isPending } = authClient.useSession()
+
+  useEffect(() => {
+    if (isPending || !session) return
+
+    const eventName = consumePendingAuthEvent()
+    if (eventName) trackAuthCompleted(eventName, 'google')
+  }, [isPending, session])
+
+  return null
 }

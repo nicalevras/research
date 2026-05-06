@@ -7,8 +7,11 @@ import { FavoriteButton } from '~/components/favorite-button'
 import { FEATURE_LABELS } from '~/lib/constants'
 import { PromoCodeBadge } from '~/components/promo-code'
 import { VendorAvatar } from '~/components/vendor-avatar'
+import { trackPromoCodeCopy, trackVendorProfileClick } from '~/lib/analytics'
 
-function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummary; initialFavorited?: boolean }) {
+type VendorGridSurface = 'home_featured' | 'vendor_directory' | 'favorites'
+
+function VendorCard({ vendor, initialFavorited = false, surface }: { vendor: VendorSummary; initialFavorited?: boolean; surface: VendorGridSurface }) {
   const reviewLabel = vendor.reviewCount > 0
     ? `(${vendor.reviewCount} ${vendor.reviewCount === 1 ? 'review' : 'reviews'})`
     : '(No reviews)'
@@ -21,6 +24,7 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummar
             <Link
               to="/vendors/$id"
               params={{ id: vendor.id }}
+              onClick={() => trackVendorProfileClick(vendor, surface)}
               className="flex h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-neutral-50 transition-opacity hover:opacity-80 dark:border-white/[0.08] dark:bg-white/[0.04]"
             >
               <VendorAvatar vendor={vendor} />
@@ -31,6 +35,7 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummar
                 <Link
                   to="/vendors/$id"
                   params={{ id: vendor.id }}
+                  onClick={() => trackVendorProfileClick(vendor, surface)}
                   className="block min-w-0 flex-1 truncate text-lg font-bold leading-[1.1] text-neutral-950 transition-colors hover:text-neutral-700 dark:text-white dark:hover:text-neutral-300"
                 >
                   {vendor.name}
@@ -38,6 +43,7 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummar
                 <FavoriteButton
                   vendorId={vendor.id}
                   initialFavorited={initialFavorited}
+                  surface={surface}
                   className="-mt-1"
                 />
               </div>
@@ -77,12 +83,19 @@ function VendorCard({ vendor, initialFavorited = false }: { vendor: VendorSummar
           {vendor.description}
         </p>
 
-        <PromoCodeBadge code={vendor.promoCode} discountPercent={vendor.promoDiscountPercent} size="compact" className="text-base" />
+        <PromoCodeBadge
+          code={vendor.promoCode}
+          discountPercent={vendor.promoDiscountPercent}
+          size="compact"
+          className="text-base"
+          onCopy={() => trackPromoCodeCopy(vendor, surface)}
+        />
 
         <div className="mt-auto flex items-center gap-3">
           <Link
             to="/vendors/$id"
             params={{ id: vendor.id }}
+            onClick={() => trackVendorProfileClick(vendor, surface)}
             className="inline-flex min-h-12 flex-1 items-center justify-center gap-3 rounded-lg bg-black px-5 py-3 text-base font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
           >
             Vendor Profile
@@ -132,11 +145,12 @@ export function VendorGridSkeleton() {
 interface VendorGridProps {
   data: VendorSummary[]
   initialFavorites?: boolean
+  surface?: VendorGridSurface
   emptyTitle?: string
   emptyDescription?: string
 }
 
-export function VendorGrid({ data, initialFavorites = false, emptyTitle = 'No vendors found', emptyDescription = 'Try adjusting your filters' }: VendorGridProps) {
+export function VendorGrid({ data, initialFavorites = false, surface = 'vendor_directory', emptyTitle = 'No vendors found', emptyDescription = 'Try adjusting your filters' }: VendorGridProps) {
   if (data.length === 0) {
     return (
       <div className="rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200/60 dark:border-white/[0.06] py-20 text-center">
@@ -152,7 +166,7 @@ export function VendorGrid({ data, initialFavorites = false, emptyTitle = 'No ve
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
       {data.map((vendor) => (
-        <VendorCard key={vendor.id} vendor={vendor} initialFavorited={initialFavorites} />
+        <VendorCard key={vendor.id} vendor={vendor} initialFavorited={initialFavorites} surface={surface} />
       ))}
     </div>
   )

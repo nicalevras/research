@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { CalculatorIcon, MessageCircleIcon, NewspaperIcon, ResourceAvatar } from '~/components/icons'
+import { trackForumClick } from '~/lib/analytics'
 
 const resources = [
   {
@@ -58,6 +59,9 @@ export function FeaturedResources() {
                     ) : (
                       <a
                         href={resource.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => trackForumClick('home_resource_card')}
                         className="block h-14 w-14 shrink-0 overflow-hidden rounded-lg"
                         aria-label={`View ${resource.title}`}
                       >
@@ -76,6 +80,9 @@ export function FeaturedResources() {
                         ) : (
                           <a
                             href={resource.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => trackForumClick('home_resource_card')}
                             className="block min-w-0 flex-1 truncate text-lg font-bold leading-[1.1] text-neutral-950 transition-colors hover:text-neutral-700 dark:text-white dark:hover:text-neutral-300"
                           >
                             {resource.title}
@@ -106,6 +113,9 @@ export function FeaturedResources() {
                   ) : (
                     <a
                       href={resource.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => trackForumClick('home_resource_card')}
                       className="inline-flex min-h-12 flex-1 items-center justify-center rounded-lg bg-black px-5 py-3 text-base font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
                     >
                       {resource.cta}

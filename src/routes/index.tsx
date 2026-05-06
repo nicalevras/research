@@ -208,6 +208,7 @@ function HomePage() {
         </div>
         <VendorGrid
           data={vendors}
+          surface="home_featured"
           emptyTitle="No featured vendors yet"
           emptyDescription="Browse the full vendor directory while featured vendors are being selected."
         />
@@ -226,6 +227,7 @@ function HomePage() {
         </div>
         <PeptideGrid
           data={compounds}
+          surface="home_featured"
           emptyTitle="No featured peptides yet"
           emptyDescription="Browse the peptide directory while featured peptides are being selected."
         />

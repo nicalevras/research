@@ -2,10 +2,13 @@ import { Link } from '@tanstack/react-router'
 import { PEPTIDE_CATEGORIES } from '~/lib/constants'
 import type { Compound } from '~/lib/types'
 import { PeptideAvatar } from '~/lib/peptide-icons'
+import { trackPeptideVendorsClick } from '~/lib/analytics'
+import type { AnalyticsSurface } from '~/lib/analytics'
 
 const PEPTIDE_CATEGORY_BY_ID = new Map(PEPTIDE_CATEGORIES.map((category) => [category.id, category]))
 
-function PeptideCard({ id, name, description, categories, vendorCount }: Compound) {
+function PeptideCard({ compound, surface }: { compound: Compound; surface: AnalyticsSurface }) {
+  const { id, name, description, categories, vendorCount } = compound
   const categoryLabels = categories.flatMap((categoryId) => {
     const category = PEPTIDE_CATEGORY_BY_ID.get(categoryId)
     return category ? [category] : []
@@ -73,6 +76,7 @@ function PeptideCard({ id, name, description, categories, vendorCount }: Compoun
           <Link
             to="/vendors"
             search={{ peptide: id }}
+            onClick={() => trackPeptideVendorsClick(compound, surface)}
             className="inline-flex min-h-12 flex-1 items-center justify-center rounded-lg bg-black px-5 py-3 text-center text-base font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
           >
             {name} Vendors
@@ -85,11 +89,12 @@ function PeptideCard({ id, name, description, categories, vendorCount }: Compoun
 
 interface PeptideGridProps {
   data: Compound[]
+  surface?: AnalyticsSurface
   emptyTitle?: string
   emptyDescription?: string
 }
 
-export function PeptideGrid({ data, emptyTitle = 'No peptides found', emptyDescription = 'Try adjusting your filters' }: PeptideGridProps) {
+export function PeptideGrid({ data, surface = 'peptide_directory', emptyTitle = 'No peptides found', emptyDescription = 'Try adjusting your filters' }: PeptideGridProps) {
   if (data.length === 0) {
     return (
       <div className="rounded-lg border border-neutral-200/80 bg-white p-6 text-sm text-neutral-500 dark:border-white/[0.08] dark:bg-neutral-900 dark:text-neutral-400">
@@ -102,7 +107,7 @@ export function PeptideGrid({ data, emptyTitle = 'No peptides found', emptyDescr
   return (
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {data.map((compound) => (
-        <PeptideCard key={compound.id} {...compound} />
+        <PeptideCard key={compound.id} compound={compound} surface={surface} />
       ))}
     </div>
   )

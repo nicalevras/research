@@ -4,6 +4,7 @@ import { Link, useNavigate, useRouter, useRouterState } from '@tanstack/react-ro
 import { useTheme } from '~/lib/use-theme'
 import { useAuthModal } from '~/lib/auth-context'
 import { authClient } from '~/lib/auth-client'
+import { trackForumClick } from '~/lib/analytics'
 import { MenuIcon, UserIcon, SunIcon, MoonIcon, LogInIcon, UserPlusIcon, LogOutIcon, SettingsIcon, SearchIcon, XIcon, HeartIcon, ChevronDownIcon } from '~/components/icons'
 
 function DropdownMenu({
@@ -118,6 +119,9 @@ export function HamburgerMenu() {
       <DropdownDivider />
       <a
         href="https://community.aminorank.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => trackForumClick('mobile_menu')}
         className="flex w-full items-center gap-2 px-3 py-2 text-sm text-neutral-600 transition-colors hover:bg-neutral-50 dark:text-neutral-300 dark:hover:bg-white/[0.04]"
       >
         Community

@@ -3,6 +3,8 @@ import type { ReactNode } from 'react'
 import { authClient } from '~/lib/auth-client'
 import { useAuthModal } from '~/lib/auth-context'
 import { getFavoriteVendorIds, setVendorFavorite } from '~/lib/data'
+import { trackFavoriteToggled } from '~/lib/analytics'
+import type { AnalyticsSurface } from '~/lib/analytics'
 
 type FavoritesContextValue = {
   favoriteIds: Set<string>
@@ -10,7 +12,7 @@ type FavoritesContextValue = {
   authPending: boolean
   isFavorite: (vendorId: string) => boolean
   isToggling: (vendorId: string) => boolean
-  toggleFavorite: (vendorId: string) => Promise<void>
+  toggleFavorite: (vendorId: string, surface?: AnalyticsSurface) => Promise<void>
 }
 
 const FavoritesContext = createContext<FavoritesContextValue>({
@@ -71,7 +73,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
   const isFavorite = useCallback((vendorId: string) => favoriteIds.has(vendorId), [favoriteIds])
   const isToggling = useCallback((vendorId: string) => togglingIds.has(vendorId), [togglingIds])
 
-  const toggleFavorite = useCallback(async (vendorId: string) => {
+  const toggleFavorite = useCallback(async (vendorId: string, surface?: AnalyticsSurface) => {
     if (authPending) return
 
     if (!userId) {
@@ -97,6 +99,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
 
     try {
       const result = await setVendorFavorite({ data: { vendorId, favorited: nextFavorited } })
+      trackFavoriteToggled(result.vendorId, result.favorited, surface)
       setFavoriteIds((prev) => {
         const next = new Set(prev)
         if (result.favorited) next.add(result.vendorId)

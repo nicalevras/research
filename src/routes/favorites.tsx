@@ -79,6 +79,7 @@ function FavoritesPage() {
         <VendorGrid
           data={visibleVendors}
           initialFavorites
+          surface="favorites"
           emptyTitle="No favorites yet"
           emptyDescription="Save vendors from the directory or vendor profile pages."
         />

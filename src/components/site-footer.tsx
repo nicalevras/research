@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { AminoRankMark, ChevronRightIcon } from '~/components/icons'
+import { trackForumClick } from '~/lib/analytics'
 import { SITE_NAME } from '~/lib/constants'
 
 function FooterHeading({ children }: { children: React.ReactNode }) {
@@ -13,10 +14,16 @@ function FooterHeading({ children }: { children: React.ReactNode }) {
 function FooterLink({
   to,
   href,
+  target,
+  rel,
+  onClick,
   children,
 }: {
   to?: string
   href?: string
+  target?: string
+  rel?: string
+  onClick?: () => void
   children: React.ReactNode
 }) {
   const className =
@@ -24,7 +31,7 @@ function FooterLink({
 
   if (href) {
     return (
-      <a href={href} className={className}>
+      <a href={href} target={target} rel={rel} onClick={onClick} className={className}>
         {children}
         <ChevronRightIcon className="h-3 w-3 opacity-50" />
       </a>
@@ -63,7 +70,7 @@ export function SiteFooter() {
           <div className="flex flex-col items-start gap-2">
             <FooterLink to="/vendors">Peptide Vendors</FooterLink>
             <FooterLink to="/peptides">Peptide Catalog</FooterLink>
-            <FooterLink href="https://community.aminorank.com/">Community</FooterLink>
+            <FooterLink href="https://community.aminorank.com/" target="_blank" rel="noopener noreferrer" onClick={() => trackForumClick('footer')}>Community</FooterLink>
             <FooterLink to="/articles">Articles</FooterLink>
             <FooterLink to="/calculator">Calculator</FooterLink>
           </div>

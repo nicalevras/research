@@ -5,6 +5,7 @@ import { ChevronRightIcon } from '~/components/icons'
 import { ReviewStars } from '~/components/reviews'
 import { VendorAvatar } from '~/components/vendor-avatar'
 import { PeptideAvatar } from '~/lib/peptide-icons'
+import { trackPeptideVendorsClick, trackVendorProfileClick } from '~/lib/analytics'
 
 const PEPTIDE_CATEGORY_BY_ID = new Map(PEPTIDE_CATEGORIES.map((category) => [category.id, category]))
 
@@ -87,6 +88,7 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
             <Link
               to="/vendors"
               search={{ peptide: compound.id }}
+              onClick={() => trackPeptideVendorsClick({ id: compound.id, name: compound.name, vendorCount: vendors.length }, 'peptide_profile')}
               className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-black px-5 py-3 text-base font-bold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
             >
               View Vendors
@@ -177,6 +179,7 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
                         <Link
                           to="/vendors/$id"
                           params={{ id: vendor.id }}
+                          onClick={() => trackVendorProfileClick(vendor, 'peptide_profile', compound.id)}
                           className="block truncate font-semibold text-neutral-700 hover:underline dark:text-neutral-200"
                         >
                           {vendor.name}
@@ -194,6 +197,7 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
                     <Link
                       to="/vendors/$id"
                       params={{ id: vendor.id }}
+                      onClick={() => trackVendorProfileClick(vendor, 'peptide_profile', compound.id)}
                       className="inline-flex items-center justify-center rounded-lg bg-neutral-900 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200"
                     >
                       Profile

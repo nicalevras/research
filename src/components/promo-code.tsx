@@ -7,9 +7,10 @@ interface PromoCodeBadgeProps {
   className?: string
   size?: 'default' | 'compact'
   fullWidth?: boolean
+  onCopy?: () => void
 }
 
-export function PromoCodeBadge({ code, discountPercent, className = '', size = 'default', fullWidth = true }: PromoCodeBadgeProps) {
+export function PromoCodeBadge({ code, discountPercent, className = '', size = 'default', fullWidth = true, onCopy }: PromoCodeBadgeProps) {
   if (!code) return null
 
   const isCompact = size === 'compact'
@@ -33,6 +34,7 @@ export function PromoCodeBadge({ code, discountPercent, className = '', size = '
             value={code}
             label="Copy promo code"
             unstyled
+            onCopied={onCopy}
             className={`${copyButtonClass} rounded-lg text-neutral-500 hover:text-emerald-700 dark:text-neutral-300 dark:hover:text-emerald-200`}
           />
         </div>

@@ -9,6 +9,7 @@ import { CountryFlag } from '~/components/flags'
 import { FavoriteButton } from '~/components/favorite-button'
 import { PromoCodeBadge } from '~/components/promo-code'
 import { VendorAvatar } from '~/components/vendor-avatar'
+import { trackPromoCodeCopy, trackVendorOutboundClick } from '~/lib/analytics'
 import { buildVendorProfileDescription, buildVendorProfileTitle, vendorProfilePath } from '~/lib/vendor-profile-seo'
 
 function VendorNotFound() {
@@ -295,11 +296,16 @@ function VendorDetailPage() {
                     </span>
                   </div>
                 </div>
-                <FavoriteButton vendorId={vendor.id} className="absolute right-0 top-0" />
+                <FavoriteButton vendorId={vendor.id} surface="vendor_profile" className="absolute right-0 top-0" />
               </div>
             </header>
 
-            <PromoCodeBadge code={vendor.promoCode} discountPercent={vendor.promoDiscountPercent} fullWidth={false} />
+            <PromoCodeBadge
+              code={vendor.promoCode}
+              discountPercent={vendor.promoDiscountPercent}
+              fullWidth={false}
+              onCopy={() => trackPromoCodeCopy(vendor, 'vendor_profile')}
+            />
 
             <p className="max-w-3xl text-base leading-7 text-neutral-500 dark:text-neutral-300">
               {vendor.description}
@@ -309,6 +315,7 @@ function VendorDetailPage() {
               href={vendor.website}
               target="_blank"
               rel="noopener noreferrer nofollow"
+              onClick={() => trackVendorOutboundClick(vendor, 'vendor_profile_primary')}
               className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-black px-5 py-3 text-base font-bold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
             >
               View Website
@@ -383,6 +390,7 @@ function VendorDetailPage() {
                           href={vendor.website}
                           target="_blank"
                           rel="noopener noreferrer nofollow"
+                          onClick={() => trackVendorOutboundClick(vendor, 'vendor_profile_peptide_table', compoundSlug)}
                           className="inline-flex items-center justify-center rounded-lg bg-neutral-900 dark:bg-white px-3 py-1.5 text-xs font-semibold text-white dark:text-neutral-900 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors"
                         >
                           Buy

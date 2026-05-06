@@ -3,6 +3,7 @@ import type { Review } from '~/lib/types'
 import { authClient } from '~/lib/auth-client'
 import { useAuthModal } from '~/lib/auth-context'
 import { createReview, updateReview, deleteReview } from '~/lib/data'
+import { trackReviewSubmitted } from '~/lib/analytics'
 import { StarIcon } from '~/components/icons'
 import { useRouter } from '@tanstack/react-router'
 
@@ -202,6 +203,7 @@ function ReviewForm({ vendorId, existingReview, onDone }: {
         await updateReview({ data: { reviewId: existingReview.id, rating, comment } })
       } else {
         await createReview({ data: { vendorId, rating, comment } })
+        trackReviewSubmitted(vendorId, rating)
       }
       setRating(0)
       setComment('')

@@ -1,4 +1,4 @@
-export const SITE_URL = process.env.SITE_URL || ''
+export const SITE_URL = 'https://aminorank.com'
 export const SITE_NAME = 'AminoRank'
 
 export const FEATURE_LABELS = {

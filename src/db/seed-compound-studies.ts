@@ -87,6 +87,19 @@ function requiredField(row: CsvRow, key: string): string {
   return value
 }
 
+const SOURCE_LABELS: Record<string, string> = {
+  'ACS Chemical Biology': 'ACS',
+  'Nature Communications': 'Nature',
+  'New England Journal of Medicine': 'NEJM',
+  'Oxford Academic': 'Oxford',
+  'Saint Petersburg Institute of Bioregulation and Gerontology': 'SPIBG',
+  'Synergie Skin': 'SS',
+}
+
+function normalizeSource(source: string) {
+  return SOURCE_LABELS[source] ?? source
+}
+
 function readStudiesCsv() {
   const csvPath = resolve(
     process.cwd(),
@@ -126,7 +139,7 @@ async function seedCompoundStudies() {
     return {
       compoundId,
       title: requiredField(row, 'study_title'),
-      source: requiredField(row, 'source'),
+      source: normalizeSource(requiredField(row, 'source')),
       url: requiredField(row, 'url'),
       sortOrder: studyRank,
     } satisfies typeof schema.compoundStudies.$inferInsert

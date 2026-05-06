@@ -80,7 +80,9 @@ const DEFAULT_SYRINGE = readDefaultSyringe()
 
 const VIAL_OPTIONS = [2, 5, 10, 15]
 const WATER_OPTIONS = [1, 2, 3]
-const DOSE_OPTIONS = [1, 2, 5, 10]
+const DOSE_OPTIONS_MG = [1, 2, 5, 10]
+const DOSE_OPTIONS_MCG = [100, 250, 500]
+type DoseUnit = 'mg' | 'mcg'
 
 // ── Pill Button ────────────────────────────────────────────────────
 
@@ -104,7 +106,7 @@ function Pill({ active, onClick, children }: { active: boolean; onClick: () => v
 // ── Section Label ──────────────────────────────────────────────────
 
 function Label({ children }: { children: React.ReactNode }) {
-  return <p className="text-sm font-semibold text-neutral-900 dark:text-white">{children}</p>
+  return <p className="text-sm font-bold text-neutral-900 dark:text-white">{children}</p>
 }
 
 // ── Syringe Scale ──────────────────────────────────────────────────
@@ -182,14 +184,18 @@ function CalculatorPage() {
   const [waterMl, setWaterMl] = useState(1)
   const [customWater, setCustomWater] = useState('')
   const [isCustomWater, setIsCustomWater] = useState(false)
-  const [doseMg, setDoseMg] = useState(1)
+  const [doseUnit, setDoseUnit] = useState<DoseUnit>('mg')
+  const [doseAmount, setDoseAmount] = useState(1)
   const [customDose, setCustomDose] = useState('')
   const [isCustomDose, setIsCustomDose] = useState(false)
 
   // Resolve actual values (custom overrides presets)
   const actualVial = isCustomVial ? parseFloat(customVial) || 0 : vialMg
   const actualWater = isCustomWater ? parseFloat(customWater) || 0 : waterMl
-  const actualDoseMg = isCustomDose ? parseFloat(customDose) || 0 : doseMg
+  const doseOptions = doseUnit === 'mg' ? DOSE_OPTIONS_MG : DOSE_OPTIONS_MCG
+  const actualDoseAmount = isCustomDose ? parseFloat(customDose) || 0 : doseAmount
+  const actualDoseMg = doseUnit === 'mcg' ? actualDoseAmount / 1000 : actualDoseAmount
+  const actualDoseLabel = `${actualDoseAmount.toLocaleString('en-US', { maximumFractionDigits: 3 })} ${doseUnit}`
 
   // Compute results (internally use mg throughout)
   const concentrationMgPerMl = actualWater > 0 ? actualVial / actualWater : 0
@@ -210,8 +216,15 @@ function CalculatorPage() {
     setCustomWater('')
   }
 
-  const handleSelectDose = (mg: number) => {
-    setDoseMg(mg)
+  const handleSelectDose = (amount: number) => {
+    setDoseAmount(amount)
+    setIsCustomDose(false)
+    setCustomDose('')
+  }
+
+  const handleSelectDoseUnit = (unit: DoseUnit) => {
+    setDoseUnit(unit)
+    setDoseAmount(unit === 'mg' ? DOSE_OPTIONS_MG[0]! : DOSE_OPTIONS_MCG[0]!)
     setIsCustomDose(false)
     setCustomDose('')
   }
@@ -302,11 +315,29 @@ function CalculatorPage() {
 
         {/* Desired Dose */}
         <div className="rounded-lg border border-neutral-200/60 dark:border-white/[0.06] p-5 space-y-2.5">
-          <Label>Desired Dose (mg)</Label>
+          <div className="flex items-center justify-between gap-3">
+            <Label>Desired Dose ({doseUnit})</Label>
+            <div className="inline-flex rounded-lg border border-neutral-200/60 bg-white/70 p-0.5 dark:border-white/[0.06] dark:bg-white/[0.04]" role="group" aria-label="Desired dose unit">
+              {(['mg', 'mcg'] as const).map((unit) => (
+                <button
+                  key={unit}
+                  type="button"
+                  onClick={() => handleSelectDoseUnit(unit)}
+                  className={`rounded-md px-2.5 py-1 text-xs font-semibold transition-colors ${
+                    doseUnit === unit
+                      ? 'bg-neutral-900 text-white dark:bg-white dark:text-neutral-950'
+                      : 'text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-white'
+                  }`}
+                >
+                  {unit}
+                </button>
+              ))}
+            </div>
+          </div>
           <div className="flex flex-wrap gap-2">
-            {DOSE_OPTIONS.map((mg) => (
-              <Pill key={mg} active={!isCustomDose && doseMg === mg} onClick={() => handleSelectDose(mg)}>
-                {mg} mg
+            {doseOptions.map((amount) => (
+              <Pill key={amount} active={!isCustomDose && doseAmount === amount} onClick={() => handleSelectDose(amount)}>
+                {amount.toLocaleString('en-US')} {doseUnit}
               </Pill>
             ))}
             <Pill active={isCustomDose} onClick={() => setIsCustomDose(true)}>
@@ -320,11 +351,11 @@ function CalculatorPage() {
                 inputMode="decimal"
                 value={customDose}
                 onChange={(e) => setCustomDose(e.target.value)}
-                placeholder="Enter mg"
+                placeholder={`Enter ${doseUnit}`}
                 autoFocus
                 className="w-32 rounded-lg border border-neutral-200/60 dark:border-white/[0.06] bg-white/70 dark:bg-white/[0.04] px-3.5 py-2 text-sm text-neutral-900 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:focus:ring-white/10 transition-all"
               />
-              <span className="text-xs text-neutral-400 dark:text-neutral-500">mg</span>
+              <span className="text-xs text-neutral-400 dark:text-neutral-500">{doseUnit}</span>
             </div>
           )}
         </div>
@@ -350,7 +381,7 @@ function CalculatorPage() {
               <div className="rounded-lg bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/[0.06] p-4 text-center">
                 <p className="text-sm text-neutral-500 dark:text-neutral-400">
                   For a dose of{' '}
-                  <span className="text-xl font-bold text-neutral-900 dark:text-white tabular-nums">{actualDoseMg} mg</span>
+                  <span className="text-xl font-bold text-neutral-900 dark:text-white tabular-nums">{actualDoseLabel}</span>
                   {' '}pull the syringe to{' '}
                   <span className="text-xl font-bold text-neutral-900 dark:text-white tabular-nums">{syringeUnits.toFixed(1)}</span>
                   {' '}units

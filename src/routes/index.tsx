@@ -106,7 +106,8 @@ function HomePage() {
 
   const handleVendorChange = useCallback(
     (value: string) => {
-      navigate({ to: '/peptides', search: { vendor: value || undefined } })
+      if (!value) return
+      navigate({ to: '/vendors/$id', params: { id: value } })
     },
     [navigate],
   )
@@ -172,7 +173,7 @@ function HomePage() {
 
                 <div className="relative flex-1 sm:w-44 sm:flex-none">
                   <label htmlFor="home-vendor-filter" className="sr-only">
-                    Filter peptides by vendor
+                    Open vendor profile
                   </label>
                   <select
                     id="home-vendor-filter"

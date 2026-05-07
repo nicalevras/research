@@ -110,8 +110,8 @@ function SkeletonCard() {
   return (
     <div className="flex h-full flex-col rounded-lg border border-neutral-200/80 bg-white p-5 dark:border-white/[0.08] dark:bg-neutral-900">
       <div className="flex flex-1 animate-pulse flex-col gap-4">
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex items-start gap-4">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-start gap-2">
             <div className="h-14 w-14 rounded-lg bg-neutral-100 dark:bg-neutral-800" />
             <div className="space-y-3">
               <div className="h-7 w-36 rounded-lg bg-neutral-200 dark:bg-neutral-700" />
@@ -125,7 +125,7 @@ function SkeletonCard() {
           <div className="h-4 w-full rounded-lg bg-neutral-100 dark:bg-neutral-800" />
           <div className="h-4 w-4/5 rounded-lg bg-neutral-100 dark:bg-neutral-800" />
         </div>
-        <div className="h-10 w-full rounded-lg bg-emerald-50 dark:bg-emerald-400/10" />
+        <div className="h-10 w-full rounded-lg bg-neutral-100 dark:bg-neutral-800" />
         <div className="h-12 w-full rounded-lg bg-neutral-200 dark:bg-neutral-700" />
       </div>
     </div>

@@ -112,3 +112,38 @@ export function PeptideGrid({ data, surface = 'peptide_directory', emptyTitle = 
     </div>
   )
 }
+
+function SkeletonCard() {
+  return (
+    <div className="flex h-full flex-col rounded-lg border border-neutral-200/80 bg-white p-5 dark:border-white/[0.08] dark:bg-neutral-900">
+      <div className="flex flex-1 animate-pulse flex-col gap-4">
+        <div className="flex min-w-0 items-start gap-2">
+          <div className="h-14 w-14 shrink-0 rounded-lg bg-neutral-100 dark:bg-neutral-800" />
+          <div className="min-w-0 flex-1 space-y-3">
+            <div className="h-7 w-36 rounded-lg bg-neutral-200 dark:bg-neutral-700" />
+            <div className="h-5 w-28 rounded-lg bg-neutral-100 dark:bg-neutral-800" />
+          </div>
+        </div>
+        <div className="h-5 w-24 rounded-lg bg-neutral-100 dark:bg-neutral-800" />
+        <div className="space-y-3">
+          <div className="h-4 w-full rounded-lg bg-neutral-100 dark:bg-neutral-800" />
+          <div className="h-4 w-4/5 rounded-lg bg-neutral-100 dark:bg-neutral-800" />
+        </div>
+        <div className="mt-auto space-y-3">
+          <div className="h-12 w-full rounded-lg bg-neutral-100 dark:bg-neutral-800" />
+          <div className="h-12 w-full rounded-lg bg-neutral-200 dark:bg-neutral-700" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export function PeptideGridSkeleton() {
+  return (
+    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {Array.from({ length: 6 }, (_, i) => (
+        <SkeletonCard key={i} />
+      ))}
+    </div>
+  )
+}

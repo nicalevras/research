@@ -87,9 +87,9 @@ export function DirectoryListing({ heading, description, resultSummary, searchQu
       <div>
         <div className="py-16">
           {isRouteChanging ? (
-            <div className="mx-auto max-w-3xl">
-              <div className="mx-auto h-9 w-72 rounded-lg bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
-              <div className="mx-auto mt-4 h-4 w-96 max-w-full rounded-lg bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
+            <div className="max-w-3xl">
+              <div className="h-9 w-72 rounded-lg bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
+              <div className="mt-4 h-4 w-96 max-w-full rounded-lg bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
             </div>
           ) : (
             <div className="max-w-3xl">

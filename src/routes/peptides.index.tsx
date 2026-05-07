@@ -1,8 +1,8 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useRouterState } from '@tanstack/react-router'
 import { zodValidator } from '@tanstack/zod-adapter'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ChevronDownIcon, SearchIcon, XIcon } from '~/components/icons'
-import { PeptideGrid } from '~/components/peptide-grid'
+import { PeptideGrid, PeptideGridSkeleton } from '~/components/peptide-grid'
 import { PillNav } from '~/components/pill-nav'
 import { withVendorCounts } from '~/lib/compound-counts'
 import { PEPTIDE_CATEGORIES, SITE_NAME, SITE_URL } from '~/lib/constants'
@@ -87,7 +87,7 @@ function peptideLandingCopy(filters: {
   }
 
   return {
-    heading: search ? 'Peptide Search Results' : 'Peptides',
+    heading: search ? 'Peptide Search Results' : 'All Peptides',
     description: search
       ? `Search results for peptides matching "${search}".`
       : 'Browse research peptides and compare vendors carrying each peptide.',
@@ -286,6 +286,19 @@ function PeptidesPage() {
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null)
   const [localQuery, setLocalQuery] = useState(q ?? '')
   const [localCategories, setLocalCategories] = useState<string[]>(() => selectedCategoryIds(categories))
+  const isGridLoading = useRouterState({
+    select: (s) => {
+      if (!s.isLoading) return false
+      return !s.location.pathname.startsWith('/peptides/')
+    },
+  })
+  const isRouteChanging = useRouterState({
+    select: (s) => {
+      if (!s.isLoading) return false
+      const resolved = s.resolvedLocation?.pathname ?? s.location.pathname
+      return resolved !== s.location.pathname && !s.location.pathname.startsWith('/peptides/')
+    },
+  })
 
   useEffect(() => {
     if (document.activeElement !== searchRef.current) {
@@ -353,15 +366,22 @@ function PeptidesPage() {
   return (
     <div>
       <section className="py-16">
-        <div className="max-w-3xl">
-          <h1 className="max-w-2xl text-3xl font-[900] font-stretch-semi-expanded capitalize leading-tight tracking-[-1px] text-neutral-950 dark:text-white sm:text-4xl">{landing.heading}</h1>
-          <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-neutral-600 dark:text-neutral-300">
-            {landing.description}
-          </p>
-          <p className="sr-only">
-            {landing.resultSummary}
-          </p>
-        </div>
+        {isRouteChanging ? (
+          <div className="max-w-3xl">
+            <div className="h-9 w-72 rounded-lg bg-neutral-200 dark:bg-neutral-800 animate-pulse" />
+            <div className="mt-4 h-4 w-96 max-w-full rounded-lg bg-neutral-100 dark:bg-neutral-800 animate-pulse" />
+          </div>
+        ) : (
+          <div className="max-w-3xl">
+            <h1 className="max-w-2xl text-3xl font-[900] font-stretch-semi-expanded capitalize leading-tight tracking-[-1px] text-neutral-950 dark:text-white sm:text-4xl">{landing.heading}</h1>
+            <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-neutral-600 dark:text-neutral-300">
+              {landing.description}
+            </p>
+            <p className="sr-only">
+              {landing.resultSummary}
+            </p>
+          </div>
+        )}
       </section>
 
       <div>
@@ -424,11 +444,15 @@ function PeptidesPage() {
 
       <section className="mt-6" aria-label="Peptides">
         <h2 className="sr-only">Peptide listings</h2>
-        <PeptideGrid
-          data={compounds}
-          emptyTitle="No peptides match the current filters"
-          emptyDescription="Try adjusting your search, category, or vendor filter."
-        />
+        {isGridLoading ? (
+          <PeptideGridSkeleton />
+        ) : (
+          <PeptideGrid
+            data={compounds}
+            emptyTitle="No peptides match the current filters"
+            emptyDescription="Try adjusting your search, category, or vendor filter."
+          />
+        )}
       </section>
     </div>
   )

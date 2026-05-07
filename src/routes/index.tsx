@@ -28,8 +28,8 @@ export const Route = createFileRoute('/')({
     }
   },
   head: ({ loaderData }) => {
-    const pageTitle = `${SITE_NAME} - Vendors, Peptides, and Research Tools`
-    const pageDescription = `Browse featured peptide vendors, research peptides, and core tools from ${SITE_NAME}.`
+    const pageTitle = `Peptide Vendor Reviews, Lab Results & Discounts | ${SITE_NAME}`
+    const pageDescription = `Find peptide vendors with reviews, lab results, peptide availability, accepted payment methods, and exclusive discounts on ${SITE_NAME}.`
     const canonicalUrl = `${SITE_URL}/`
     const ogImage = `${SITE_URL}/og-image.png`
     const featuredVendorListId = `${canonicalUrl}#featured-vendors`
@@ -120,7 +120,7 @@ function HomePage() {
               Find <HandwrittenUnderline color="#8cff00">Trusted</HandwrittenUnderline> Peptide Vendors
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-pretty text-base leading-7 text-neutral-600 dark:text-neutral-300">
-              Compare vendor ratings, promo codes, COAs, payment methods, and peptide availability in one focused research directory.
+              Compare peptide vendors by ratings, reviews, COA transparency, peptide availability, payment methods, and exclusive discounts.
             </p>
           </div>
 

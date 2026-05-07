@@ -19,6 +19,7 @@ const FEATURE_FILTER_BY_ID = new Map(APPROVED_VENDOR_INDEX_FEATURES.map((feature
 type VendorDirectoryLanding = {
   heading: string
   description: string
+  pageDescription?: string
   pageTitle: string
   listName: string
   resultSummary: string
@@ -77,11 +78,14 @@ function vendorLandingCopy(filters: {
   }
 
   return {
-    heading: search ? 'Vendor Search Results' : 'Peptide Vendors',
+    heading: search ? 'Vendor Search Results' : 'All Peptide Vendors',
     description: search
       ? `Search results for peptide vendors matching "${search}".`
-      : 'Browse every peptide vendor in the directory. Compare ratings, certifications, promo codes, and vendor details in one place.',
-    pageTitle: search ? `Vendor Search Results - ${SITE_NAME}` : `Vendors - ${SITE_NAME}`,
+      : 'Browse peptide vendors by reviews, lab results, peptide availability, accepted payment methods, and exclusive discounts.',
+    pageDescription: search
+      ? undefined
+      : `Browse peptide vendors with reviews, lab results, peptide availability, accepted payment methods, and exclusive discounts on ${SITE_NAME}.`,
+    pageTitle: search ? `Vendor Search Results - ${SITE_NAME}` : `Best Peptide Vendors 2026: Reviews & Discounts | ${SITE_NAME}`,
     listName: 'Peptide Vendors',
     resultSummary: search
       ? `${countSummaryPrefix} matching your search.`
@@ -209,7 +213,7 @@ export const Route = createFileRoute('/vendors/')({
       noindex: false,
       indexable: true,
     }
-    const pageDescription = landing.description
+    const pageDescription = landing.pageDescription ?? landing.description
     const canonicalUrl = `${SITE_URL}${seo.canonicalPath}`
     const ogImage = `${SITE_URL}/og-image.png`
     const itemListId = seo.indexable ? `${canonicalUrl}#vendor-list` : undefined

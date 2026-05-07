@@ -5,9 +5,9 @@ import { SITE_NAME } from '~/lib/constants'
 
 function FooterHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-300">
+    <p className="text-xs font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-300">
       {children}
-    </h2>
+    </p>
   )
 }
 

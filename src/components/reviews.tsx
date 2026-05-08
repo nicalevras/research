@@ -154,7 +154,7 @@ function RatingSummary({ reviews }: { reviews: Review[] }) {
                   style={{ width: `${pct}%` }}
                 />
               </div>
-              <span className="w-4 text-left text-sm tabular-nums text-neutral-400 dark:text-neutral-500">{count}</span>
+              <span className="w-4 text-left text-sm tabular-nums text-neutral-600 dark:text-neutral-300">{count}</span>
             </div>
           )
         })}
@@ -235,7 +235,7 @@ function ReviewForm({ vendorId, existingReview, onDone }: {
       />
       <div className="flex items-start justify-between -mt-2">
         <div>
-          <span className="text-xs text-neutral-400 dark:text-neutral-500">{comment.length}/2000</span>
+          <span className="text-xs text-neutral-600 dark:text-neutral-300">{comment.length}/2000</span>
           {error && <p className="text-xs text-red-500 mt-0.5">{error}</p>}
         </div>
         <div className="flex gap-3">
@@ -306,7 +306,7 @@ function ReviewCard({ review, currentUserId, onEdit, onDeleted }: {
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold text-neutral-900 dark:text-white">{review.username}</span>
-            <time dateTime={review.createdAt} className="text-[11px] text-neutral-400 dark:text-neutral-500">{timeAgo}</time>
+            <time dateTime={review.createdAt} className="text-[11px] text-neutral-600 dark:text-neutral-300">{timeAgo}</time>
           </div>
           {isOwner && (
             <div className="flex items-center gap-2.5 shrink-0">

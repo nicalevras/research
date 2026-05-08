@@ -51,7 +51,7 @@ export const Route = createFileRoute('/')({
       ],
       links: [{ rel: 'canonical', href: canonicalUrl }],
       scripts: [
-        { type: 'application/ld+json', children: JSON.stringify(websiteSchema()) },
+        { type: 'application/ld+json', children: JSON.stringify(websiteSchema(pageDescription)) },
         ...(loaderData?.vendors
           ? [{
               type: 'application/ld+json' as const,
@@ -71,8 +71,35 @@ export const Route = createFileRoute('/')({
     'Cache-Control': 'public, max-age=300, stale-while-revalidate=3600',
     'Vary': 'Accept, Accept-Encoding',
   }),
+  pendingComponent: HomePageSkeleton,
   component: HomePage,
 })
+
+function HomePageSkeleton() {
+  return (
+    <div>
+      <section className="py-16">
+        <div className="mx-auto max-w-3xl space-y-6">
+          <div className="text-center">
+            <div className="mx-auto h-9 w-80 max-w-full animate-pulse rounded-lg bg-neutral-200 dark:bg-neutral-800" />
+            <div className="mx-auto mt-4 h-4 w-[36rem] max-w-full animate-pulse rounded-lg bg-neutral-100 dark:bg-neutral-800" />
+          </div>
+
+          <div className="mx-auto w-full max-w-2xl space-y-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="h-10 flex-1 animate-pulse rounded-lg bg-neutral-100 dark:bg-neutral-800" />
+              <div className="flex w-full shrink-0 gap-3 sm:w-auto">
+                <div className="h-10 flex-1 animate-pulse rounded-lg bg-neutral-100 dark:bg-neutral-800 sm:w-44 sm:flex-none" />
+                <div className="h-10 flex-1 animate-pulse rounded-lg bg-neutral-100 dark:bg-neutral-800 sm:w-44 sm:flex-none" />
+              </div>
+            </div>
+            <div className="h-8 animate-pulse rounded-lg bg-neutral-100 dark:bg-neutral-800" />
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
 
 function HomePage() {
   const navigate = useNavigate()

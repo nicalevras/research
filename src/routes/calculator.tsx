@@ -6,8 +6,8 @@ import { CircleAlertIcon } from '~/components/icons'
 
 export const Route = createFileRoute('/calculator')({
   head: () => {
-    const pageTitle = `Peptide Reconstitution Calculator - ${SITE_NAME}`
-    const pageDescription = 'Free peptide reconstitution calculator. Calculate concentration, dose volume, and syringe units for any peptide vial.'
+    const pageTitle = `Peptide Reconstitution Calculator | ${SITE_NAME}`
+    const pageDescription = 'Free peptide reconstitution calculator for mixing bacteriostatic water, calculating concentration, dose volume, and syringe units.'
     const canonicalPath = '/calculator'
     const canonicalUrl = `${SITE_URL}${canonicalPath}`
     const ogImage = `${SITE_URL}/og-image.png`
@@ -34,7 +34,7 @@ export const Route = createFileRoute('/calculator')({
             name: 'Peptide Reconstitution Calculator',
             url: canonicalPath,
             description: pageDescription,
-            applicationCategory: 'HealthApplication',
+            applicationCategory: 'UtilitiesApplication',
             operatingSystem: 'Any',
             offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
             isAccessibleForFree: true,
@@ -237,7 +237,7 @@ function CalculatorPage() {
             Peptide Reconstitution Calculator
           </h1>
           <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-neutral-600 dark:text-neutral-300">
-            Free peptide reconstitution calculator for accurate dosing. Calculate concentrations, mixing volumes, and syringe units instantly for any peptide.
+            Calculate bacteriostatic water, concentration, dose volume, and syringe units for research peptides.
           </p>
         </div>
       </section>

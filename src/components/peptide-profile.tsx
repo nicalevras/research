@@ -27,14 +27,14 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
       <nav className="mb-6 flex items-center gap-1.5 text-sm">
         <Link
           to="/"
-          className="text-neutral-400 transition-colors hover:text-neutral-900 dark:text-neutral-500 dark:hover:text-white"
+          className="text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white"
         >
           Home
         </Link>
         <ChevronRightIcon className="h-3.5 w-3.5 text-neutral-300 dark:text-neutral-600" />
         <Link
           to="/peptides"
-          className="text-neutral-400 transition-colors hover:text-neutral-900 dark:text-neutral-500 dark:hover:text-white"
+          className="text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white"
         >
           Peptides
         </Link>
@@ -45,8 +45,8 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
       </nav>
 
       <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(320px,420px)]">
-        <div className="glass-card-solid overflow-hidden p-5 shadow-none">
-          <div className="space-y-4">
+        <div className="glass-card-solid flex overflow-hidden p-5 shadow-none">
+          <div className="flex min-h-full w-full flex-col gap-4">
             <header className="flex min-w-0 flex-col gap-4">
               <div className="flex min-w-0 items-start gap-2">
                 <div
@@ -89,7 +89,7 @@ export function PeptideProfile({ compound, vendors, studies }: PeptideProfilePro
               to="/vendors"
               search={{ peptide: compound.id }}
               onClick={() => trackPeptideVendorsClick({ id: compound.id, name: compound.name, vendorCount: vendors.length }, 'peptide_profile')}
-              className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-black px-5 py-3 text-base font-bold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
+              className="mt-auto inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-black px-5 py-3 text-base font-bold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
             >
               View Vendors
             </Link>

@@ -16,6 +16,57 @@ import {
 
 const FEATURE_FILTER_BY_ID = new Map(APPROVED_VENDOR_INDEX_FEATURES.map((feature) => [feature.id, feature]))
 
+const FEATURE_PAGE_TITLES: Record<string, string> = {
+  coa: `Best Peptide Vendors With Lab Results 2026 | ${SITE_NAME}`,
+  'credit-card': `Best Peptide Vendors That Accept Credit Cards 2026 | ${SITE_NAME}`,
+  ach: `Best Peptide Vendors That Accept ACH 2026 | ${SITE_NAME}`,
+  crypto: `Best Peptide Vendors That Accept Crypto 2026 | ${SITE_NAME}`,
+  'promo-code': `Best Peptide Vendors With Discounts 2026 | ${SITE_NAME}`,
+  international: `Best Peptide Vendors That Ship Internationally 2026 | ${SITE_NAME}`,
+  'fast-shipping': `Best Peptide Vendors With Fast Shipping 2026 | ${SITE_NAME}`,
+}
+
+const FEATURE_PAGE_HEADINGS: Record<string, string> = {
+  coa: 'Peptide Vendors With Lab Results',
+  'credit-card': 'Credit Card Accepted Peptide Vendors',
+  ach: 'ACH Accepted Peptide Vendors',
+  crypto: 'Crypto Accepted Peptide Vendors',
+  'promo-code': 'Peptide Vendors With Discounts',
+  international: 'International Shipping Peptide Vendors',
+  'fast-shipping': 'Fast Shipping Peptide Vendors',
+}
+
+const FEATURE_PAGE_DESCRIPTIONS: Record<string, { hero: string; meta: string }> = {
+  coa: {
+    hero: 'Compare peptide vendors with lab results by reviews, peptide availability, payment methods, and exclusive discounts.',
+    meta: `Compare peptide vendors with lab results by reviews, peptide availability, payment methods, and exclusive discounts on ${SITE_NAME}.`,
+  },
+  'credit-card': {
+    hero: 'Compare peptide vendors that accept credit cards by reviews, lab results, peptide availability, and exclusive discounts.',
+    meta: `Compare peptide vendors that accept credit cards by reviews, lab results, peptide availability, and exclusive discounts on ${SITE_NAME}.`,
+  },
+  ach: {
+    hero: 'Compare peptide vendors that accept ACH by reviews, lab results, peptide availability, and exclusive discounts.',
+    meta: `Compare peptide vendors that accept ACH by reviews, lab results, peptide availability, and exclusive discounts on ${SITE_NAME}.`,
+  },
+  crypto: {
+    hero: 'Compare peptide vendors that accept crypto by reviews, lab results, peptide availability, and exclusive discounts.',
+    meta: `Compare peptide vendors that accept crypto by reviews, lab results, peptide availability, and exclusive discounts on ${SITE_NAME}.`,
+  },
+  'promo-code': {
+    hero: 'Compare peptide vendors with exclusive discounts by reviews, lab results, peptide availability, and payment methods.',
+    meta: `Compare peptide vendors with exclusive discounts by reviews, lab results, peptide availability, and payment methods on ${SITE_NAME}.`,
+  },
+  international: {
+    hero: 'Compare peptide vendors that ship internationally by reviews, lab results, peptide availability, payment methods, and exclusive discounts.',
+    meta: `Compare peptide vendors that ship internationally by reviews, lab results, peptide availability, payment methods, and exclusive discounts on ${SITE_NAME}.`,
+  },
+  'fast-shipping': {
+    hero: 'Compare peptide vendors with fast shipping by reviews, lab results, peptide availability, payment methods, and exclusive discounts.',
+    meta: `Compare peptide vendors with fast shipping by reviews, lab results, peptide availability, payment methods, and exclusive discounts on ${SITE_NAME}.`,
+  },
+}
+
 type VendorDirectoryLanding = {
   heading: string
   description: string
@@ -55,8 +106,9 @@ function vendorLandingCopy(filters: {
 
     return {
       heading: compoundVendorTitle,
-      description: `Compare peptide vendors carrying ${compound.name}. Review ratings, vendor profiles, payment methods, and category matches in one place.`,
-      pageTitle: `${compoundVendorTitle} - ${SITE_NAME}`,
+      description: `Compare ${compound.name} peptide vendors by reviews, lab results, payment methods, and exclusive discounts.`,
+      pageDescription: `Compare ${compound.name} peptide vendors by reviews, lab results, payment methods, and exclusive discounts on ${SITE_NAME}.`,
+      pageTitle: `Best ${compound.name} Peptide Vendors 2026: Reviews & Discounts | ${SITE_NAME}`,
       listName: compoundVendorTitle,
       resultSummary: filters.indexable
         ? `${countSummaryPrefix} that currently list ${compound.name}.`
@@ -66,10 +118,15 @@ function vendorLandingCopy(filters: {
 
   if (featureLabels.length > 0) {
     const label = featureLabels.join(' + ')
+    const singleFeatureId = filters.featureIds.length === 1 ? filters.featureIds[0] : undefined
+    const featureHeading = singleFeatureId ? FEATURE_PAGE_HEADINGS[singleFeatureId] : undefined
+    const featureTitle = singleFeatureId ? FEATURE_PAGE_TITLES[singleFeatureId] : undefined
+    const featureDescription = singleFeatureId ? FEATURE_PAGE_DESCRIPTIONS[singleFeatureId] : undefined
     return {
-      heading: `${label} Vendors`,
-      description: `Compare peptide vendors with ${label.toLowerCase()}. Review ratings, vendor profiles, payment methods, and peptide availability.`,
-      pageTitle: `${label} Vendors - ${SITE_NAME}`,
+      heading: featureHeading ?? `${label} Vendors`,
+      description: featureDescription?.hero ?? `Compare peptide vendors with ${label.toLowerCase()}. Review ratings, vendor profiles, payment methods, and peptide availability.`,
+      pageDescription: featureDescription?.meta,
+      pageTitle: featureTitle ?? `${label} Vendors - ${SITE_NAME}`,
       listName: `${label} Vendors`,
       resultSummary: filters.indexable && featureLabels.length === 1
         ? `${countSummaryPrefix} marked with ${label}.`
@@ -80,12 +137,12 @@ function vendorLandingCopy(filters: {
   return {
     heading: search ? 'Vendor Search Results' : 'All Peptide Vendors',
     description: search
-      ? `Search results for peptide vendors matching "${search}".`
+      ? `Showing vendor results for "${search}".`
       : 'Browse peptide vendors by reviews, lab results, peptide availability, accepted payment methods, and exclusive discounts.',
     pageDescription: search
-      ? undefined
+      ? `Search peptide vendor results for "${search}" on ${SITE_NAME}.`
       : `Browse peptide vendors with reviews, lab results, peptide availability, accepted payment methods, and exclusive discounts on ${SITE_NAME}.`,
-    pageTitle: search ? `Vendor Search Results - ${SITE_NAME}` : `Best Peptide Vendors 2026: Reviews & Discounts | ${SITE_NAME}`,
+    pageTitle: search ? `Vendor Search Results | ${SITE_NAME}` : `Best Peptide Vendors 2026: Reviews & Discounts | ${SITE_NAME}`,
     listName: 'Peptide Vendors',
     resultSummary: search
       ? `${countSummaryPrefix} matching your search.`

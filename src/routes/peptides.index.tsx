@@ -22,6 +22,7 @@ const PEPTIDE_CATEGORY_BY_ID = new Map(PEPTIDE_CATEGORIES.map((category) => [cat
 type PeptideDirectoryLanding = {
   heading: string
   description: string
+  pageDescription?: string
   pageTitle: string
   listName: string
   resultSummary: string
@@ -61,10 +62,12 @@ function peptideLandingCopy(filters: {
 
   if (categoryLabels.length > 0) {
     const label = categoryLabels.join(' + ')
+    const categoryPhrase = label.toLowerCase()
     return {
       heading: `${label} Peptides`,
-      description: `Browse ${label.toLowerCase()} research peptides and compare vendors carrying each peptide.`,
-      pageTitle: `${label} Peptides - ${SITE_NAME}`,
+      description: `Explore ${categoryPhrase} research peptides with linked studies, categories, and vendor availability.`,
+      pageDescription: `Explore ${categoryPhrase} research peptides with linked studies, categories, and vendor availability on ${SITE_NAME}.`,
+      pageTitle: `${label} Peptide Guide 2026: Studies & Vendors | ${SITE_NAME}`,
       listName: `${label} Peptides`,
       resultSummary: filters.indexable && categoryLabels.length === 1
         ? `${peptideCountSummary} in ${label}.`
@@ -77,8 +80,9 @@ function peptideLandingCopy(filters: {
 
     return {
       heading: vendorHeading,
-      description: `Browse research peptides listed for ${filters.vendorName}. Compare peptide profiles and matching vendor availability.`,
-      pageTitle: `${vendorHeading} - ${SITE_NAME}`,
+      description: `Browse research peptides available from ${filters.vendorName} by category.`,
+      pageDescription: `Browse research peptides available from ${filters.vendorName} by category on ${SITE_NAME}.`,
+      pageTitle: `${filters.vendorName} Research Peptides | ${SITE_NAME}`,
       listName: vendorHeading,
       resultSummary: search
         ? `${peptideCountSummary} matching current filters.`
@@ -89,9 +93,12 @@ function peptideLandingCopy(filters: {
   return {
     heading: search ? 'Peptide Search Results' : 'All Peptides',
     description: search
-      ? `Search results for peptides matching "${search}".`
-      : 'Browse research peptides and compare vendors carrying each peptide.',
-    pageTitle: search ? `Peptide Search Results - ${SITE_NAME}` : `Peptides - ${SITE_NAME}`,
+      ? `Showing peptide results for "${search}".`
+      : 'Explore research peptides with linked studies, categories, and vendor availability.',
+    pageDescription: search
+      ? `Search peptide results for "${search}" on ${SITE_NAME}.`
+      : `Explore research peptides with linked studies, categories, and vendor availability on ${SITE_NAME}.`,
+    pageTitle: search ? `Peptide Search Results | ${SITE_NAME}` : `Peptide Research Guide 2026: Studies & Vendors | ${SITE_NAME}`,
     listName: 'Peptides',
     resultSummary: search
       ? `${peptideCountSummary} matching your search.`
@@ -223,7 +230,7 @@ export const Route = createFileRoute('/peptides/')({
       noindex: false,
       indexable: true,
     }
-    const pageDescription = landing.description
+    const pageDescription = landing.pageDescription ?? landing.description
     const canonicalUrl = `${SITE_URL}${seo.canonicalPath}`
     const ogImage = `${SITE_URL}/og-image.png`
     const itemListId = seo.indexable ? `${canonicalUrl}#peptide-list` : undefined

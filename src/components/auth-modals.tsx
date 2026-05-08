@@ -77,6 +77,18 @@ function Divider() {
   )
 }
 
+function AuthLogo() {
+  return (
+    <img
+      src="/apple-touch-icon.png"
+      alt="AminoRank"
+      className="mx-auto mb-3 h-12 w-12 rounded-xl"
+      width={48}
+      height={48}
+    />
+  )
+}
+
 function ForgotPasswordForm() {
   const { openSignIn } = useAuthModal()
   const [email, setEmail] = useState('')
@@ -107,6 +119,7 @@ function ForgotPasswordForm() {
     return (
       <div className="space-y-4 text-center">
         <div className="mb-6">
+          <AuthLogo />
           <h2 className="text-lg font-semibold text-neutral-900 dark:text-white">Check your email</h2>
           <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
             If an account exists for {email}, we sent a password reset link.
@@ -126,6 +139,7 @@ function ForgotPasswordForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="text-center mb-6">
+        <AuthLogo />
         <h2 className="text-lg font-semibold text-neutral-900 dark:text-white">Reset Password</h2>
         <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">Enter your email to receive a reset link</p>
       </div>
@@ -193,6 +207,7 @@ function SignInForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="text-center mb-6">
+        <AuthLogo />
         <h2 className="text-lg font-semibold text-neutral-900 dark:text-white">Sign In</h2>
         <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">{message ?? 'Welcome back'}</p>
       </div>
@@ -288,6 +303,7 @@ function SignUpForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="text-center mb-6">
+        <AuthLogo />
         <h2 className="text-lg font-semibold text-neutral-900 dark:text-white">Sign Up</h2>
         <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">Create your account</p>
       </div>

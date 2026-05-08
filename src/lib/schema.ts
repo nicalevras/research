@@ -64,7 +64,7 @@ export function collectionPageSchema({
   name: string
   description: string
   url: string
-  mainEntityId: string
+  mainEntityId?: string
 }) {
   return {
     '@context': 'https://schema.org',
@@ -72,9 +72,13 @@ export function collectionPageSchema({
     url: `${SITE_URL}${url}`,
     name,
     description,
-    mainEntity: {
-      '@id': mainEntityId,
-    },
+    ...(mainEntityId
+      ? {
+          mainEntity: {
+            '@id': mainEntityId,
+          },
+        }
+      : {}),
   }
 }
 
@@ -309,12 +313,13 @@ export function peptideProfileSchema({
   }
 }
 
-export function websiteSchema() {
+export function websiteSchema(description?: string) {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: SITE_NAME,
     url: SITE_URL,
+    ...(description ? { description } : {}),
   }
 }
 

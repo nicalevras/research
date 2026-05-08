@@ -3,18 +3,18 @@ import { NewspaperIcon } from '~/components/icons'
 import { SITE_NAME, SITE_URL } from '~/lib/constants'
 import { breadcrumbSchema, collectionPageSchema } from '~/lib/schema'
 
-const pageTitle = `Articles - ${SITE_NAME}`
-const pageDescription = `Read research articles, analysis, and long-form peptide content published on ${SITE_NAME}.`
+const pageTitle = `Peptide Research Articles & Vendor Guides | ${SITE_NAME}`
+const pageDescription = `Read peptide research articles, vendor guides, study breakdowns, and ${SITE_NAME} updates.`
 const canonicalPath = '/articles'
 const canonicalUrl = `${SITE_URL}${canonicalPath}`
 const ogImage = `${SITE_URL}/og-image.png`
-const collectionId = `${canonicalUrl}#articles`
 
 export const Route = createFileRoute('/articles/')({
   head: () => ({
     meta: [
       { title: pageTitle },
       { name: 'description', content: pageDescription },
+      { name: 'robots', content: 'noindex, follow' },
       { property: 'og:title', content: pageTitle },
       { property: 'og:type', content: 'website' },
       { property: 'og:description', content: pageDescription },
@@ -33,7 +33,6 @@ export const Route = createFileRoute('/articles/')({
           name: pageTitle,
           description: pageDescription,
           url: canonicalPath,
-          mainEntityId: collectionId,
         })),
       },
       {
@@ -58,10 +57,10 @@ function ArticlesPage() {
       <section className="py-16">
         <div className="max-w-3xl">
           <h1 className="max-w-2xl text-3xl font-[900] font-stretch-semi-expanded capitalize leading-tight tracking-[-1px] text-neutral-950 dark:text-white sm:text-4xl">
-            Articles
+            Peptide Research Articles
           </h1>
           <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-neutral-600 dark:text-neutral-300">
-            Research articles, peptide analysis, and long-form writeups will live here.
+            Read peptide research articles, vendor guides, study breakdowns, and {SITE_NAME} updates.
           </p>
         </div>
       </section>
@@ -76,7 +75,7 @@ function ArticlesPage() {
                 </div>
                 <div className="space-y-2">
                   <h2 className="text-lg font-bold leading-[1.1] text-neutral-950 dark:text-white">
-                    Coming Soon
+                    {SITE_NAME} Articles
                   </h2>
                   <span className="inline-flex items-center rounded-lg bg-neutral-100 px-2 py-1 text-xs font-medium text-neutral-600 dark:bg-white/[0.06] dark:text-neutral-300">
                     <span className="mr-1" aria-hidden="true">📚</span>Article
@@ -85,7 +84,7 @@ function ArticlesPage() {
               </header>
 
               <p className="text-base leading-7 text-neutral-500 dark:text-neutral-300">
-                The first AminoRank articles are on the way. This section will collect research breakdowns, vendor analysis, and peptide-focused editorial content.
+                Research articles, vendor guides, study breakdowns, and peptide-focused updates will be published here.
               </p>
 
               <div className="mt-auto">

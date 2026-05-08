@@ -58,7 +58,7 @@ export function SiteFooter() {
             {SITE_NAME}
           </Link>
           <p className="mt-4 text-sm leading-6 text-neutral-500 dark:text-neutral-400">
-            Compare peptide vendors, peptide profiles, promo codes, COAs, payment methods, and research tools in one focused directory.
+            Compare peptide vendors by ratings, reviews, COA transparency, peptide availability, payment methods, and exclusive discounts.
           </p>
           <p className="mt-4 text-sm text-neutral-500 dark:text-neutral-400">
             &copy; {new Date().getFullYear()} {SITE_NAME}

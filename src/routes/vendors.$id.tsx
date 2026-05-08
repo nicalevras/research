@@ -119,8 +119,8 @@ function VendorSkeleton() {
       </div>
 
       <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(320px,420px)]">
-        <div className="glass-card-solid overflow-hidden shadow-none p-5">
-          <div className="space-y-4">
+        <div className="glass-card-solid flex overflow-hidden p-5 shadow-none">
+          <div className="flex min-h-full w-full flex-col gap-4">
             <div className="flex items-start gap-4">
               <Shimmer className="h-14 w-14 shrink-0 rounded-lg" />
               <div className="min-w-0 flex-1 space-y-3">
@@ -257,14 +257,14 @@ function VendorDetailPage() {
       <nav className="mb-6 flex items-center gap-1.5 text-sm">
         <Link
           to="/"
-          className="text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
+          className="text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white"
         >
           Home
         </Link>
         <ChevronRightIcon className="h-3.5 w-3.5 text-neutral-300 dark:text-neutral-600" />
         <Link
           to="/vendors"
-          className="text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors"
+          className="text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-white"
         >
           Vendors
         </Link>
@@ -316,7 +316,7 @@ function VendorDetailPage() {
               target="_blank"
               rel="noopener noreferrer nofollow"
               onClick={() => trackVendorOutboundClick(vendor, 'vendor_profile_primary')}
-              className="inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-black px-5 py-3 text-base font-bold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
+              className="mt-auto inline-flex min-h-12 w-full items-center justify-center rounded-lg bg-black px-5 py-3 text-base font-bold text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
             >
               View Website
             </a>
@@ -407,7 +407,7 @@ function VendorDetailPage() {
 
       {/* Reviews card */}
       <section className="mt-6 glass-card-solid overflow-hidden shadow-none p-5 space-y-6" aria-labelledby="vendor-reviews-heading">
-        <h2 id="vendor-reviews-heading" className="text-xs font-bold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
+        <h2 id="vendor-reviews-heading" className="text-xs font-bold uppercase tracking-wider text-neutral-600 dark:text-neutral-300">
           Reviews
         </h2>
         <ReviewsList reviews={reviews} vendorId={vendor.id} />

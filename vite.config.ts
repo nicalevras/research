@@ -3,6 +3,10 @@ import { defineConfig } from 'vite'
 import viteReact from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { nitro } from 'nitro/vite'
+import contentCollections from '@content-collections/vite'
+import mdx from '@mdx-js/rollup'
+import remarkFrontmatter from 'remark-frontmatter'
+import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
 
 const PRIVATE_ROUTES = new Set(['/account', '/favorites'])
 
@@ -21,16 +25,26 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   plugins: [
+    {
+      enforce: 'pre',
+      ...mdx({
+        remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
+      }),
+    },
+    contentCollections(),
     tailwindcss(),
     tanstackStart({
       srcDirectory: 'src',
       prerender: {
         enabled: true,
         crawlLinks: true,
+        concurrency: 2,
+        retryCount: 2,
+        retryDelay: 500,
         filter: ({ path }) => shouldPrerenderPath(path),
       },
     }),
-    viteReact(),
+    viteReact({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),
     nitro({
       publicAssets: [
         {

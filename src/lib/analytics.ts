@@ -1,4 +1,4 @@
-import type { Vendor, VendorSummary } from '~/lib/types'
+import type { VendorSummary } from '~/lib/types'
 
 type PlausibleValue = string | number | boolean | null | undefined
 type PlausibleProps = Record<string, PlausibleValue>
@@ -19,6 +19,7 @@ export type AnalyticsSurface =
   | 'vendor_profile'
   | 'vendor_profile_primary'
   | 'vendor_profile_peptide_table'
+  | 'article_vendor_table'
   | 'peptide_directory'
   | 'peptide_profile'
   | 'favorites'
@@ -72,7 +73,7 @@ export function trackVendorProfileClick(vendor: TrackableVendor, surface: Analyt
   })
 }
 
-export function trackVendorOutboundClick(vendor: Vendor, surface: AnalyticsSurface, peptideSlug?: string) {
+export function trackVendorOutboundClick(vendor: TrackableVendor, surface: AnalyticsSurface, peptideSlug?: string) {
   trackEvent('Vendor Outbound Click', {
     ...vendorProps(vendor),
     surface,

@@ -123,6 +123,64 @@ export function breadcrumbSchema(items: { name: string; url: string }[]) {
   }
 }
 
+export function articleSchema({
+  title,
+  description,
+  path,
+  author,
+  publishedAt,
+  updatedAt,
+}: {
+  title: string
+  description: string
+  path: string
+  author: string
+  publishedAt: string
+  updatedAt: string
+}) {
+  const url = `${SITE_URL}${path}`
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
+    description,
+    url,
+    mainEntityOfPage: url,
+    author: {
+      '@type': 'Organization',
+      name: author,
+      url: SITE_URL,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: SITE_NAME,
+      url: SITE_URL,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${SITE_URL}/og-image.png`,
+      },
+    },
+    datePublished: publishedAt,
+    dateModified: updatedAt,
+  }
+}
+
+export function faqPageSchema(faqs: { question: string; answer: string }[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  }
+}
+
 export function organizationSchema(vendor: Vendor, reviews?: Review[]) {
   return {
     '@context': 'https://schema.org',

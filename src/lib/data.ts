@@ -32,6 +32,7 @@ let featuredVendorsRequest: Promise<VendorSummary[]> | undefined
 const vendorSummaryColumns = {
   id: vendors.id,
   name: vendors.name,
+  website: vendors.website,
   description: vendors.description,
   logoUrl: vendors.logoUrl,
   promoCode: vendors.promoCode,
@@ -54,6 +55,7 @@ const vendorSummaryColumns = {
 type VendorSummaryRow = {
   id: string
   name: string
+  website: string
   description: string
   logoUrl: string | null
   promoCode: string | null
@@ -77,6 +79,7 @@ function rowToVendorSummary(row: VendorSummaryRow): VendorSummary {
   return {
     id: row.id,
     name: row.name,
+    website: row.website,
     description: row.description,
     logoUrl: row.logoUrl,
     promoCode: row.promoCode,

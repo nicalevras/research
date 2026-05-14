@@ -1,6 +1,7 @@
 export interface VendorSummary {
   id: string
   name: string
+  website: string
   description: string
   logoUrl: string | null
   promoCode: string | null

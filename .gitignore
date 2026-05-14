@@ -4,6 +4,7 @@ yarn.lock
 
 .DS_Store
 .cache
+.content-collections
 .env
 .vercel
 .output

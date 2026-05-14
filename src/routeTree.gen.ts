@@ -27,6 +27,7 @@ import { Route as PeptidesIndexRouteImport } from './routes/peptides.index'
 import { Route as ArticlesIndexRouteImport } from './routes/articles.index'
 import { Route as VendorsIdRouteImport } from './routes/vendors.$id'
 import { Route as PeptidesCompoundRouteImport } from './routes/peptides.$compound'
+import { Route as ArticlesSlugRouteImport } from './routes/articles.$slug'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const VendorsRoute = VendorsRouteImport.update({
@@ -119,6 +120,11 @@ const PeptidesCompoundRoute = PeptidesCompoundRouteImport.update({
   path: '/$compound',
   getParentRoute: () => PeptidesRoute,
 } as any)
+const ArticlesSlugRoute = ArticlesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ArticlesRoute,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -139,6 +145,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/vendors': typeof VendorsRouteWithChildren
+  '/articles/$slug': typeof ArticlesSlugRoute
   '/peptides/$compound': typeof PeptidesCompoundRoute
   '/vendors/$id': typeof VendorsIdRoute
   '/articles/': typeof ArticlesIndexRoute
@@ -157,6 +164,7 @@ export interface FileRoutesByTo {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
   '/peptides/$compound': typeof PeptidesCompoundRoute
   '/vendors/$id': typeof VendorsIdRoute
   '/articles': typeof ArticlesIndexRoute
@@ -179,6 +187,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/vendors': typeof VendorsRouteWithChildren
+  '/articles/$slug': typeof ArticlesSlugRoute
   '/peptides/$compound': typeof PeptidesCompoundRoute
   '/vendors/$id': typeof VendorsIdRoute
   '/articles/': typeof ArticlesIndexRoute
@@ -202,6 +211,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/terms'
     | '/vendors'
+    | '/articles/$slug'
     | '/peptides/$compound'
     | '/vendors/$id'
     | '/articles/'
@@ -220,6 +230,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap.xml'
     | '/terms'
+    | '/articles/$slug'
     | '/peptides/$compound'
     | '/vendors/$id'
     | '/articles'
@@ -241,6 +252,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/terms'
     | '/vendors'
+    | '/articles/$slug'
     | '/peptides/$compound'
     | '/vendors/$id'
     | '/articles/'
@@ -394,6 +406,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PeptidesCompoundRouteImport
       parentRoute: typeof PeptidesRoute
     }
+    '/articles/$slug': {
+      id: '/articles/$slug'
+      path: '/$slug'
+      fullPath: '/articles/$slug'
+      preLoaderRoute: typeof ArticlesSlugRouteImport
+      parentRoute: typeof ArticlesRoute
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -405,10 +424,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface ArticlesRouteChildren {
+  ArticlesSlugRoute: typeof ArticlesSlugRoute
   ArticlesIndexRoute: typeof ArticlesIndexRoute
 }
 
 const ArticlesRouteChildren: ArticlesRouteChildren = {
+  ArticlesSlugRoute: ArticlesSlugRoute,
   ArticlesIndexRoute: ArticlesIndexRoute,
 }
 

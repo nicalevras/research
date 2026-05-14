@@ -1,5 +1,5 @@
 {
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx", ".content-collections/generated/**/*.ts"],
   "compilerOptions": {
     "strict": true,
     "esModuleInterop": true,
@@ -16,7 +16,8 @@
     "target": "ES2022",
     "forceConsistentCasingInFileNames": true,
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "content-collections": ["./.content-collections/generated"]
     },
     "noEmit": true
   }

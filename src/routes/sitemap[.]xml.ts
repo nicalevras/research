@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { SITE_URL } from '~/lib/constants'
 import { filterVendors, getPeptideProfileSitemapEntries } from '~/lib/data'
+import { getPublishedArticles } from '~/lib/articles'
 import { APPROVED_PEPTIDE_INDEX_CATEGORIES } from '~/lib/peptide-directory-seo'
 import { APPROVED_VENDOR_INDEX_FEATURES } from '~/lib/vendor-directory-seo'
 
@@ -64,6 +65,15 @@ export const Route = createFileRoute('/sitemap.xml')({
 
         for (const category of APPROVED_PEPTIDE_INDEX_CATEGORIES) {
           urls.push({ loc: `/peptides?categories=${category.id}`, priority: '0.6', changefreq: 'weekly' })
+        }
+
+        for (const article of getPublishedArticles()) {
+          urls.push({
+            loc: article.path,
+            priority: article.affiliateIntent === 'high' ? '0.7' : '0.6',
+            changefreq: 'monthly',
+            lastmod: formatLastmod(article.updatedAt),
+          })
         }
 
         const xml = `<?xml version="1.0" encoding="UTF-8"?>

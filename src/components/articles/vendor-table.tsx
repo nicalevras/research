@@ -12,9 +12,16 @@ type RetatrutideVendorTableProps = {
   limit?: number
 }
 
-type RetatrutideVendorSnapshotProps = {
+type PeptideVendorTableProps = RetatrutideVendorTableProps & {
+  peptideSlug: string
+  peptideName: string
+}
+
+type PeptideVendorSnapshotProps = {
   vendors: VendorSummary[]
   title?: string
+  peptideSlug: string
+  peptideName: string
 }
 
 function yesNo(value: boolean) {
@@ -45,13 +52,13 @@ function promoSummary(vendor: VendorSummary) {
   return vendor.promoDiscountPercent ? `${vendor.promoDiscountPercent}% off (${vendor.promoCode})` : vendor.promoCode
 }
 
-function VendorWebsiteLink({ vendor }: { vendor: VendorSummary }) {
+function VendorWebsiteLink({ vendor, peptideSlug }: { vendor: VendorSummary; peptideSlug: string }) {
   return (
     <a
       href={vendor.website}
       target="_blank"
       rel="noopener noreferrer nofollow"
-      onClick={() => trackVendorOutboundClick(vendor, 'article_vendor_table', 'retatrutide')}
+      onClick={() => trackVendorOutboundClick(vendor, 'article_vendor_table', peptideSlug)}
       className="inline-flex items-center gap-1"
     >
       Buy
@@ -73,7 +80,7 @@ function visibleVendors(vendors: VendorSummary[], variant: VendorTableVariant, l
   return filtered.slice(0, limit)
 }
 
-function FullRows({ vendors }: { vendors: VendorSummary[] }) {
+function FullRows({ vendors, peptideSlug }: { vendors: VendorSummary[]; peptideSlug: string }) {
   return (
     <>
       {vendors.map((vendor) => (
@@ -88,7 +95,7 @@ function FullRows({ vendors }: { vendors: VendorSummary[] }) {
           <td>{paymentMethods(vendor)}</td>
           <td>{shippingSummary(vendor)}</td>
           <td>
-            <VendorWebsiteLink vendor={vendor} />
+            <VendorWebsiteLink vendor={vendor} peptideSlug={peptideSlug} />
           </td>
         </tr>
       ))}
@@ -96,7 +103,7 @@ function FullRows({ vendors }: { vendors: VendorSummary[] }) {
   )
 }
 
-function PromoRows({ vendors }: { vendors: VendorSummary[] }) {
+function PromoRows({ vendors, peptideSlug }: { vendors: VendorSummary[]; peptideSlug: string }) {
   return (
     <>
       {vendors.map((vendor) => (
@@ -109,7 +116,7 @@ function PromoRows({ vendors }: { vendors: VendorSummary[] }) {
           <td>{yesNo(vendor.hasCoa)}</td>
           <td>{paymentMethods(vendor)}</td>
           <td>
-            <VendorWebsiteLink vendor={vendor} />
+            <VendorWebsiteLink vendor={vendor} peptideSlug={peptideSlug} />
           </td>
         </tr>
       ))}
@@ -117,7 +124,7 @@ function PromoRows({ vendors }: { vendors: VendorSummary[] }) {
   )
 }
 
-function TrustRows({ vendors }: { vendors: VendorSummary[] }) {
+function TrustRows({ vendors, peptideSlug }: { vendors: VendorSummary[]; peptideSlug: string }) {
   return (
     <>
       {vendors.map((vendor) => (
@@ -131,7 +138,7 @@ function TrustRows({ vendors }: { vendors: VendorSummary[] }) {
           <td>{vendor.reviewCount}</td>
           <td>{vendor.verified ? 'Verified listing' : 'Listed vendor'}</td>
           <td>
-            <VendorWebsiteLink vendor={vendor} />
+            <VendorWebsiteLink vendor={vendor} peptideSlug={peptideSlug} />
           </td>
         </tr>
       ))}
@@ -139,7 +146,7 @@ function TrustRows({ vendors }: { vendors: VendorSummary[] }) {
   )
 }
 
-function PaymentRows({ vendors }: { vendors: VendorSummary[] }) {
+function PaymentRows({ vendors, peptideSlug }: { vendors: VendorSummary[]; peptideSlug: string }) {
   return (
     <>
       {vendors.map((vendor) => (
@@ -152,7 +159,7 @@ function PaymentRows({ vendors }: { vendors: VendorSummary[] }) {
           <td>{vendor.acceptsCrypto ? 'Yes' : 'No'}</td>
           <td>{promoSummary(vendor)}</td>
           <td>
-            <VendorWebsiteLink vendor={vendor} />
+            <VendorWebsiteLink vendor={vendor} peptideSlug={peptideSlug} />
           </td>
         </tr>
       ))}
@@ -160,7 +167,7 @@ function PaymentRows({ vendors }: { vendors: VendorSummary[] }) {
   )
 }
 
-function ShippingRows({ vendors }: { vendors: VendorSummary[] }) {
+function ShippingRows({ vendors, peptideSlug }: { vendors: VendorSummary[]; peptideSlug: string }) {
   return (
     <>
       {vendors.map((vendor) => (
@@ -173,7 +180,7 @@ function ShippingRows({ vendors }: { vendors: VendorSummary[] }) {
           <td>{vendor.shipsInternational ? 'Yes' : 'No'}</td>
           <td>{vendor.rating.toFixed(1)} ({vendor.reviewCount})</td>
           <td>
-            <VendorWebsiteLink vendor={vendor} />
+            <VendorWebsiteLink vendor={vendor} peptideSlug={peptideSlug} />
           </td>
         </tr>
       ))}
@@ -181,28 +188,31 @@ function ShippingRows({ vendors }: { vendors: VendorSummary[] }) {
   )
 }
 
-export function RetatrutideVendorTable({
+function PeptideVendorTable({
   vendors,
   variant = 'full',
-  title = 'Retatrutide Research Vendors On AminoRank',
+  title,
   limit = 8,
-}: RetatrutideVendorTableProps) {
+  peptideSlug,
+  peptideName,
+}: PeptideVendorTableProps) {
   const rows = visibleVendors(vendors, variant, limit)
+  const resolvedTitle = title ?? `${peptideName} Research Vendors On AminoRank`
 
   if (rows.length === 0) {
     return (
       <aside className="my-6 rounded-lg border border-neutral-200/80 bg-white p-4 text-sm text-neutral-600 dark:border-white/[0.08] dark:bg-neutral-900 dark:text-neutral-300">
-        No matching retatrutide vendor data is currently available for this table.
+        No matching {peptideName} vendor data is currently available for this table.
       </aside>
     )
   }
 
   return (
-    <section className="my-8" aria-label={title}>
+    <section className="my-8" aria-label={resolvedTitle}>
       <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <h3 className="m-0 text-lg font-bold leading-tight text-neutral-950 dark:text-white">{title}</h3>
-        <a href="/vendors?peptide=retatrutide" className="inline-flex items-center gap-1 text-sm font-semibold text-neutral-950 dark:text-white">
-          View all retatrutide vendors
+        <h3 className="m-0 text-lg font-bold leading-tight text-neutral-950 dark:text-white">{resolvedTitle}</h3>
+        <a href={`/vendors?peptide=${peptideSlug}`} className="inline-flex items-center gap-1 text-sm font-semibold text-neutral-950 dark:text-white">
+          View all {peptideName} vendors
           <ChevronRightIcon className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
         </a>
       </div>
@@ -262,14 +272,14 @@ export function RetatrutideVendorTable({
           </thead>
           <tbody>
             {variant === 'promo'
-              ? <PromoRows vendors={rows} />
+              ? <PromoRows vendors={rows} peptideSlug={peptideSlug} />
               : variant === 'trust'
-                ? <TrustRows vendors={rows} />
+                ? <TrustRows vendors={rows} peptideSlug={peptideSlug} />
                 : variant === 'payment'
-                  ? <PaymentRows vendors={rows} />
+                  ? <PaymentRows vendors={rows} peptideSlug={peptideSlug} />
                   : variant === 'shipping'
-                    ? <ShippingRows vendors={rows} />
-                    : <FullRows vendors={rows} />}
+                    ? <ShippingRows vendors={rows} peptideSlug={peptideSlug} />
+                    : <FullRows vendors={rows} peptideSlug={peptideSlug} />}
           </tbody>
         </table>
       </div>
@@ -278,11 +288,14 @@ export function RetatrutideVendorTable({
   )
 }
 
-export function RetatrutideVendorSnapshot({
+function PeptideVendorSnapshot({
   vendors,
-  title = 'Current Retatrutide Vendor Snapshot',
-}: RetatrutideVendorSnapshotProps) {
+  title,
+  peptideSlug,
+  peptideName,
+}: PeptideVendorSnapshotProps) {
   if (vendors.length === 0) return null
+  const resolvedTitle = title ?? `Current ${peptideName} Vendor Snapshot`
 
   const withCoas = vendors.filter((vendor) => vendor.hasCoa).length
   const withPromos = vendors.filter((vendor) => vendor.promoCode).length
@@ -306,10 +319,10 @@ export function RetatrutideVendorSnapshot({
   ]
 
   return (
-    <aside className="my-8 rounded-lg border border-neutral-200/80 bg-white p-5 dark:border-white/[0.08] dark:bg-neutral-900" aria-label={title}>
+    <aside className="my-8 rounded-lg border border-neutral-200/80 bg-white p-5 dark:border-white/[0.08] dark:bg-neutral-900" aria-label={resolvedTitle}>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <h3 className="m-0 text-lg font-bold leading-tight text-neutral-950 dark:text-white">{title}</h3>
-        <a href="/vendors?peptide=retatrutide" className="inline-flex items-center gap-1 text-sm font-semibold text-neutral-950 dark:text-white">
+        <h3 className="m-0 text-lg font-bold leading-tight text-neutral-950 dark:text-white">{resolvedTitle}</h3>
+        <a href={`/vendors?peptide=${peptideSlug}`} className="inline-flex items-center gap-1 text-sm font-semibold text-neutral-950 dark:text-white">
           View live directory
           <ChevronRightIcon className="h-3.5 w-3.5 opacity-60" aria-hidden="true" />
         </a>
@@ -324,4 +337,20 @@ export function RetatrutideVendorSnapshot({
       </div>
     </aside>
   )
+}
+
+export function RetatrutideVendorTable(props: RetatrutideVendorTableProps) {
+  return <PeptideVendorTable {...props} peptideSlug="retatrutide" peptideName="Retatrutide" />
+}
+
+export function RetatrutideVendorSnapshot(props: Omit<PeptideVendorSnapshotProps, 'peptideSlug' | 'peptideName'>) {
+  return <PeptideVendorSnapshot {...props} peptideSlug="retatrutide" peptideName="Retatrutide" />
+}
+
+export function GHKCuVendorTable(props: RetatrutideVendorTableProps) {
+  return <PeptideVendorTable {...props} peptideSlug="ghk-cu" peptideName="GHK-Cu" />
+}
+
+export function GHKCuVendorSnapshot(props: Omit<PeptideVendorSnapshotProps, 'peptideSlug' | 'peptideName'>) {
+  return <PeptideVendorSnapshot {...props} peptideSlug="ghk-cu" peptideName="GHK-Cu" />
 }

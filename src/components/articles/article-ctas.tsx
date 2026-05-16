@@ -38,6 +38,17 @@ export function ProfileCta() {
   )
 }
 
+export function GHKCuProfileCta() {
+  return (
+    <ArticleCta
+      href="/peptides/ghk-cu"
+      title="Explore the AminoRank GHK-Cu profile"
+      description="Review linked studies, category details, and vendor availability for GHK-Cu."
+      cta="View GHK-Cu profile"
+    />
+  )
+}
+
 export function VendorCta() {
   return (
     <ArticleCta
@@ -45,6 +56,17 @@ export function VendorCta() {
       title="Compare retatrutide research vendors"
       description="Browse vendors by COAs, reviews, discounts, shipping, and payment options."
       cta="View retatrutide vendors"
+    />
+  )
+}
+
+export function GHKCuVendorCta() {
+  return (
+    <ArticleCta
+      href="/vendors?peptide=ghk-cu"
+      title="Compare GHK-Cu research vendors"
+      description="Browse vendors by COAs, reviews, discounts, shipping, and payment options."
+      cta="View GHK-Cu vendors"
     />
   )
 }

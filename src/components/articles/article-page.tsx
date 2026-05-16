@@ -3,14 +3,15 @@ import { MDXContent } from '@content-collections/mdx/react'
 import type { ComponentProps } from 'react'
 import type { Article } from '~/lib/articles'
 import { formatArticleDate } from '~/lib/articles'
-import { CalculatorCta, ProfileCta, VendorCta } from '~/components/articles/article-ctas'
-import { RetatrutideVendorSnapshot, RetatrutideVendorTable } from '~/components/articles/vendor-table'
+import { CalculatorCta, GHKCuProfileCta, GHKCuVendorCta, ProfileCta, VendorCta } from '~/components/articles/article-ctas'
+import { GHKCuVendorSnapshot, GHKCuVendorTable, RetatrutideVendorSnapshot, RetatrutideVendorTable } from '~/components/articles/vendor-table'
 import type { VendorSummary } from '~/lib/types'
 
 type ArticlePageProps = {
   article: Article
   relatedArticles: Article[]
   retatrutideVendors: VendorSummary[]
+  ghkCuVendors: VendorSummary[]
 }
 
 function articleDateLine(article: Article) {
@@ -83,9 +84,17 @@ function RelatedArticles({ articles }: { articles: Article[] }) {
   )
 }
 
-export function ArticlePage({ article, relatedArticles, retatrutideVendors }: ArticlePageProps) {
+export function ArticlePage({ article, relatedArticles, retatrutideVendors, ghkCuVendors }: ArticlePageProps) {
   const mdxComponents = {
     CalculatorCta,
+    GHKCuProfileCta,
+    GHKCuVendorCta,
+    GHKCuVendorSnapshot: (props: Omit<ComponentProps<typeof GHKCuVendorSnapshot>, 'vendors'>) => (
+      <GHKCuVendorSnapshot {...props} vendors={ghkCuVendors} />
+    ),
+    GHKCuVendorTable: (props: Omit<ComponentProps<typeof GHKCuVendorTable>, 'vendors'>) => (
+      <GHKCuVendorTable {...props} vendors={ghkCuVendors} />
+    ),
     ProfileCta,
     RetatrutideVendorSnapshot: (props: Omit<ComponentProps<typeof RetatrutideVendorSnapshot>, 'vendors'>) => (
       <RetatrutideVendorSnapshot {...props} vendors={retatrutideVendors} />

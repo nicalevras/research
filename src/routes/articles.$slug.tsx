@@ -12,11 +12,15 @@ export const Route = createFileRoute('/articles/$slug')({
     const retatrutideVendors = article.content.includes('RetatrutideVendorTable') || article.content.includes('RetatrutideVendorSnapshot')
       ? await filterVendors({ data: { peptide: 'retatrutide' } })
       : []
+    const ghkCuVendors = article.content.includes('GHKCuVendorTable') || article.content.includes('GHKCuVendorSnapshot')
+      ? await filterVendors({ data: { peptide: 'ghk-cu' } })
+      : []
 
     return {
       article,
       relatedArticles: getRelatedArticles(article),
       retatrutideVendors,
+      ghkCuVendors,
     }
   },
   head: ({ loaderData }) => {
@@ -81,7 +85,7 @@ export const Route = createFileRoute('/articles/$slug')({
 })
 
 function ArticleDetailPage() {
-  const { article, relatedArticles, retatrutideVendors } = Route.useLoaderData()
+  const { article, relatedArticles, retatrutideVendors, ghkCuVendors } = Route.useLoaderData()
 
-  return <ArticlePage article={article} relatedArticles={relatedArticles} retatrutideVendors={retatrutideVendors} />
+  return <ArticlePage article={article} relatedArticles={relatedArticles} retatrutideVendors={retatrutideVendors} ghkCuVendors={ghkCuVendors} />
 }

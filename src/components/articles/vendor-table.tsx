@@ -354,3 +354,27 @@ export function GHKCuVendorTable(props: RetatrutideVendorTableProps) {
 export function GHKCuVendorSnapshot(props: Omit<PeptideVendorSnapshotProps, 'peptideSlug' | 'peptideName'>) {
   return <PeptideVendorSnapshot {...props} peptideSlug="ghk-cu" peptideName="GHK-Cu" />
 }
+
+export function TesamorelinVendorTable(props: RetatrutideVendorTableProps) {
+  return <PeptideVendorTable {...props} peptideSlug="tesamorelin" peptideName="Tesamorelin" />
+}
+
+export function TesamorelinVendorSnapshot(props: Omit<PeptideVendorSnapshotProps, 'peptideSlug' | 'peptideName'>) {
+  return <PeptideVendorSnapshot {...props} peptideSlug="tesamorelin" peptideName="Tesamorelin" />
+}
+
+export function BPC157VendorTable(props: RetatrutideVendorTableProps) {
+  return <PeptideVendorTable {...props} peptideSlug="bpc-157" peptideName="BPC-157" />
+}
+
+export function BPC157VendorSnapshot(props: Omit<PeptideVendorSnapshotProps, 'peptideSlug' | 'peptideName'>) {
+  return <PeptideVendorSnapshot {...props} peptideSlug="bpc-157" peptideName="BPC-157" />
+}
+
+export function BPC157TB500VendorTable(props: RetatrutideVendorTableProps) {
+  return <PeptideVendorTable {...props} peptideSlug="bpc-157-tb-500" peptideName="BPC-157/TB-500" />
+}
+
+export function BPC157TB500VendorSnapshot(props: Omit<PeptideVendorSnapshotProps, 'peptideSlug' | 'peptideName'>) {
+  return <PeptideVendorSnapshot {...props} peptideSlug="bpc-157-tb-500" peptideName="BPC-157/TB-500" />
+}

@@ -49,6 +49,39 @@ export function GHKCuProfileCta() {
   )
 }
 
+export function TesamorelinProfileCta() {
+  return (
+    <ArticleCta
+      href="/peptides/tesamorelin"
+      title="Explore the AminoRank tesamorelin profile"
+      description="Review linked studies, category details, and vendor availability for tesamorelin."
+      cta="View tesamorelin profile"
+    />
+  )
+}
+
+export function BPC157ProfileCta() {
+  return (
+    <ArticleCta
+      href="/peptides/bpc-157"
+      title="Explore the AminoRank BPC-157 profile"
+      description="Review linked studies, category details, and vendor availability for BPC-157."
+      cta="View BPC-157 profile"
+    />
+  )
+}
+
+export function BPC157TB500ProfileCta() {
+  return (
+    <ArticleCta
+      href="/peptides/bpc-157-tb-500"
+      title="Explore the AminoRank BPC-157/TB-500 profile"
+      description="Review category details and vendor availability for the BPC-157/TB-500 blend."
+      cta="View BPC-157/TB-500 profile"
+    />
+  )
+}
+
 export function VendorCta() {
   return (
     <ArticleCta
@@ -60,6 +93,28 @@ export function VendorCta() {
   )
 }
 
+export function BPC157VendorCta() {
+  return (
+    <ArticleCta
+      href="/vendors?peptide=bpc-157"
+      title="Compare BPC-157 research vendors"
+      description="Browse vendors by COAs, reviews, discounts, shipping, and payment options."
+      cta="View BPC-157 vendors"
+    />
+  )
+}
+
+export function BPC157TB500VendorCta() {
+  return (
+    <ArticleCta
+      href="/vendors?peptide=bpc-157-tb-500"
+      title="Compare BPC-157/TB-500 research vendors"
+      description="Browse blend vendors by COAs, reviews, discounts, shipping, and payment options."
+      cta="View BPC-157/TB-500 vendors"
+    />
+  )
+}
+
 export function GHKCuVendorCta() {
   return (
     <ArticleCta
@@ -67,6 +122,17 @@ export function GHKCuVendorCta() {
       title="Compare GHK-Cu research vendors"
       description="Browse vendors by COAs, reviews, discounts, shipping, and payment options."
       cta="View GHK-Cu vendors"
+    />
+  )
+}
+
+export function TesamorelinVendorCta() {
+  return (
+    <ArticleCta
+      href="/vendors?peptide=tesamorelin"
+      title="Compare tesamorelin research vendors"
+      description="Browse vendors by COAs, reviews, discounts, shipping, and payment options."
+      cta="View tesamorelin vendors"
     />
   )
 }

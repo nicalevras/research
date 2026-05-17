@@ -3,8 +3,8 @@ import { MDXContent } from '@content-collections/mdx/react'
 import type { ComponentProps } from 'react'
 import type { Article } from '~/lib/articles'
 import { formatArticleDate } from '~/lib/articles'
-import { CalculatorCta, GHKCuProfileCta, GHKCuVendorCta, ProfileCta, VendorCta } from '~/components/articles/article-ctas'
-import { GHKCuVendorSnapshot, GHKCuVendorTable, RetatrutideVendorSnapshot, RetatrutideVendorTable } from '~/components/articles/vendor-table'
+import { BPC157ProfileCta, BPC157TB500ProfileCta, BPC157TB500VendorCta, BPC157VendorCta, CalculatorCta, GHKCuProfileCta, GHKCuVendorCta, ProfileCta, TesamorelinProfileCta, TesamorelinVendorCta, VendorCta } from '~/components/articles/article-ctas'
+import { BPC157TB500VendorSnapshot, BPC157TB500VendorTable, BPC157VendorSnapshot, BPC157VendorTable, GHKCuVendorSnapshot, GHKCuVendorTable, RetatrutideVendorSnapshot, RetatrutideVendorTable, TesamorelinVendorSnapshot, TesamorelinVendorTable } from '~/components/articles/vendor-table'
 import type { VendorSummary } from '~/lib/types'
 
 type ArticlePageProps = {
@@ -12,6 +12,9 @@ type ArticlePageProps = {
   relatedArticles: Article[]
   retatrutideVendors: VendorSummary[]
   ghkCuVendors: VendorSummary[]
+  tesamorelinVendors: VendorSummary[]
+  bpc157Vendors: VendorSummary[]
+  bpc157Tb500Vendors: VendorSummary[]
 }
 
 function articleDateLine(article: Article) {
@@ -84,8 +87,24 @@ function RelatedArticles({ articles }: { articles: Article[] }) {
   )
 }
 
-export function ArticlePage({ article, relatedArticles, retatrutideVendors, ghkCuVendors }: ArticlePageProps) {
+export function ArticlePage({ article, relatedArticles, retatrutideVendors, ghkCuVendors, tesamorelinVendors, bpc157Vendors, bpc157Tb500Vendors }: ArticlePageProps) {
   const mdxComponents = {
+    BPC157ProfileCta,
+    BPC157TB500ProfileCta,
+    BPC157TB500VendorCta,
+    BPC157TB500VendorSnapshot: (props: Omit<ComponentProps<typeof BPC157TB500VendorSnapshot>, 'vendors'>) => (
+      <BPC157TB500VendorSnapshot {...props} vendors={bpc157Tb500Vendors} />
+    ),
+    BPC157TB500VendorTable: (props: Omit<ComponentProps<typeof BPC157TB500VendorTable>, 'vendors'>) => (
+      <BPC157TB500VendorTable {...props} vendors={bpc157Tb500Vendors} />
+    ),
+    BPC157VendorCta,
+    BPC157VendorSnapshot: (props: Omit<ComponentProps<typeof BPC157VendorSnapshot>, 'vendors'>) => (
+      <BPC157VendorSnapshot {...props} vendors={bpc157Vendors} />
+    ),
+    BPC157VendorTable: (props: Omit<ComponentProps<typeof BPC157VendorTable>, 'vendors'>) => (
+      <BPC157VendorTable {...props} vendors={bpc157Vendors} />
+    ),
     CalculatorCta,
     GHKCuProfileCta,
     GHKCuVendorCta,
@@ -101,6 +120,14 @@ export function ArticlePage({ article, relatedArticles, retatrutideVendors, ghkC
     ),
     RetatrutideVendorTable: (props: Omit<ComponentProps<typeof RetatrutideVendorTable>, 'vendors'>) => (
       <RetatrutideVendorTable {...props} vendors={retatrutideVendors} />
+    ),
+    TesamorelinProfileCta,
+    TesamorelinVendorCta,
+    TesamorelinVendorSnapshot: (props: Omit<ComponentProps<typeof TesamorelinVendorSnapshot>, 'vendors'>) => (
+      <TesamorelinVendorSnapshot {...props} vendors={tesamorelinVendors} />
+    ),
+    TesamorelinVendorTable: (props: Omit<ComponentProps<typeof TesamorelinVendorTable>, 'vendors'>) => (
+      <TesamorelinVendorTable {...props} vendors={tesamorelinVendors} />
     ),
     VendorCta,
   }

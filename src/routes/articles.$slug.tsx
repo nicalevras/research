@@ -15,12 +15,24 @@ export const Route = createFileRoute('/articles/$slug')({
     const ghkCuVendors = article.content.includes('GHKCuVendorTable') || article.content.includes('GHKCuVendorSnapshot')
       ? await filterVendors({ data: { peptide: 'ghk-cu' } })
       : []
+    const tesamorelinVendors = article.content.includes('TesamorelinVendorTable') || article.content.includes('TesamorelinVendorSnapshot')
+      ? await filterVendors({ data: { peptide: 'tesamorelin' } })
+      : []
+    const bpc157Vendors = article.content.includes('BPC157VendorTable') || article.content.includes('BPC157VendorSnapshot')
+      ? await filterVendors({ data: { peptide: 'bpc-157' } })
+      : []
+    const bpc157Tb500Vendors = article.content.includes('BPC157TB500VendorTable') || article.content.includes('BPC157TB500VendorSnapshot')
+      ? await filterVendors({ data: { peptide: 'bpc-157-tb-500' } })
+      : []
 
     return {
       article,
       relatedArticles: getRelatedArticles(article),
       retatrutideVendors,
       ghkCuVendors,
+      tesamorelinVendors,
+      bpc157Vendors,
+      bpc157Tb500Vendors,
     }
   },
   head: ({ loaderData }) => {
@@ -85,7 +97,7 @@ export const Route = createFileRoute('/articles/$slug')({
 })
 
 function ArticleDetailPage() {
-  const { article, relatedArticles, retatrutideVendors, ghkCuVendors } = Route.useLoaderData()
+  const { article, relatedArticles, retatrutideVendors, ghkCuVendors, tesamorelinVendors, bpc157Vendors, bpc157Tb500Vendors } = Route.useLoaderData()
 
-  return <ArticlePage article={article} relatedArticles={relatedArticles} retatrutideVendors={retatrutideVendors} ghkCuVendors={ghkCuVendors} />
+  return <ArticlePage article={article} relatedArticles={relatedArticles} retatrutideVendors={retatrutideVendors} ghkCuVendors={ghkCuVendors} tesamorelinVendors={tesamorelinVendors} bpc157Vendors={bpc157Vendors} bpc157Tb500Vendors={bpc157Tb500Vendors} />
 }
